@@ -624,6 +624,7 @@ let package = Package(
                 "Store",
                 "Blockchain",
                 "BalanceService",
+                "GemstonePrimitives",
             ],
             path: "EarnService",
             exclude: ["TestKit"],

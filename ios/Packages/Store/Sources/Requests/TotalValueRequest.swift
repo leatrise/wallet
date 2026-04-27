@@ -6,10 +6,16 @@ import Primitives
 public struct TotalValueRequest: DatabaseQueryable, Equatable {
     public var walletId: WalletId
     public var type: TotalValueType
+    public var earnUnderlyingAssetIdsByBackedAssetId: [String: [String]]
 
-    public init(walletId: WalletId, type: TotalValueType) {
+    public init(
+        walletId: WalletId,
+        type: TotalValueType,
+        earnUnderlyingAssetIdsByBackedAssetId: [String: [String]] = [:],
+    ) {
         self.walletId = walletId
         self.type = type
+        self.earnUnderlyingAssetIdsByBackedAssetId = earnUnderlyingAssetIdsByBackedAssetId
     }
 
     public func fetch(_ db: Database) throws -> TotalFiatValue {
@@ -17,9 +23,7 @@ public struct TotalValueRequest: DatabaseQueryable, Equatable {
         case .perpetual:
             return try BalanceCalculator.totalFiatValue([perpetualFiatValue(db)])
         case .wallet:
-            let assets = try assetRecords(db).compactMap {
-                AssetFiatValue(record: $0, amount: $0.balance.totalAmount)
-            }
+            let assets = try walletFiatValues(db)
             return try BalanceCalculator.totalFiatValue(assets + [perpetualFiatValue(db)])
         case .earn:
             let assets = try assetRecords(db).compactMap {
@@ -38,6 +42,34 @@ public struct TotalValueRequest: DatabaseQueryable, Equatable {
                 .filter(BalanceRecord.Columns.isEnabled == true))
             .asRequest(of: AssetRecordInfoMinimal.self)
             .fetchAll(db)
+    }
+
+    private func walletAmount(record: AssetRecordInfoMinimal, excludedBackedAssetIds: Set<String>) -> Double {
+        excludedBackedAssetIds.contains(record.asset.id)
+            ? record.balance.totalAmount - record.balance.earnAmount
+            : record.balance.totalAmount
+    }
+
+    private func excludedBackedAssetIds(records: [AssetRecordInfoMinimal]) -> Set<String> {
+        let enabledAssetIds = Set(records.map(\.asset.id))
+        return Set(earnUnderlyingAssetIdsByBackedAssetId.compactMap { backedAssetId, underlyingAssetIds in
+            underlyingAssetIds.contains(where: enabledAssetIds.contains) ? backedAssetId : nil
+        })
+    }
+
+    private func walletFiatValues(_ db: Database) throws -> [AssetFiatValue] {
+        let records = try assetRecords(db)
+
+        if earnUnderlyingAssetIdsByBackedAssetId.isEmpty {
+            return records.compactMap {
+                AssetFiatValue(record: $0, amount: $0.balance.totalAmount)
+            }
+        }
+
+        let excludedBackedAssetIds = excludedBackedAssetIds(records: records)
+        return records.compactMap {
+            AssetFiatValue(record: $0, amount: walletAmount(record: $0, excludedBackedAssetIds: excludedBackedAssetIds))
+        }
     }
 
     private func perpetualFiatValue(_ db: Database) throws -> AssetFiatValue {

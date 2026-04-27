@@ -4,6 +4,7 @@ import BalanceService
 import BannerService
 import Components
 import DiscoverAssetsService
+import EarnService
 import Formatters
 import Foundation
 import InfoSheet
@@ -70,7 +71,14 @@ public final class WalletSceneViewModel: Sendable {
         self.walletService = walletService
         self.observablePreferences = observablePreferences
 
-        totalFiatQuery = ObservableQuery(TotalValueRequest(walletId: wallet.walletId, type: .wallet), initialValue: .zero)
+        totalFiatQuery = ObservableQuery(
+            TotalValueRequest(
+                walletId: wallet.walletId,
+                type: .wallet,
+                earnUnderlyingAssetIdsByBackedAssetId: EarnConfig.underlyingAssetIdsByBackedAssetId(),
+            ),
+            initialValue: .zero,
+        )
         assetsQuery = ObservableQuery(AssetsRequest(walletId: wallet.walletId, filters: [.enabledBalance]), initialValue: [])
         bannersQuery = ObservableQuery(BannersRequest(walletId: wallet.walletId, assetId: .none, chain: .none, events: [.accountBlockedMultiSignature, .onboarding]), initialValue: [])
         self.isPresentingSelectedAssetInput = isPresentingSelectedAssetInput
