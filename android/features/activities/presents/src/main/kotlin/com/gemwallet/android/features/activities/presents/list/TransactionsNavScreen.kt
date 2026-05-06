@@ -18,12 +18,12 @@ fun TransactionsNavScreen(
     viewModel: TransactionsViewModel = hiltViewModel()
 ) {
     val transactions by viewModel.transactions.collectAsStateWithLifecycle()
-    val loading by viewModel.state.collectAsStateWithLifecycle()
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val chainFilter by viewModel.chainsFilter.collectAsStateWithLifecycle()
     val typeFilter by viewModel.typeFilter.collectAsStateWithLifecycle()
 
     TransactionsScene(
-        loading = loading,
+        isRefreshing = isRefreshing,
         transactions = transactions,
         chainsFilter = chainFilter,
         typeFilter = typeFilter,

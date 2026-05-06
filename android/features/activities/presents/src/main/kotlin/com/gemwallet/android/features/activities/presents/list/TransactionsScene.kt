@@ -37,7 +37,7 @@ import com.wallet.core.primitives.Chain
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TransactionsScene(
-    loading: Boolean,
+    isRefreshing: Boolean,
     transactions: List<TransactionDataAggregate>,
     chainsFilter: List<Chain>,
     typeFilter: List<TransactionTypeFilter>,
@@ -68,13 +68,13 @@ internal fun TransactionsScene(
     ) {
         PullToRefreshBox(
             modifier = Modifier,
-            isRefreshing = loading,
+            isRefreshing = isRefreshing,
             onRefresh = { onAction(TransactionsListAction.Refresh) },
             state = pullToRefreshState,
             indicator = {
                 PullToRefreshDefaults.Indicator(
                     modifier = Modifier.align(Alignment.TopCenter),
-                    isRefreshing = loading,
+                    isRefreshing = isRefreshing,
                     state = pullToRefreshState,
                     containerColor = MaterialTheme.colorScheme.background,
                 )

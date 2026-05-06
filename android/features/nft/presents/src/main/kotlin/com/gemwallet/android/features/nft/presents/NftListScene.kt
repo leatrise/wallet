@@ -63,7 +63,7 @@ fun NftListNavScreen(
     viewModel: NftListViewModels = hiltViewModel(),
 ) {
     val items by viewModel.collections.collectAsStateWithLifecycle()
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val error by viewModel.error.collectAsStateWithLifecycle()
     val unverifiedCount by viewModel.unverifiedCount.collectAsStateWithLifecycle()
 
@@ -75,7 +75,7 @@ fun NftListNavScreen(
 
     NftListScene(
         items = items,
-        isLoading = isLoading,
+        isRefreshing = isRefreshing,
         error = error,
         unverifiedCount = unverifiedCount,
         title = title,
@@ -100,7 +100,7 @@ fun NftListNavScreen(
 @Composable
 internal fun NftListScene(
     items: List<NftItemUIModel>,
-    isLoading: Boolean,
+    isRefreshing: Boolean,
     error: NftError?,
     unverifiedCount: Int,
     title: String,
@@ -133,13 +133,13 @@ internal fun NftListScene(
     ) {
         PullToRefreshBox(
             modifier = Modifier.fillMaxSize(),
-            isRefreshing = isLoading,
+            isRefreshing = isRefreshing,
             onRefresh = { onAction(NftListAction.Refresh) },
             state = pullToRefreshState,
             indicator = {
                 Indicator(
                     modifier = Modifier.align(Alignment.TopCenter),
-                    isRefreshing = isLoading,
+                    isRefreshing = isRefreshing,
                     state = pullToRefreshState,
                     containerColor = MaterialTheme.colorScheme.background,
                 )

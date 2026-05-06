@@ -16,13 +16,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -36,21 +33,8 @@ class NftListViewModels @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val loadState = MutableStateFlow(false)
-
-    val isLoading = loadState
-        .flatMapLatest { shouldLoad ->
-            flow {
-                if (!shouldLoad) return@flow
-                emit(true)
-                runCatching { syncNftCollections() }
-                emit(false)
-                loadState.update { false }
-            }
-        }
-        .catch { error.update { NftError.LoadError } }
-        .flowOn(Dispatchers.IO)
-        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
     val nftCollectionId = savedStateHandle.getStateFlow<String?>(RouteArgument.NftCollectionId.key, null)
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
@@ -59,11 +43,18 @@ class NftListViewModels @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     private val nftData: StateFlow<List<NFTData>> = nftCollectionId
-        .onEach { loadState.emit(it == null) }
         .flatMapLatest { nftCollectionId ->
             getNftCollections(nftCollectionId).map { data -> data.filter { it.assets.isNotEmpty() } }
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (nftCollectionId.firstOrNull() == null) {
+                syncNftCollections()
+            }
+        }
+    }
 
     val collections = combine(nftData, nftCollectionId, unverified) { data, nftCollectionId, unverified ->
         val filtered = when {
@@ -90,6 +81,13 @@ class NftListViewModels @Inject constructor(
     val error = MutableStateFlow<NftError?>(null)
 
     fun refresh() {
-        viewModelScope.launch { loadState.emit(true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            _isRefreshing.update { true }
+            try {
+                syncNftCollections()
+            } finally {
+                _isRefreshing.update { false }
+            }
+        }
     }
 }
