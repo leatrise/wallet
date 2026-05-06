@@ -45,7 +45,7 @@ import com.gemwallet.android.features.assets.viewmodels.AssetsViewModel
 import com.gemwallet.android.features.assets.views.AssetsScreen
 import com.gemwallet.android.features.main.models.BottomNavItem
 import com.gemwallet.android.features.main.viewmodels.MainScreenViewModel
-import com.gemwallet.android.features.nft.presents.NftListScene
+import com.gemwallet.android.features.nft.presents.NftListNavScreen
 import com.gemwallet.android.features.settings.settings.presents.views.SettingsScene
 import com.gemwallet.android.ui.R
 import com.gemwallet.android.ui.components.animation.NavigationAnimation
@@ -227,7 +227,7 @@ fun MainScreen(
                             onBuy = navigator::openBuy,
                             onReceive = navigator::openReceive,
                         )
-                        nftRoute -> NftListScene(
+                        nftRoute -> NftListNavScreen(
                             listState = nftListState,
                             cancelAction = null,
                             collectionAction = navigator::openNftCollection,
