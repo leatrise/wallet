@@ -37,10 +37,6 @@ internal fun MainContent(
     val onWalletContentReady: () -> Unit = remember { { isWalletContentReady = true } }
     val shouldShowLockedSplash = !isWalletUnlocked || !isWalletContentReady
 
-    LaunchedEffect(isWalletUnlocked) {
-        if (!isWalletUnlocked) isWalletContentReady = false
-    }
-
     LaunchedEffect(requiresAuthPrompt, canAttemptSystemAuth, state.authPromptRequest) {
         if (requiresAuthPrompt && canAttemptSystemAuth) {
             onSystemAuthRequired()
