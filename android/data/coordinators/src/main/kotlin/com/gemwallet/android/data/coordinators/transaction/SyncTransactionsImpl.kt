@@ -8,6 +8,7 @@ import com.gemwallet.android.data.service.store.WalletPreferencesFactory
 import com.gemwallet.android.data.services.gemapi.GemDeviceApiClient
 import com.gemwallet.android.ext.getAssociatedAssetIds
 import com.gemwallet.android.ext.identifier
+import com.gemwallet.android.ext.walletId
 import com.wallet.core.primitives.Transaction
 import com.wallet.core.primitives.AssetId
 import com.wallet.core.primitives.Wallet
@@ -27,7 +28,7 @@ class SyncTransactionsImpl(
         }.getOrNull() ?: return
 
         syncAssets(wallet, transactions)
-        saveTransactions.saveTransactions(walletId = wallet.id, transactions)
+        saveTransactions.saveTransactions(walletId = wallet.walletId, transactions)
         preferences.transactionsTimestamp = currentTimestamp()
     }
 
@@ -40,7 +41,7 @@ class SyncTransactionsImpl(
         }.getOrNull() ?: return
 
         syncAssets(wallet, transactions)
-        saveTransactions.saveTransactions(walletId = wallet.id, transactions)
+        saveTransactions.saveTransactions(walletId = wallet.walletId, transactions)
         preferences.setTransactionsForAssetTimestamp(assetId, currentTimestamp())
     }
 
