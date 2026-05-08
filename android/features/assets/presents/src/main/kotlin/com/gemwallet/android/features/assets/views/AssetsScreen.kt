@@ -76,6 +76,7 @@ fun AssetsScreen(
     onBuyClick: () -> Unit,
     onSwapClick: () -> Unit,
     onPerpetuals: () -> Unit,
+    onPerpetualDetails: (String) -> Unit,
     onAssetClick: (AssetId) -> Unit,
     onContentReady: () -> Unit = {},
     listState: LazyListState = rememberLazyListState(),
@@ -94,6 +95,11 @@ fun AssetsScreen(
     val currentOnContentReady by rememberUpdatedState(onContentReady)
     LaunchedEffect(walletSummary != null) {
         if (walletSummary != null) currentOnContentReady()
+    }
+
+    val currentWalletId by viewModel.currentWalletId.collectAsStateWithLifecycle()
+    LaunchedEffect(currentWalletId) {
+        if (currentWalletId != null) listState.scrollToItem(0)
     }
 
     Scaffold(
@@ -189,7 +195,10 @@ fun AssetsScreen(
                     }
                 }
                 item(key = PerpetualsSectionItemKey) {
-                    PerpetualsPreviewSection(onOpenPerpetuals = onPerpetuals)
+                    PerpetualsPreviewSection(
+                        onOpenPerpetuals = onPerpetuals,
+                        onOpenPerpetualDetails = onPerpetualDetails,
+                    )
                 }
                 assets(
                     items = pinnedAssets,

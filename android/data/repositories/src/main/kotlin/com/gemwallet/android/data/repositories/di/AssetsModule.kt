@@ -136,13 +136,19 @@ object AssetsModule {
     @Singleton
     fun provideStreamObserverService(
         sessionRepository: SessionRepository,
+        userConfig: com.gemwallet.android.data.repositories.config.UserConfig,
         syncAssets: SyncAssets,
+        syncPerpetuals: com.gemwallet.android.application.perpetual.coordinators.SyncPerpetuals,
+        syncPerpetualPositions: com.gemwallet.android.application.perpetual.coordinators.SyncPerpetualPositions,
         deviceRequestSigner: DeviceRequestSigner,
         streamSubscriptionService: StreamSubscriptionService,
         eventHandler: StreamEventHandler,
     ): StreamObserverService = StreamObserverService(
         sessionRepository = sessionRepository,
+        userConfig = userConfig,
         syncAssets = syncAssets,
+        syncPerpetuals = syncPerpetuals,
+        syncPerpetualPositions = syncPerpetualPositions,
         deviceRequestSigner = deviceRequestSigner,
         subscriptionService = streamSubscriptionService,
         eventHandler = eventHandler,

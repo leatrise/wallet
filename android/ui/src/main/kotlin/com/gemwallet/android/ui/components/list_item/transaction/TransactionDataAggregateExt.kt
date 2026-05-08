@@ -15,13 +15,18 @@ import com.wallet.core.primitives.TransactionState
 import com.wallet.core.primitives.TransactionType
 
 @Composable
-fun TransactionDataAggregate.getTitle(): String {
-    return stringResource(type.getTitle(direction, state))
-}
+fun TransactionDataAggregate.getTitle(): String = perpetualTitle(type) ?: stringResource(type.getTitle(direction, state))
 
 @Composable
-fun TransactionDetailsAggregate.getTitle(): String {
-    return stringResource(type.getTitle(direction, state))
+fun TransactionDetailsAggregate.getTitle(): String = perpetualTitle(type) ?: stringResource(type.getTitle(direction, state))
+
+@Composable
+private fun perpetualTitle(type: TransactionType): String? = when (type) {
+    TransactionType.PerpetualOpenPosition ->
+        stringResource(R.string.perpetual_open_direction, stringResource(R.string.perpetual_position))
+    TransactionType.PerpetualClosePosition ->
+        stringResource(R.string.perpetual_close_direction, stringResource(R.string.perpetual_position))
+    else -> null
 }
 
 @Composable

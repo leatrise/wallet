@@ -217,6 +217,7 @@ fun MainScreen(
                             onBuyClick = navigator::openBuy,
                             onSwapClick = navigator::openSwap,
                             onPerpetuals = navigator::openPerpetuals,
+                            onPerpetualDetails = navigator::openPerpetualDetails,
                             onAssetClick = navigator::openAsset,
                             onContentReady = onWalletContentReady,
                             listState = assetsListState,
