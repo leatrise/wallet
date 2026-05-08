@@ -104,7 +104,7 @@ fun RequestScene(
                 is WCRequest.Transaction -> ConfirmScreen(
                     params = request.confirmParams,
                     walletConnectSimulation = request.simulation,
-                    finishAction = { _, hash, _ -> viewModel.onTransactionResult(hash) },
+                    finishAction = { hash -> viewModel.onTransactionResult(hash) },
                     onBuy = onBuy,
                     cancelAction = viewModel::onReject,
                     handleSystemBack = true,
@@ -134,7 +134,7 @@ private fun SignMessageScene(
                 title = stringResource(id = R.string.transfer_confirm),
                 enabled = !request.simulation.warnings.hasCriticalWarning(),
             ) {
-                context.requestAuth(AuthRequest.Phrase) {
+                context.requestAuth(AuthRequest.Confirmation) {
                     onApprove()
                 }
             }

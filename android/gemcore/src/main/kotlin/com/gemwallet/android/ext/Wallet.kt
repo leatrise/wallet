@@ -17,3 +17,8 @@ val Wallet.walletId: WalletId get() = WalletId(id)
 
 val WalletType.isViewOnly: Boolean get() = this == WalletType.View
 val WalletType.canSign: Boolean get() = !isViewOnly
+
+val Wallet.hasPerpetualsSupport: Boolean
+    get() = type == WalletType.Multicoin && accounts.any {
+        it.chain == Chain.Arbitrum || it.chain == Chain.HyperCore || it.chain == Chain.Hyperliquid
+    }
