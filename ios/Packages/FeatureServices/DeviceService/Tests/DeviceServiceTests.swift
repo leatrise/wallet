@@ -13,7 +13,7 @@ import Testing
 
 struct DeviceServiceTests {
     @Test
-    func prepareForWalletRequestSkipsCleanState() async throws {
+    func synchronizeIfNeededSkipsCleanState() async throws {
         let preferences = Preferences.mock()
         preferences.isDeviceRegistered = true
         preferences.subscriptionsVersionHasChange = false
@@ -33,7 +33,7 @@ struct DeviceServiceTests {
             securePreferences: securePreferences,
         )
 
-        try await service.prepareForWalletRequest()
+        try await service.synchronizeIfNeeded()
 
         #expect(await deviceProvider.isDeviceRegisteredCalls == 0)
         #expect(await deviceProvider.getDeviceCalls == 0)
@@ -42,7 +42,7 @@ struct DeviceServiceTests {
     }
 
     @Test
-    func prepareForWalletRequestSharesInFlightSync() async throws {
+    func synchronizeIfNeededSharesInFlightSync() async throws {
         let preferences = Preferences.mock()
         preferences.isDeviceRegistered = false
         preferences.subscriptionsVersionHasChange = true
@@ -59,8 +59,8 @@ struct DeviceServiceTests {
             subscriptionProvider: subscriptionProvider,
         )
 
-        async let first: Void = service.prepareForWalletRequest()
-        async let second: Void = service.prepareForWalletRequest()
+        async let first: Void = service.synchronizeIfNeeded()
+        async let second: Void = service.synchronizeIfNeeded()
         _ = try await (first, second)
 
         #expect(await deviceProvider.isDeviceRegisteredCalls == 1)
@@ -71,7 +71,7 @@ struct DeviceServiceTests {
     }
 
     @Test
-    func prepareForWalletRequestReplacesLegacyDeviceIdAndRegistersDevice() async throws {
+    func synchronizeIfNeededReplacesLegacyDeviceIdAndRegistersDevice() async throws {
         let preferences = Preferences.mock()
         preferences.isDeviceRegistered = true
         preferences.subscriptionsVersionHasChange = false
@@ -90,7 +90,7 @@ struct DeviceServiceTests {
             securePreferences: securePreferences,
         )
 
-        try await service.prepareForWalletRequest()
+        try await service.synchronizeIfNeeded()
 
         #expect(await deviceProvider.addDeviceCalls == 1)
         let publicKey = try securePreferences.getData(key: .devicePublicKey)
@@ -98,7 +98,7 @@ struct DeviceServiceTests {
     }
 
     @Test
-    func prepareForWalletRequestRegistersWhenMirroredDeviceIdIsMissing() async throws {
+    func synchronizeIfNeededRegistersWhenMirroredDeviceIdIsMissing() async throws {
         let preferences = Preferences.mock()
         preferences.isDeviceRegistered = true
         preferences.subscriptionsVersionHasChange = false
@@ -117,7 +117,7 @@ struct DeviceServiceTests {
             securePreferences: securePreferences,
         )
 
-        try await service.prepareForWalletRequest()
+        try await service.synchronizeIfNeeded()
 
         #expect(await deviceProvider.addDeviceCalls == 1)
         let publicKey = try securePreferences.getData(key: .devicePublicKey)
@@ -125,7 +125,7 @@ struct DeviceServiceTests {
     }
 
     @Test
-    func updateAndPrepareForWalletRequestShareSyncTask() async throws {
+    func updateAndSynchronizeIfNeededShareSyncTask() async throws {
         let preferences = Preferences.mock()
         preferences.isDeviceRegistered = false
         preferences.subscriptionsVersionHasChange = true
@@ -143,7 +143,7 @@ struct DeviceServiceTests {
         )
 
         async let update: Void = service.update()
-        async let ready: Void = service.prepareForWalletRequest()
+        async let ready: Void = service.synchronizeIfNeeded()
         _ = try await (update, ready)
 
         #expect(await deviceProvider.isDeviceRegisteredCalls == 1)
@@ -154,7 +154,7 @@ struct DeviceServiceTests {
     }
 
     @Test
-    func prepareForWalletRequestWaitsForInFlightSyncBeforeFastPath() async throws {
+    func synchronizeIfNeededWaitsForInFlightSyncBeforeFastPath() async throws {
         let preferences = Preferences.mock()
         preferences.isDeviceRegistered = true
         preferences.subscriptionsVersionHasChange = true
@@ -184,7 +184,7 @@ struct DeviceServiceTests {
         #expect(!preferences.subscriptionsVersionHasChange)
 
         let readyTask = Task {
-            try await service.prepareForWalletRequest()
+            try await service.synchronizeIfNeeded()
             await ready.markComplete()
         }
 
@@ -196,7 +196,7 @@ struct DeviceServiceTests {
     }
 
     @Test
-    func prepareForWalletRequestPropagatesSyncErrors() async {
+    func synchronizeIfNeededPropagatesSyncErrors() async {
         let preferences = Preferences.mock()
         preferences.isDeviceRegistered = false
         preferences.subscriptionsVersionHasChange = true
@@ -211,7 +211,7 @@ struct DeviceServiceTests {
         )
 
         await #expect(throws: TestError.self) {
-            try await service.prepareForWalletRequest()
+            try await service.synchronizeIfNeeded()
         }
 
         #expect(preferences.subscriptionsVersionHasChange)

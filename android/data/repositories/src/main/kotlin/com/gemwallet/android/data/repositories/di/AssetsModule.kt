@@ -5,7 +5,6 @@ import com.gemwallet.android.application.device.coordinators.GetDeviceId
 import com.gemwallet.android.application.fiat.coordinators.SyncFiatTransactions
 import com.gemwallet.android.application.pricealerts.coordinators.UpdatePriceAlerts
 import com.gemwallet.android.application.transactions.coordinators.GetChangedTransactions
-import com.gemwallet.android.blockchain.services.AddressStatusService
 import com.gemwallet.android.blockchain.services.BalancesService
 import com.gemwallet.android.blockchain.services.PerpetualService
 import com.gemwallet.android.cases.nft.SyncNfts
@@ -69,14 +68,6 @@ object AssetsModule {
     fun provideBalanceRemoteSource(
         gateway: GemGateway,
     ): BalancesService = BalancesService(
-        gateway = gateway,
-    )
-
-    @Provides
-    @Singleton
-    fun provideAddressStatusService(
-        gateway: GemGateway,
-    ): AddressStatusService = AddressStatusService(
         gateway = gateway,
     )
 
