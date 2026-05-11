@@ -5,7 +5,6 @@ import androidx.navigation3.runtime.NavKey
 import com.gemwallet.android.application.assets.coordinators.EnsureWalletAssets
 import com.gemwallet.android.application.assets.coordinators.GetAssetById
 import com.gemwallet.android.application.assets.coordinators.PrefetchAssets
-import com.gemwallet.android.application.perpetual.coordinators.GetPerpetual
 import com.gemwallet.android.cases.parseNotificationData
 import com.gemwallet.android.cases.transactions.SaveTransactions
 import com.gemwallet.android.data.repositories.session.SessionRepository
@@ -35,7 +34,6 @@ class NotificationNavigation @Inject constructor(
     private val prefetchAssets: PrefetchAssets,
     private val ensureWalletAssets: EnsureWalletAssets,
     private val getAssetById: GetAssetById,
-    private val getPerpetual: GetPerpetual,
 ) {
     suspend fun prepareNavigation(intent: Intent): List<NavKey> {
         if (!intent.hasNotificationPayload()) {
@@ -94,10 +92,7 @@ class NotificationNavigation @Inject constructor(
         if (asset.type != AssetType.PERPETUAL) {
             return listOf(AssetRoute(asset.id), transactionRoute)
         }
-        val perpetualRoute = getPerpetual.getPerpetualByAssetId(data.assetId)
-            .firstOrNull()
-            ?.let { PerpetualPositionRoute(it.id) }
-        return listOfNotNull(PerpetualRoute, perpetualRoute, transactionRoute)
+        return listOf(PerpetualRoute, PerpetualPositionRoute(data.assetId), transactionRoute)
     }
 
     private suspend fun prepareWallet(walletId: WalletId, assetIds: List<AssetId>): Wallet? {

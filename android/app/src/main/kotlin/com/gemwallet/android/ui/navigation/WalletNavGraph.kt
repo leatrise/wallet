@@ -228,7 +228,8 @@ fun WalletNavGraph(
 
             perpetualScreen(
                 onOpenPerpetualDetails = navigator::openPerpetualDetails,
-                onCancel = onCancel
+                onCancel = onCancel,
+                onTransaction = navigator::openTransaction,
             )
 
             referral(onClose = onCancel)

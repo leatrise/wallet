@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gemwallet.android.domains.perpetual.aggregates.PerpetualPositionDataAggregate
-import com.gemwallet.android.domains.price.PriceState
+import com.gemwallet.android.domains.price.ValueDirection
 import com.gemwallet.android.features.perpetual.views.models.color
 import com.gemwallet.android.features.perpetual.views.models.text
 import com.gemwallet.android.ui.components.image.AssetIcon
@@ -80,7 +80,7 @@ private fun PerpetualPositionLongItemPreview() {
         override val leverage: Int = 40
         override val marginAmount: String = "$1,000.00"
         override val pnlWithPercentage: String = "+$1,250.00 (+12.50%)"
-        override val pnlState: PriceState = PriceState.Up
+        override val pnlState: ValueDirection = ValueDirection.Up
     }
 
     WalletTheme {
@@ -108,7 +108,7 @@ private fun PerpetualPositionShortItemPreview() {
         override val leverage: Int = 40
         override val marginAmount: String = "$1,000.00"
         override val pnlWithPercentage: String = "-$1,250.00 (+12.50%)"
-        override val pnlState: PriceState = PriceState.Down
+        override val pnlState: ValueDirection = ValueDirection.Down
     }
 
     WalletTheme {

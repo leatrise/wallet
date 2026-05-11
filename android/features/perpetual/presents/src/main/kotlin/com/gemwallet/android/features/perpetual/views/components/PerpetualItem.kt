@@ -38,7 +38,7 @@ fun PerpetualItem(
     listPosition: ListPosition = ListPosition.Single,
     longPressState: MutableState<String?>,
     onTogglePin: (String) -> Unit,
-    onClick: (String) -> Unit,
+    onClick: (AssetId) -> Unit,
 ) {
     DropDownContextItem(
         modifier = modifier,
@@ -66,7 +66,7 @@ fun PerpetualItem(
             )
         },
         onLongClick = { longPressState.value = item.id },
-    ) { onClick(item.id) }
+    ) { onClick(item.asset.id) }
 }
 
 @Composable

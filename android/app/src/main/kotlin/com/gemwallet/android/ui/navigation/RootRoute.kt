@@ -191,7 +191,7 @@ class WalletNavigator(
     fun openPriceAlerts(assetId: AssetId) = push(AssetPriceAlertsRoute(assetId))
     fun openAddPriceAlertTarget(assetId: AssetId) = push(AddPriceAlertTargetRoute(assetId))
     fun openPerpetuals() = push(PerpetualRoute)
-    fun openPerpetualDetails(perpetualId: String) = push(PerpetualPositionRoute(perpetualId))
+    fun openPerpetualDetails(assetId: AssetId) = push(PerpetualPositionRoute(assetId))
     fun openStake(assetId: AssetId) = push(StakeRoute(assetId))
     fun openDelegation(validatorId: String, delegationId: String) = push(DelegationRoute(validatorId, delegationId))
     fun openReceive() = push(ReceiveSelectRoute)

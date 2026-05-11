@@ -3,11 +3,9 @@ package com.gemwallet.android
 import com.gemwallet.android.application.assets.coordinators.EnsureWalletAssets
 import com.gemwallet.android.application.assets.coordinators.GetAssetById
 import com.gemwallet.android.application.assets.coordinators.PrefetchAssets
-import com.gemwallet.android.application.perpetual.coordinators.GetPerpetual
 import com.gemwallet.android.cases.transactions.SaveTransactions
 import com.gemwallet.android.data.repositories.session.SessionRepository
 import com.gemwallet.android.data.repositories.wallets.WalletsRepository
-import com.gemwallet.android.domains.perpetual.aggregates.PerpetualDetailsDataAggregate
 import com.gemwallet.android.ext.getAssociatedAssetIds
 import com.gemwallet.android.model.PushNotificationData
 import com.gemwallet.android.testkit.mockAccount
@@ -49,7 +47,6 @@ class NotificationNavigationTest {
     private val prefetchAssets = mockk<PrefetchAssets>()
     private val ensureWalletAssets = mockk<EnsureWalletAssets>()
     private val getAssetById = mockk<GetAssetById>()
-    private val getPerpetual = mockk<GetPerpetual>()
 
     private val subject = NotificationNavigation(
         sessionRepository = sessionRepository,
@@ -58,7 +55,6 @@ class NotificationNavigationTest {
         prefetchAssets = prefetchAssets,
         ensureWalletAssets = ensureWalletAssets,
         getAssetById = getAssetById,
-        getPerpetual = getPerpetual,
     )
 
     @Before
@@ -71,7 +67,6 @@ class NotificationNavigationTest {
         coJustRun { prefetchAssets.prefetchAssets(any()) }
         coJustRun { ensureWalletAssets.ensureWalletAssets(any(), any()) }
         every { getAssetById(any()) } returns flowOf(null)
-        every { getPerpetual.getPerpetualByAssetId(any()) } returns flowOf(null)
     }
 
     @Test
@@ -108,7 +103,6 @@ class NotificationNavigationTest {
     fun perpetualTransactionNotification_opensPerpetualMarketBeforeTransaction() = runBlocking {
         val assetId = mockAssetId(Chain.HyperCore, tokenId = "perpetual::UNI")
         val walletId = mockWalletId()
-        val perpetualId = "hypercore_UNI"
         val asset = mockAsset(
             chain = assetId.chain,
             tokenId = assetId.tokenId,
@@ -116,9 +110,6 @@ class NotificationNavigationTest {
             symbol = "UNI",
             type = AssetType.PERPETUAL,
         )
-        val perpetual = mockk<PerpetualDetailsDataAggregate> {
-            every { id } returns perpetualId
-        }
         val transaction = mockTransaction(
             assetId = assetId,
             type = TransactionType.PerpetualOpenPosition,
@@ -129,7 +120,6 @@ class NotificationNavigationTest {
         )
         every { walletsRepository.getWallet(wallet.id) } returns flowOf(wallet)
         every { getAssetById(assetId) } returns flowOf(asset)
-        every { getPerpetual.getPerpetualByAssetId(assetId) } returns flowOf(perpetual)
 
         val route = subject.prepareNavigation(
             type = PushNotificationTypes.Transaction.string,
@@ -143,13 +133,12 @@ class NotificationNavigationTest {
         assertEquals(
             listOf(
                 PerpetualRoute,
-                PerpetualPositionRoute(perpetualId),
+                PerpetualPositionRoute(assetId),
                 TransactionDetailsRoute(transaction.id),
             ),
             route,
         )
         verify { getAssetById(assetId) }
-        verify { getPerpetual.getPerpetualByAssetId(assetId) }
         coVerify { saveTransactions.saveTransactions(walletId, listOf(transaction)) }
     }
 
