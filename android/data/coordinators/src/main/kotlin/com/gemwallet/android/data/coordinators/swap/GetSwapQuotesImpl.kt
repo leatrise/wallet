@@ -6,7 +6,6 @@ import com.gemwallet.android.ext.toIdentifier
 import com.wallet.core.primitives.Asset
 import uniffi.gemstone.Config
 import uniffi.gemstone.GemSwapper
-import uniffi.gemstone.SwapperMode
 import uniffi.gemstone.SwapperOptions
 import uniffi.gemstone.SwapperQuote
 import uniffi.gemstone.SwapperQuoteAsset
@@ -39,11 +38,9 @@ class GetSwapQuotesImpl(
             walletAddress = ownerAddress,
             destinationAddress = destination,
             value = amount,
-            mode = SwapperMode.EXACT_IN,
             options = SwapperOptions(
                 slippage = getDefaultSlippage(from.chain.string),
                 fee = Config().getSwapConfig().referralFee,
-                preferredProviders = emptyList(),
                 useMaxAmount = useMaxAmount,
             )
         )

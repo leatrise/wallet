@@ -60,7 +60,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import uniffi.gemstone.GemSwapQuoteDataType
-import uniffi.gemstone.SwapperMode
 import uniffi.gemstone.SwapperOptions
 import uniffi.gemstone.SwapperProvider
 import uniffi.gemstone.SwapperProviderData
@@ -596,14 +595,12 @@ class SwapViewModelTest {
             walletAddress = solInfo.owner!!.address,
             destinationAddress = usdcInfo.owner!!.address,
             value = fromValue,
-            mode = SwapperMode.EXACT_IN,
             options = SwapperOptions(
                 slippage = SwapperSlippage(
                     bps = 50u,
                     mode = SwapperSlippageMode.AUTO,
                 ),
                 fee = null,
-                preferredProviders = emptyList(),
                 useMaxAmount = false,
             ),
         ),

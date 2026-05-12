@@ -263,6 +263,37 @@ struct WalletIdMigrationTests {
     }
 
     @Test
+    func removeUnmappedInvalidLegacyWallets() throws {
+        let userDefaults = UserDefaults.mock()
+        let db = DB.mockWithChains([.ethereum, .bitcoin])
+        let walletStore = WalletStore(db: db)
+
+        let validAddress = "0xvalid"
+        try db.insertLegacyWallet(
+            id: "uuid-valid",
+            type: .multicoin,
+            accounts: [.mock(chain: .ethereum, address: validAddress)],
+        )
+        try db.insertLegacyWallet(
+            id: "uuid-unmapped",
+            type: .multicoin,
+            accounts: [.mock(chain: .bitcoin, address: "bc1unmapped")],
+        )
+
+        try db.dbQueue.write { db in
+            try WalletIdMigration.migrate(db: db, userDefaults: userDefaults)
+        }
+
+        let wallets = try walletStore.getWallets()
+        #expect(wallets.map(\.id) == [.multicoin(address: validAddress)])
+
+        let storedIds = try db.dbQueue.read { db in
+            try String.fetchAll(db, sql: "SELECT id FROM \(WalletRecord.databaseTableName)")
+        }
+        #expect(!storedIds.contains("uuid-unmapped"))
+    }
+
+    @Test
     func multipleDuplicateGroups() throws {
         let userDefaults = UserDefaults.mock()
         let db = DB.mockWithChains([.ethereum])

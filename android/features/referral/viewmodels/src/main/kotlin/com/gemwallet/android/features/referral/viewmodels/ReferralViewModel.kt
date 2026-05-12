@@ -89,7 +89,7 @@ class ReferralViewModel @Inject constructor(
     private fun sync(wallet: Wallet, type: SyncType) = viewModelScope.launch(Dispatchers.IO) {
         inSync.update { type }
         val rewards = try {
-            getRewards.getRewards(wallet.id.id)
+            getRewards.getRewards(wallet.id)
         } catch (_: Exception) {
             null
         } finally {

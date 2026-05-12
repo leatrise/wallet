@@ -18,8 +18,8 @@ class GetWalletSecretDataImpl(
     private val loadPrivateDataOperator: LoadPrivateDataOperator,
 ) : GetWalletSecretData {
 
-    override fun getSecretData(walletId: String): Flow<WalletSecretDataValue> {
-        return walletsRepository.getWallet(WalletId(walletId)).mapLatest { wallet ->
+    override fun getSecretData(walletId: WalletId): Flow<WalletSecretDataValue> {
+        return walletsRepository.getWallet(walletId).mapLatest { wallet ->
             val data = try {
                 wallet?.let {
                     val password = passwordStore.getPassword(wallet.id.id)
