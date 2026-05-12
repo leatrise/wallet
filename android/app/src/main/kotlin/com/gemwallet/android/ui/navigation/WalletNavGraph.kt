@@ -217,7 +217,7 @@ fun WalletNavGraph(
                 onCancel = onCancel,
                 onImported = { result ->
                     when (result) {
-                        is WalletImportResult.New -> navigator.openSetupWallet(WalletId(result.wallet.id))
+                        is WalletImportResult.New -> navigator.openSetupWallet(result.wallet.id)
                         is WalletImportResult.Existing -> navigator.resetToWallet()
                     }
                 },

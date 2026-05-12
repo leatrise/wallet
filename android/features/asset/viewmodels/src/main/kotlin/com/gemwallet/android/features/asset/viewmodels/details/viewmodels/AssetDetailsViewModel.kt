@@ -27,7 +27,6 @@ import com.gemwallet.android.ext.asset
 import com.gemwallet.android.ext.getAccount
 import com.gemwallet.android.ext.isStaked
 import com.gemwallet.android.ext.type
-import com.gemwallet.android.ext.walletId
 import com.gemwallet.android.model.AssetInfo
 import com.gemwallet.android.model.availableFormatted
 import com.gemwallet.android.model.format
@@ -207,7 +206,7 @@ class AssetDetailsViewModel @Inject constructor(
 
     private suspend fun add(wallet: Wallet, assetId: AssetId) {
         wallet.getAccount(assetId) ?: return
-        enableAsset(wallet.walletId, assetId)
+        enableAsset(wallet.id, assetId)
     }
 
     private data class Model(

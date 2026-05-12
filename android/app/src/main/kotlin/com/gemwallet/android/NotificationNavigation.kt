@@ -96,7 +96,7 @@ class NotificationNavigation @Inject constructor(
     }
 
     private suspend fun prepareWallet(walletId: WalletId, assetIds: List<AssetId>): Wallet? {
-        val wallet = walletsRepository.getWallet(walletId.id).firstOrNull() ?: return null
+        val wallet = walletsRepository.getWallet(walletId).firstOrNull() ?: return null
         prefetchAssets.prefetchAssets(assetIds)
         ensureWalletAssets.ensureWalletAssets(wallet, assetIds)
         if (sessionRepository.session().firstOrNull()?.wallet?.id != wallet.id) {

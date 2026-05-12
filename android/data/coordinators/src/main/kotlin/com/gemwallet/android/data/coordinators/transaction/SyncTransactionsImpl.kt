@@ -11,7 +11,6 @@ import com.gemwallet.android.data.service.store.WalletPreferencesFactory
 import com.gemwallet.android.data.services.gemapi.GemDeviceApiClient
 import com.gemwallet.android.ext.getAssociatedAssetIds
 import com.gemwallet.android.ext.identifier
-import com.gemwallet.android.ext.walletId
 import com.wallet.core.primitives.AssetId
 import com.wallet.core.primitives.TransactionsResponse
 import com.wallet.core.primitives.Wallet
@@ -30,9 +29,10 @@ class SyncTransactionsImpl @Inject constructor(
 ) : SyncTransactions, SyncAssetTransactions {
 
     override suspend fun syncTransactions(wallet: Wallet) {
-        val preferences = walletPreferencesFactory.create(wallet.id)
+        val walletId = wallet.id.id
+        val preferences = walletPreferencesFactory.create(walletId)
         val response = runCatching {
-            gemDeviceApiClient.getTransactions(wallet.id, preferences.transactionsTimestamp)
+            gemDeviceApiClient.getTransactions(walletId, preferences.transactionsTimestamp)
         }.getOrNull() ?: return
 
         sync(wallet, response)
@@ -46,11 +46,12 @@ class SyncTransactionsImpl @Inject constructor(
     }
 
     private suspend fun syncAssetTransactions(wallet: Wallet, assetId: AssetId) {
-        val preferences = walletPreferencesFactory.create(wallet.id)
+        val walletId = wallet.id.id
+        val preferences = walletPreferencesFactory.create(walletId)
         val assetIdentifier = assetId.identifier
         val timestamp = preferences.transactionsForAssetTimestamp(assetIdentifier)
         val response = runCatching {
-            gemDeviceApiClient.getTransactions(wallet.id, assetIdentifier, timestamp)
+            gemDeviceApiClient.getTransactions(walletId, assetIdentifier, timestamp)
         }.getOrNull() ?: return
 
         sync(wallet, response)
@@ -64,7 +65,7 @@ class SyncTransactionsImpl @Inject constructor(
         prefetchAssets.prefetchAssets(assetIds)
         ensureWalletAssets.ensureWalletAssets(wallet, assetIds)
 
-        saveTransactions.saveTransactions(walletId = wallet.walletId, response.transactions)
+        saveTransactions.saveTransactions(walletId = wallet.id, response.transactions)
         saveAddressNames.saveAddressNames(response.addressNames)
     }
 

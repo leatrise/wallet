@@ -4,7 +4,6 @@ import com.gemwallet.android.application.swap.coordinators.GetSwapSupported
 import com.gemwallet.android.data.repositories.assets.AssetsRepository
 import com.gemwallet.android.domains.swap.SwapItemType
 import com.gemwallet.android.ext.toIdentifier
-import com.gemwallet.android.ext.walletId
 import com.gemwallet.android.model.AssetBalance
 import com.gemwallet.android.testkit.mockAccount
 import com.gemwallet.android.testkit.mockAssetHyperCoreHype
@@ -36,13 +35,13 @@ class SearchSwapAssetsImplTest {
         val fundedAsset = mockAssetInfo(
             asset = usdcAsset,
             balance = AssetBalance.create(usdcAsset, available = "100000000"),
-            walletId = wallet.walletId,
+            walletId = wallet.id,
             metadata = swapableMetaData,
         )
         val stakedOnlyAsset = mockAssetInfo(
             asset = hypeAsset,
             balance = AssetBalance.create(hypeAsset, available = "0", staked = "500000000"),
-            walletId = wallet.walletId,
+            walletId = wallet.id,
             metadata = swapableMetaData,
         )
 

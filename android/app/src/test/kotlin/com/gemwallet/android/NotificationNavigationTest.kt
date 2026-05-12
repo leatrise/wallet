@@ -146,7 +146,7 @@ class NotificationNavigationTest {
     fun walletNotification_isRejectedWhenWalletDoesNotExist() = runBlocking {
         val assetId = mockAssetId(Chain.Solana)
         val walletId = mockWalletId("missing-wallet")
-        every { walletsRepository.getWallet(walletId.id) } returns flowOf(null)
+        every { walletsRepository.getWallet(walletId) } returns flowOf(null)
 
         val route = subject.prepareNavigation(
             type = PushNotificationTypes.Stake.string,
