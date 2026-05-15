@@ -1,6 +1,6 @@
 # Engineering Principles
 
-These rules apply across the monorepo unless a platform guide gives a stricter local rule.
+These rules govern the monorepo unless a platform guide gives a stricter local rule.
 
 ## Clean Code Principles
 
@@ -9,6 +9,7 @@ These rules apply across the monorepo unless a platform guide gives a stricter l
 - Follow YAGNI: do not add behavior until the task needs it
 - Keep types and functions single-purpose
 - Prefer clear names over explanatory comments
+- Avoid generic operation verbs in API and helper names. Words such as `process`, `handle`, `manage`, `perform`, and `execute` usually hide the actual contract; use a domain verb that says what is read, written, fetched, built, decoded, scheduled, or validated. Keep framework-required names only when the framework or protocol owns the signature
 - Before copying a nearby pattern, understand why it exists. If you cannot, ask before copying — copying patterns whose purpose you do not understand is how dead conventions spread
 - Keep API surface small: only make things public when they need to be public
 
