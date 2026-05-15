@@ -27,7 +27,7 @@ android {
     defaultConfig {
         applicationId = "com.gemwallet.android"
         minSdk = 28
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 760
         versionName = "2.61"
 
