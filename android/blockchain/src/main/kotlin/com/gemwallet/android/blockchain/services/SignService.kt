@@ -317,7 +317,8 @@ class SignService : SignClient {
             ChainType.Algorand,
             ChainType.Stellar,
             ChainType.Cosmos,
-            ChainType.Ton -> true
+            ChainType.Ton,
+            ChainType.Xrp -> true
             else -> false
         }
     }

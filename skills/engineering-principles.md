@@ -9,7 +9,7 @@ These rules govern the monorepo unless a platform guide gives a stricter local r
 - Follow YAGNI: do not add behavior until the task needs it
 - Keep types and functions single-purpose
 - Prefer clear names over explanatory comments
-- Avoid generic operation verbs in API and helper names. Words such as `process`, `handle`, `manage`, `perform`, and `execute` usually hide the actual contract; use a domain verb that says what is read, written, fetched, built, decoded, scheduled, or validated. Keep framework-required names only when the framework or protocol owns the signature
+- Use intent-specific names for APIs and helpers. A function name should state the domain action and expected output in the language of the codebase, for example `parse_destination_tag`, `build_transfer_message`, `sign_trust_set`, or `map_balance_assets`. Generic verbs such as `process`, `handle`, `manage`, `perform`, `execute`, and `resolve` usually hide the contract; keep them only when a framework or protocol owns the signature.
 - Before copying a nearby pattern, understand why it exists. If you cannot, ask before copying — copying patterns whose purpose you do not understand is how dead conventions spread
 - Keep API surface small: only make things public when they need to be public
 
