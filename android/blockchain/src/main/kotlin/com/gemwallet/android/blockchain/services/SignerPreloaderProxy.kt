@@ -2,7 +2,6 @@ package com.gemwallet.android.blockchain.services
 
 import com.gemwallet.android.blockchain.clients.bitcoin.BitcoinGatewayEstimateFee
 import com.gemwallet.android.blockchain.clients.cardano.CardanoGatewayEstimateFee
-import com.gemwallet.android.blockchain.clients.polkadot.PolkadotGatewayEstimateFee
 import com.gemwallet.android.blockchain.gemstone.selectFeeRate
 import com.gemwallet.android.blockchain.gemstone.toChainData
 import com.gemwallet.android.blockchain.gemstone.toFee
@@ -87,7 +86,6 @@ class SignerPreloaderProxy(
         return when (chain.toChainType()) {
             ChainType.Bitcoin -> BitcoinGatewayEstimateFee()
             ChainType.Cardano -> CardanoGatewayEstimateFee()
-            ChainType.Polkadot -> PolkadotGatewayEstimateFee()
             ChainType.Ethereum,
             ChainType.Solana,
             ChainType.Cosmos,
@@ -99,6 +97,7 @@ class SignerPreloaderProxy(
             ChainType.Near,
             ChainType.Stellar,
             ChainType.Algorand,
+            ChainType.Polkadot,
             ChainType.HyperCore -> StubGatewayEstimateFee
         }
     }

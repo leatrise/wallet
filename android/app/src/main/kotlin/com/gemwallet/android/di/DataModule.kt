@@ -3,7 +3,6 @@ package com.gemwallet.android.di
 import com.gemwallet.android.application.fiat.coordinators.SyncFiatAssets
 import com.gemwallet.android.blockchain.clients.bitcoin.BitcoinSignClient
 import com.gemwallet.android.blockchain.clients.cardano.CardanoSignClient
-import com.gemwallet.android.blockchain.clients.polkadot.PolkadotSignClient
 import com.gemwallet.android.blockchain.clients.solana.SolanaSignClient
 import com.gemwallet.android.blockchain.clients.sui.SuiSignClient
 import com.gemwallet.android.blockchain.clients.tron.TronSignClient
@@ -59,7 +58,6 @@ object DataModule {
                 ChainType.Solana -> SolanaSignClient(it, assetsRepository)
                 ChainType.Tron -> TronSignClient(it)
 
-                ChainType.Polkadot -> PolkadotSignClient(it)
                 ChainType.Cardano -> CardanoSignClient(it)
                 ChainType.Ethereum,
                 ChainType.Aptos,
@@ -70,6 +68,7 @@ object DataModule {
                 ChainType.Stellar,
                 ChainType.Cosmos,
                 ChainType.Ton,
+                ChainType.Polkadot,
                 ChainType.Xrp -> return@mapNotNull null
             }
         } + listOf(SignService()),
