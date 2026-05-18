@@ -9,11 +9,11 @@ import org.junit.Test
 
 class TransactionStateExtTest {
     @Test
-    fun inTransit_reusesPendingBadgeWithoutSpinner() {
+    fun inTransit_usesPendingBadgeWithoutSpinner() {
         val state = TransactionState.InTransit
 
         assertEquals(R.string.transaction_status_pending, state.statusLabelRes())
-        assertEquals(R.string.info_transaction_error_description, state.statusInfoDescriptionRes())
+        assertEquals(R.string.info_transaction_pending_description, state.statusInfoDescriptionRes())
         assertEquals(R.drawable.transaction_state_pending, state.statusBadgeIconRes())
         assertEquals(TransactionStateTone.Pending, state.statusTone())
         assertTrue(state.showsStatusBadge())

@@ -1397,6 +1397,8 @@ public enum Localized {
       return Localized.tr("Localizable", "transaction.view_on", String(describing: p1), fallback: "View on %@")
     }
     public enum Status {
+      /// Completed
+      public static let completed = Localized.tr("Localizable", "transaction.status.completed", fallback: "Completed")
       /// Successful
       public static let confirmed = Localized.tr("Localizable", "transaction.status.confirmed", fallback: "Successful")
       /// Failed

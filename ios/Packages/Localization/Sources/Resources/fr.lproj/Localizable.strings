@@ -567,3 +567,4 @@
 "common.refresh" = "Rafraîchir";
 "perpetual.margin.cross" = "Cross";
 "perpetual.margin.isolated" = "Isolated";
+"transaction.status.completed" = "Completed";
