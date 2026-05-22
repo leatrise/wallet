@@ -27,7 +27,7 @@ class SupportChatViewModel @Inject constructor(
 
     val baseUrl = "https://support.gemwallet.com"
 
-    private val publicChatwootToken = "p8uDBqT21unfbTHDQzSCCTBi"
+    private val publicChatwootToken = "21yu9Az48rJHe1rg4poHqLSr"
 
     private val sdkSourceURL = "$baseUrl/packs/js/sdk.js"
 
