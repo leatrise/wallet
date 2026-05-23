@@ -10,6 +10,7 @@ import com.gemwallet.android.ext.model
 import com.gemwallet.android.ext.os
 import com.wallet.core.primitives.Currency
 import com.wallet.core.primitives.Platform
+import com.wallet.core.primitives.PlatformStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,6 +24,7 @@ class SupportChatViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     sessionRepository: SessionRepository,
     getDeviceId: GetDeviceId,
+    private val platformStore: PlatformStore,
 ): ViewModel() {
 
     val baseUrl = "https://support.gemwallet.com"
@@ -90,6 +92,7 @@ class SupportChatViewModel @Inject constructor(
               window.${'$'}chatwoot.setCustomAttributes({
                 support_device_id: '${supportDeviceId}',
                 platform: 'android',
+                platform_store: '${platformStore.string}',
                 os: '$os',
                 device: '$model',
                 currency: '${currency.string}',
