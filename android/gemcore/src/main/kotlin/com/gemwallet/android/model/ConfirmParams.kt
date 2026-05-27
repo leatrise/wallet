@@ -55,6 +55,9 @@ sealed class ConfirmParams() {
 
     abstract val shouldIgnoreValueCheck: Boolean
 
+    open val minimumAmount: BigInteger?
+        get() = null
+
     val assetId: AssetId get() = asset.id
 
     class Builder(
@@ -297,6 +300,7 @@ sealed class ConfirmParams() {
         override val from: Account,
         val fromAsset: Asset,
         @Serializable(BigIntegerSerializer::class) val fromAmount: BigInteger,
+        @Serializable(BigIntegerSerializer::class) val minFromAmount: BigInteger? = null,
         val toAsset: Asset,
         @Serializable(BigIntegerSerializer::class) val toAmount: BigInteger,
         val swapData: String,
@@ -320,6 +324,9 @@ sealed class ConfirmParams() {
 
         override val amount: BigInteger
             get() = fromAmount
+
+        override val minimumAmount: BigInteger?
+            get() = minFromAmount
 
         override val shouldIgnoreValueCheck: Boolean
             get() = false
@@ -659,4 +666,3 @@ fun GemApprovalData.toModel(): ApprovalData {
         isUnlimited = this.isUnlimited,
     )
 }
-
