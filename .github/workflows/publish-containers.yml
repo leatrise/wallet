@@ -3,6 +3,9 @@ name: Publish Containers
 on:
   push:
     branches: ["main"]
+    paths:
+      - "core/**"
+      - ".github/workflows/publish-containers.yml"
   workflow_dispatch:
 
 permissions:
@@ -31,13 +34,13 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.PACKAGES_GITHUB_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push core
         uses: docker/build-push-action@v7
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./core
+          file: ./core/Dockerfile
           target: core
           push: true
           platforms: linux/amd64

@@ -1,7 +1,11 @@
-name: CI - Lint
+name: Core Lint
 on:
   pull_request:
     branches: ["main"]
+    paths:
+      - "core/**"
+      - ".github/actions/setup-rust-ci/**"
+      - ".github/workflows/core-lint.yml"
 
 env:
   CARGO_TERM_COLOR: always
@@ -11,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./
+        working-directory: core
 
     steps:
       - uses: actions/checkout@v6

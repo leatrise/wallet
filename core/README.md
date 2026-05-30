@@ -1,16 +1,15 @@
 # Gem Wallet Core
 
 [![Rust](https://img.shields.io/badge/language-Rust-orange?logo=rust)](https://www.rust-lang.org/)
-[![GitHub release](https://img.shields.io/github/v/release/gemwalletcom/core)](https://github.com/gemwalletcom/core/releases)
+[![GitHub release](https://img.shields.io/github/v/release/gemwalletcom/wallet)](https://github.com/gemwalletcom/wallet/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/gemwalletcom/core)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/gemwalletcom/wallet)
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white)](https://t.me/gemwallet_developers)
-![GitHub Repo stars](https://img.shields.io/github/stars/gemwalletcom/core?style=social)
+![GitHub Repo stars](https://img.shields.io/github/stars/gemwalletcom/wallet?style=social)
 
-[![Unit Tests](https://github.com/gemwalletcom/core/actions/workflows/ci.yml/badge.svg)](https://github.com/gemwalletcom/core/actions/workflows/ci.yml)
-[![Docker Build](https://github.com/gemwalletcom/core/actions/workflows/docker.yml/badge.svg)](https://github.com/gemwalletcom/core/actions/workflows/docker.yml)
-[![iOS Tests](https://github.com/gemwalletcom/core/actions/workflows/ci-stone-ios.yml/badge.svg)](https://github.com/gemwalletcom/core/actions/workflows/ci-stone-ios.yml)
-[![Android Build](https://github.com/gemwalletcom/core/actions/workflows/ci-stone-android.yml/badge.svg)](https://github.com/gemwalletcom/core/actions/workflows/ci-stone-android.yml)
+[![Core Unit Tests](https://github.com/gemwalletcom/wallet/actions/workflows/core-ci.yml/badge.svg)](https://github.com/gemwalletcom/wallet/actions/workflows/core-ci.yml)
+[![Core Lint](https://github.com/gemwalletcom/wallet/actions/workflows/core-lint.yml/badge.svg)](https://github.com/gemwalletcom/wallet/actions/workflows/core-lint.yml)
+[![Dynode Docker](https://github.com/gemwalletcom/wallet/actions/workflows/dynode-docker.yml/badge.svg)](https://github.com/gemwalletcom/wallet/actions/workflows/dynode-docker.yml)
 
 # Introduction
 
@@ -59,9 +58,7 @@ Cross platform Rust library for iOS and Android with native async networking sup
 
 ### iOS
 
-Download `Gemstone-spm.tar.bz2` from the [releases](https://github.com/gemwalletcom/core/releases) page.
-
-Unzip and add it to your project as a local Swift Package.
+From the wallet repo root, run `just generate-stone` to generate the local Swift bindings and Rust static libraries consumed by the iOS app.
 
 ### Android
 
