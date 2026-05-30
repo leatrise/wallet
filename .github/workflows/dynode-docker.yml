@@ -1,13 +1,6 @@
 name: Dynode Docker Build
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "core/apps/dynode/**"
-      - "core/Cargo.lock"
-      - "core/Dockerfile"
-      - ".github/workflows/dynode-docker.yml"
   pull_request:
     branches: ["main"]
     paths:

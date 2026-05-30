@@ -6,6 +6,7 @@ on:
     paths:
       - "core/**"
       - ".github/workflows/publish-containers.yml"
+      - ".github/docker-bake.hcl"
   workflow_dispatch:
 
 permissions:
@@ -14,9 +15,6 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-
-env:
-  CORE_IMAGE: ghcr.io/gemwalletcom/core
 
 jobs:
   build:
@@ -36,18 +34,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push core
-        uses: docker/build-push-action@v7
+      - name: Build and push containers
+        uses: docker/bake-action@v6
         with:
-          context: ./core
-          file: ./core/Dockerfile
-          target: core
+          files: .github/docker-bake.hcl
           push: true
-          platforms: linux/amd64
-          cache-from: type=gha,scope=core
-          cache-to: type=gha,mode=max,scope=core
-          labels: |
-            org.opencontainers.image.source=https://github.com/${{ github.repository }}
-          tags: |
-            ${{ env.CORE_IMAGE }}:latest
-            ${{ env.CORE_IMAGE }}:${{ github.sha }}
