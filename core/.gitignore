@@ -1,0 +1,9 @@
+target
+.DS_Store
+.env
+.idea/
+.vscode/
+.vscode/settings.json
+gemstone/src/.build
+.claude/
+*.code-workspace
