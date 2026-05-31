@@ -20,7 +20,10 @@ const LIST_TOOLS_TIMEOUT: Duration = Duration::from_secs(10);
 pub async fn connect_servers(defs: &BTreeMap<String, McpServerDef>, selections: &BTreeMap<String, Vec<DispatchSource>>) -> Result<Vec<Box<dyn ToolDyn>>> {
     let mut tools = Vec::new();
     for (name, allow_sources) in selections {
-        let def = defs.get(name).ok_or_else(|| format!("mcp `{name}` not defined in Settings.yaml"))?;
+        let Some(def) = defs.get(name) else {
+            warn!(mcp = %name, "mcp not defined in config; agent will run without its tools");
+            continue;
+        };
         match connect_one(name, def, allow_sources).await {
             Ok(new) => {
                 info!(mcp = %name, url = %def.url, tools = new.len(), "mcp connected");
