@@ -25,7 +25,7 @@ pub(super) fn status(agent: &str, name: &str, status: Status<'_>) -> String {
             let summary = response.summary().map(|text| format!(" {text}")).unwrap_or_default();
             format!(":white_check_mark: {agent} {name} succeeded in {}.{metrics}{summary}", human_duration(elapsed))
         }
-        Status::Failed { elapsed, error } => format!(":x: {agent} {name} failed in {}: {}", human_duration(elapsed), compact(error).unwrap_or_default()),
+        Status::Failed { elapsed, error } => format!(":x: {agent} {name} failed in {}: {}", human_duration(elapsed), error.trim()),
     }
 }
 
@@ -55,12 +55,7 @@ impl PromptResponseExt for PromptResponse {
             ReplyOutcome::Untagged(text) => text,
             ReplyOutcome::Silent => return None,
         };
-        compact(&text)
+        let trimmed = text.trim();
+        (!trimmed.is_empty()).then(|| trimmed.to_string())
     }
-}
-
-fn compact(s: &str) -> Option<String> {
-    let text = s.lines().map(|line| line.split_whitespace().collect::<Vec<_>>().join(" ")).collect::<Vec<_>>().join("\n");
-    let trimmed = text.trim();
-    (!trimmed.is_empty()).then(|| trimmed.to_string())
 }
