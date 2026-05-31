@@ -10,6 +10,7 @@ documentation = "https://github.com/gemwalletcom"
 [workspace]
 resolver = "3"
 members = [
+    "apps/agent",
     "apps/api",
     "apps/daemon",
     "apps/dynode",
@@ -79,6 +80,8 @@ async-trait = { version = "0.1.89" }
 prometheus-client = { version = "0.24.0" }
 futures = { version = "0.3.32" }
 uuid = { version = "1.23.0", features = ["v4"] }
+tracing = { version = "0.1.44" }
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
 
 # db
 redis = { version = "1.2.0", default-features = false, features = [
