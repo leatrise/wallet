@@ -50,10 +50,14 @@ impl PromptResponseExt for PromptResponse {
     }
 
     fn summary(&self) -> Option<String> {
+        // Only `<reply>`-tagged content is meant for the status channel — same
+        // contract as slack/chatwoot dispatch. An untagged final turn is the
+        // model's private work log (often a Markdown table Slack can't render),
+        // not something to post. Scheduled jobs communicate via their tools
+        // (slack_post, chatwoot notes); the status line stays pure telemetry.
         let text = match classify_reply(&self.output) {
             ReplyOutcome::Tagged(chunks) => chunks.join(" / "),
-            ReplyOutcome::Untagged(text) => text,
-            ReplyOutcome::Silent => return None,
+            ReplyOutcome::Untagged(_) | ReplyOutcome::Silent => return None,
         };
         let trimmed = text.trim();
         (!trimmed.is_empty()).then(|| trimmed.to_string())
