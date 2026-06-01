@@ -40,21 +40,23 @@ impl Tool for SlackPostTool {
         ToolDefinition {
             name: Self::NAME.to_string(),
             description: format!(
-                "Post a message to a Slack channel via the bot's chat.postMessage. The \
-                target channel must be in the configured allow-list ({allow}); anything \
-                else is refused at the tool boundary. Use for bridging an escalated \
-                chatwoot conversation into team awareness. Pass `thread_ts` to reply inside \
-                an existing Slack thread (avoids creating duplicate top-level threads for \
-                the same chatwoot conversation); omit it for a brand-new thread. The Slack \
-                ts of the posted message is returned in `status` so you can save it via \
-                `save_memory` and reuse it on follow-up escalations."
+                "Post a message to Slack via the bot's chat.postMessage. Target one of: a \
+                channel in the allow-list ({allow}) — any other channel is refused at the \
+                tool boundary — or a user id (`U…`) to direct-message that person, which \
+                bypasses the channel allow-list (this is how you DM Tim for the escalation \
+                fallback). Use for bridging an escalated chatwoot conversation into team \
+                awareness. Pass `thread_ts` to reply inside an existing Slack thread (avoids \
+                creating duplicate top-level threads for the same chatwoot conversation); \
+                omit it for a brand-new thread. The Slack ts of the posted message is \
+                returned in `status` so you can save it via `save_memory` and reuse it on \
+                follow-up escalations."
             ),
             parameters: json!({
                 "type": "object",
                 "properties": {
                     "channel": {
                         "type": "string",
-                        "description": "Channel id or `#name`. Must be in the allow-list."
+                        "description": "Channel id or `#name` (must be in the allow-list), or a user id `U…` to direct-message that user (bypasses the allow-list)."
                     },
                     "text": {
                         "type": "string",
