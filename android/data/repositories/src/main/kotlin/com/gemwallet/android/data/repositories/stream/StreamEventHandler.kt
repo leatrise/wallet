@@ -51,6 +51,7 @@ class StreamEventHandler(
             is StreamEvent.Perpetual -> { }
             is StreamEvent.InAppNotification -> perform { handleInAppNotification(event.data) }
             is StreamEvent.FiatTransaction -> perform { handleFiatTransaction(event.data) }
+            is StreamEvent.Support -> { }
         }
     }
 
