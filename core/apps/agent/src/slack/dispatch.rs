@@ -175,6 +175,10 @@ pub async fn handle_event(state: AppState, payload: Value) -> Result<()> {
     };
     let chunks = match classify_reply(&raw) {
         ReplyOutcome::Tagged(chunks) => chunks,
+        ReplyOutcome::Untagged(text) if msg.is_dm() => {
+            debug!(raw_chars = raw.len(), "DM without <reply> tags; posting raw text");
+            vec![text]
+        }
         ReplyOutcome::Untagged(_) => {
             warn!(addressed, raw_chars = raw.len(), "model didn't use <reply> tags; staying silent");
             return Ok(());
