@@ -39,6 +39,7 @@ pub struct SlackBot {
 pub struct SlackConfig {
     pub app: SlackApp,
     pub bot: SlackBot,
+    pub conversations_list_limit: u32,
 }
 
 #[derive(Debug, Deserialize, Clone)]

@@ -8,6 +8,7 @@ defaults:
     limit: 50
 
 slack:
+  conversations_list_limit: 100
   app:
     token: ""        # SLACK_APP_TOKEN
   bot:
