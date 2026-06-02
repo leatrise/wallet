@@ -1,6 +1,7 @@
 pub mod agent;
 pub mod chatwoot;
 pub mod config;
+pub mod coordination;
 pub mod images;
 pub mod mcp;
 pub mod preamble;
@@ -22,6 +23,7 @@ pub enum DispatchSource {
 tokio::task_local! {
     pub static DISPATCH_SOURCE: DispatchSource;
     pub static DISPATCH_CONVERSATION_ID: u64;
+    pub static DISPATCH_ADDRESSED: bool;
 }
 
 pub fn current_dispatch_source() -> DispatchSource {
@@ -30,6 +32,10 @@ pub fn current_dispatch_source() -> DispatchSource {
 
 pub fn current_dispatch_conversation_id() -> Option<u64> {
     DISPATCH_CONVERSATION_ID.try_with(|id| *id).ok()
+}
+
+pub fn current_dispatch_addressed() -> bool {
+    DISPATCH_ADDRESSED.try_with(|a| *a).unwrap_or(true)
 }
 
 use std::sync::Arc;
@@ -50,6 +56,7 @@ pub struct AppState {
     pub agent: Arc<GemmyAgent>,
     pub bot_user_id: Arc<String>,
     pub chatwoot: Option<Arc<ChatwootClient>>,
+    pub conversation_jobs: Arc<coordination::ConversationJobs>,
 }
 
 pub fn resolve_agent_name() -> Result<String> {
@@ -75,7 +82,7 @@ pub async fn build_runtime(agent_name: &str) -> Result<AppState> {
         Arc::new(ChatwootClient::new(c.base_url.clone(), c.bot.token.clone(), c.user.token.clone(), 1))
     });
 
-    let slack = Arc::new(SlackClient::new(settings.slack.bot.token.clone()));
+    let slack = Arc::new(SlackClient::new(&settings.slack));
     let mcp_tools = mcp::connect_servers(&settings.mcp, &settings.agent.mcp)
         .await
         .map_err(|e| format!("connecting MCP servers: {e}"))?;
@@ -88,5 +95,6 @@ pub async fn build_runtime(agent_name: &str) -> Result<AppState> {
         agent,
         bot_user_id,
         chatwoot,
+        conversation_jobs: Arc::new(coordination::ConversationJobs::default()),
     })
 }

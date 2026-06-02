@@ -193,12 +193,10 @@ fn build_tools(
             ToolName::SlackPost => Some(Box::new(SlackPostTool {
                 client: slack.clone(),
                 allow_channels: settings.agent.slack.names(),
-                conversations_list_limit: settings.slack.conversations_list_limit,
             })),
             ToolName::SlackHistory => Some(Box::new(SlackHistoryTool {
                 client: slack.clone(),
                 allow_channels: settings.agent.slack.names(),
-                conversations_list_limit: settings.slack.conversations_list_limit,
             })),
             ToolName::TelegramPost => Some(Box::new(TelegramPostTool {
                 client: reqwest::Client::new(),
