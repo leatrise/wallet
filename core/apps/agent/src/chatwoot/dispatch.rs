@@ -197,10 +197,7 @@ async fn dispatch_to_agent(
     let raw = match DISPATCH_SOURCE
         .scope(
             DispatchSource::Chatwoot,
-            DISPATCH_ADDRESSED.scope(
-                true,
-                DISPATCH_CONVERSATION_ID.scope(conversation_id, state.agent.prompt_with_images(&prompt, images)),
-            ),
+            DISPATCH_ADDRESSED.scope(true, DISPATCH_CONVERSATION_ID.scope(conversation_id, state.agent.prompt_with_images(&prompt, images))),
         )
         .await
     {
@@ -216,7 +213,7 @@ async fn dispatch_to_agent(
             return Ok(());
         }
     };
-    let replies = match classify_reply(&raw) {
+    let mut replies = match classify_reply(&raw) {
         ReplyOutcome::Tagged(chunks) => chunks,
         ReplyOutcome::Untagged(_) => {
             warn!(conversation_id, raw_chars = raw.len(), "model didn't use <reply> tags on chatwoot; staying silent");
@@ -227,6 +224,12 @@ async fn dispatch_to_agent(
             return Ok(());
         }
     };
+    if !is_team_note && let Some(reviewer) = state.reply_reviewer.as_deref() {
+        let review_context = build_history(&messages);
+        for reply in &mut replies {
+            *reply = reviewer.review(&review_context, reply).await;
+        }
+    }
     for (i, chunk) in replies.iter().enumerate() {
         if i > 0 {
             sleep(Duration::from_millis(350)).await;

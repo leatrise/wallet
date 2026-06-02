@@ -1,6 +1,5 @@
 pub mod chatwoot_account;
 pub mod chatwoot_conversation;
-pub mod chatwoot_review_reply;
 pub mod fetch;
 pub mod gem_api;
 pub mod gem_docs;
@@ -14,7 +13,6 @@ pub mod telegram_post;
 
 pub use chatwoot_account::ChatwootAccountTool;
 pub use chatwoot_conversation::ChatwootConversationTool;
-pub use chatwoot_review_reply::ChatwootReviewReplyTool;
 pub use fetch::FetchTool;
 pub use gem_api::GemApiTool;
 pub use gem_docs::GemDocsTool;
@@ -52,7 +50,6 @@ pub enum ToolName {
     SlackHistory,
     TelegramPost,
     Plausible,
-    ChatwootReviewReply,
 }
 
 /// Lowercase-string slugs for every variant of an enum, used to populate the
