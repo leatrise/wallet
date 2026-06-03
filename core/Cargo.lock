@@ -5656,6 +5656,7 @@ dependencies = [
 name = "generate"
 version = "1.0.0"
 dependencies = [
+ "fluent-syntax",
  "primitives",
 ]
 
