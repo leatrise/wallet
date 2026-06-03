@@ -176,14 +176,33 @@ fn ios_strings(entries: &[(String, String)], excluded_keys: &[&str], key_map: Op
         if excluded_keys.contains(&key.as_str()) {
             continue;
         }
-        let key = key_map.and_then(|values| values.get(key)).unwrap_or(key);
+        let key = ios_key(key, key_map);
         output.push('"');
-        output.push_str(key);
+        output.push_str(&key);
         output.push_str("\" = \"");
         output.push_str(value);
         output.push_str("\";\n");
     }
     output
+}
+
+fn ios_key(key: &str, key_map: Option<&BTreeMap<String, String>>) -> String {
+    let Some(key_map) = key_map else {
+        return key.to_string();
+    };
+    let mapped_key = key_map.get(key);
+    if mapped_key.is_some_and(|key| key.contains('.')) {
+        return mapped_key.expect("mapped key was checked").to_string();
+    }
+    let Some(prefix) = key_map
+        .values()
+        .filter_map(|key| key.split_once('.').map(|(prefix, _)| prefix))
+        .filter(|prefix| key.starts_with(&format!("{prefix}_")))
+        .max_by_key(|prefix| prefix.len())
+    else {
+        return mapped_key.cloned().unwrap_or_else(|| key.to_string());
+    };
+    format!("{prefix}.{}", &key[prefix.len() + 1..])
 }
 
 fn write_android(localizations: &BTreeMap<String, Vec<(String, String)>>, output_path: &Path) -> Result<(), Box<dyn Error + Send + Sync>> {

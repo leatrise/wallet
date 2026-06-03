@@ -1,74 +1,73 @@
 # Common
 
 common_cancel = Anula
-common_done = Done
+common_done = Gata
 common_secret_phrase = Frază secretă
-common_next = Next
-common_copy = Copy
-common_share = Share
-common_continue = Continue
-common_provider = Provider
-common_loading = Loading
-common_address = Address
-common_back = Back
-common_try_again = Try Again
-common_paste = Paste
-common_delete = Delete
+common_next = În continuare
+common_copy = Copiere
+common_share = Distribuie
+common_continue = Continuă
+common_provider = Furnizor
+common_loading = Încărcare
+common_address = Adresa
+common_back = Înapoi
+common_try_again = Încercați din nou
+common_paste = Lipiți
+common_delete = Ștergeți
 common_delete_confirmation = Sigur vrei să ștergi %@?
-common_hide = Hide
-common_wallet = Wallet
+common_hide = Ascunde
+common_wallet = Portofel
 common_show = Spectacol %@
-common_copied = Copied: %@
-common_recommended = Recommended
-common_all = All
-common_not_available = Not Available
-common_phrase = Phrase
-common_manage = Manage
-common_type = Type
-common_no_results_found = No Results Found
-common_yes = Yes
-common_no = No
+common_copied = Copiat: %@
+common_recommended = Recomandat
+common_all = Toate
+common_not_available = Nu este disponibil
+common_phrase = Expresie
+common_manage = Gestionează
+common_type = Tip
+common_no_results_found = Nu s-au găsit rezultate
+common_yes = Da
+common_no = Nu
 common_none = Niciuna
 common_url = URL
-common_private_key = Private Key
+common_private_key = Cheie privată
 common_latency_in_ms = %d ms
-common_open_settings = Open settings
+common_open_settings = Deschideți setările
 common_pin = Pin
-common_pinned = Pinned
-common_unpin = Unpin
-common_skip = Skip
+common_pinned = Fixat
+common_unpin = Anulați fixarea
+common_skip = Sari peste
 common_warning = Avertizare
-common_learn_more = Learn More
-common_popular = Popular
+common_learn_more = Aflați mai multe
 common_short_name = Gem
-common_description = Description
+common_description = Descriere
 common_emoji = Emoji
-common_style = Style
+common_style = Stil
 common_avatar = Avatar
-common_photo = Photo
-common_save = Save
-common_edit = Edit
+common_photo = Fotografie
+common_save = Salvați
+common_edit = Editați
 common_percentage = Procent
 common_details = Detalii
 common_info = Informații
 common_get_started = Începeți
-common_earn = Earn
+common_earn = Câștigă
 common_method = Metodă
 common_token = Jeton
 common_suspicious_address = Adresă suspectă
 common_refresh = Reîmprospăta
-common_no_thanks = No thanks
-common_grant_permission = Grant permission
-common_required_field = %@ is required
+common_no_thanks = Nu, mulțumesc
+common_grant_permission = Acordați permisiunea
+common_required_field = %@ este necesar
 
 # Welcome
 
-welcome_title = Welcome to Gem Family
+welcome_title = Bun venit la Gem Family
 
 # Wallet
 
-wallet_create_new_wallet = Create a New Wallet
-wallet_import_existing_wallet = Import an Existing Wallet
+wallet_create_new_wallet = Creați un portofel nou
+wallet_import_existing_wallet = Importați un portofel existent
 wallet_send = Trimite
 wallet_receive = Primi
 wallet_buy = Cumpăra
@@ -77,23 +76,23 @@ wallet_import_title = Importați portofelul
 wallet_new_title = Portofel nou
 wallet_name = Nume
 wallet_import_action = Import
-wallet_multicoin = Multi-Coin
-wallet_import_address_field = Address or Name
+wallet_multicoin = Multi-Monede
+wallet_import_address_field = Adresă sau Nume
 wallet_manage_token_list = Gestionați token-urile
-wallet_scan_qr_code = Scan QR Code
-wallet_scan = Scan
-wallet_default_name = Wallet #%d
-wallet_default_name_chain = %@ Wallet #%d
-wallet_copy_address = Copy Address
-wallet_watch_tooltip_title = You are watching this wallet.
-wallet_stake = Stake
-wallet_receive_no_memo_required = No memo required
-wallet_receive_no_destination_tag_required = No destination tag required
-wallet_title = Wallet
-wallet_add_token_title = Add Token
-wallet_sell = Sell
-wallet_receive_collection = Receive Collection
-wallet_more = More
+wallet_scan_qr_code = Scanați codul QR
+wallet_scan = Scanează
+wallet_default_name = Portofelul #%d
+wallet_default_name_chain = %@ Portofelul #%d
+wallet_copy_address = Copiați adresa
+wallet_watch_tooltip_title = Te uiți la acest portofel.
+wallet_stake = Miză
+wallet_receive_no_memo_required = Nu este nevoie de notă
+wallet_receive_no_destination_tag_required = Nu este necesară eticheta de destinație
+wallet_title = Portofel
+wallet_add_token_title = Adăugați un token
+wallet_sell = Vinde
+wallet_receive_collection = Primește colecția
+wallet_more = Mai mult
 wallet_import_contract_address_field = Contract sau ID token
 wallet_import_address_warning = Puteți vizualiza soldurile și tranzacțiile pentru această adresă, dar **nu puteți trimite sau vinde fonduri**.
 wallet_deposit = Depozit
@@ -104,8 +103,8 @@ wallet_import_already_imported_message = Acest portofel a fost deja importat.
 
 # Wallets
 
-wallets_title = Wallets
-wallets_watch = Watch
+wallets_title = Portofele
+wallets_watch = Privește
 
 # Receive
 
@@ -115,74 +114,74 @@ receive_warning = Aceasta este adresa dvs. — doar trimitere %@ pe %@ reţea.
 # Buy
 
 buy_title = Cumpără %@
-buy_providers_title = Providers
-buy_rate = Rate
-buy_no_results = No quotes available
+buy_providers_title = Furnizorii
+buy_rate = Rata
+buy_no_results = Nu există oferte disponibile
 
 # Transfer
 
-transfer_network_fee = Network Fee
-transfer_memo = Memo
-transfer_confirm = Confirm
-transfer_from = From
-transfer_to = To
+transfer_network_fee = Taxa de retea
+transfer_memo = Notă
+transfer_confirm = Confirmați
+transfer_from = De la
+transfer_to = Pentru a
 transfer_max = Max
-transfer_network = Network
-transfer_recipient_title = Recipient
-transfer_balance = Balance: %@
+transfer_network = Rețea
+transfer_recipient_title = Destinatar
+transfer_balance = Sold: %@
 transfer_title = Transfer
-transfer_recipient_address_field = Address or Name
+transfer_recipient_address_field = Adresă sau Nume
 transfer_send_title = Trimite
-transfer_insufficient_balance = Insufficient %@ balance.
-transfer_insufficient_network_fee_balance = Insufficient %@ balance to cover network fees.
-transfer_approve_title = Approve
+transfer_insufficient_balance = Sold %@ insuficient.
+transfer_insufficient_network_fee_balance = Sold %@ insuficient pentru a acoperi taxele de rețea.
+transfer_approve_title = Aprobați
 transfer_stake_title = Miză
-transfer_claim_rewards_title = Claim Rewards
-transfer_unstake_title = Unstake
-transfer_redelegate_title = Redelegate
+transfer_claim_rewards_title = Solicitați recompense
+transfer_unstake_title = Dezlegați
+transfer_redelegate_title = Redelege
 transfer_withdraw_title = Retrage
-transfer_rewards_title = Rewards
-transfer_minimum_amount = Minimum Amount is %@
-transfer_activate_asset_title = Activate Asset
+transfer_rewards_title = Recompense
+transfer_minimum_amount = Suma minimă este %@
+transfer_activate_asset_title = Activați Asset
 transfer_recipient_my_wallets = Portofelele mele
 transfer_recipient_view_wallets = Vizualizați portofele
 transfer_minimum_account_balance = După aceasta, trebuie să rămână un sold minim %@, cu excepția cazului în care utilizați soldul integral.
-transfer_smart_contract_title = Smart Contract
-transfer_other_title = Other
-transfer_maximum_amount = Maximum Amount is %@
+transfer_smart_contract_title = Contract inteligent
+transfer_other_title = Altele
+transfer_maximum_amount = Suma maximă este %@
 transfer_reserved_fees = Am lăsat %@ în soldul dumneavoastră pentru a acoperi viitoarele taxe de rețea.
 transfer_freeze_title = Îngheţa
 transfer_unfreeze_title = Dezghețare
 transfer_sign_transaction_title = Semnează tranzacția
 transfer_review_request = Cerere de revizuire
-transfer_amount = Amount
-transfer_amount_title = Amount
+transfer_amount = Suma
+transfer_amount_title = Suma
 
 # Settings
 
-settings_terms_of_services = Terms of Services
-settings_privacy_policy = Privacy Policy
+settings_terms_of_services = Termeni și condiții
+settings_privacy_policy = Politica de confidențialitate
 settings_title = Setări
-settings_developer = Developer
-settings_version = Version
-settings_community = Community
-settings_aboutus = About Us
-settings_networks_title = Networks
-settings_networks_source = Source
+settings_developer = Dezvoltator
+settings_version = Versiune
+settings_community = Comunitate
+settings_aboutus = Despre noi
+settings_networks_title = Rețele
+settings_networks_source = Sursa
 settings_networks_explorer = Explorer
-settings_currency = Currency
-settings_rate_app = Rate App
-settings_website = Visit Website
-settings_security = Security
-settings_enable_value = Enable %@
-settings_enable_passcode = Enable Passcode
-settings_security_authentication = Authentication
-settings_notifications_title = Notifications
-settings_language = Language
-settings_help_center = Help Center
-settings_support = Support
-settings_price_alerts_title = Price Alerts
-settings_hide_balance = Hide Balance
+settings_currency = Moneda
+settings_rate_app = Evaluați aplicația
+settings_website = Vizitați site-ul web
+settings_security = Securitate
+settings_enable_value = Activați %@
+settings_enable_passcode = Activați codul de acces
+settings_security_authentication = Autentificare
+settings_notifications_title = Notificări
+settings_language = Limba
+settings_help_center = Centrul de ajutor
+settings_support = Sprijin
+settings_price_alerts_title = Alerte de preț
+settings_hide_balance = Ascundeți soldul
 settings_disable_value = Dezactivați %@
 settings_preferences_title = Preferințe
 settings_preferences_perpetual_default_leverage = Levier implicit
@@ -194,33 +193,33 @@ settings_preferences_perpetual_default_stop_loss = Stop Loss implicit
 errors_transfer = Eroare de transfer: %@
 errors_validation = Eroare de validare: %@
 errors_create_wallet = Eroare la crearea portofelului: %@
-errors_invalid_address_name = Invalid address or name
-errors_invalid_amount = Invalid amount
-errors_token_invalid_id = Invalid Token ID
-errors_import_invalid_secret_phrase = Invalid Secret Phrase
-errors_import_invalid_secret_phrase_word = Invalid Secret Phrase word: %@
-errors_invalid_url = Invalid URL
-errors_error_occured = An error occurred!
-errors_invalid_network_id = Invalid Network ID
-errors_error = Error
-errors_connections_user_cancelled = User cancelled
-errors_not_supported = Not Supported
-errors_permissions_not_granted = Permissions Not Granted
-errors_decoding = Decoding Error
-errors_unknown = Unknown
-errors_not_supported_qr = This device does not support QR code scanning. You can only select QR code image from library.
-errors_camera_permissions_not_granted = Camera permission not granted. Please enable camera access in settings to scan QR code.
-errors_decoding_qr = Failed to decode the QR code. Please try again with a different QR code.
-errors_transfer_error = Transfer Error
-errors_unable_estimate_network_fee = We are currently unable to calculate the network fee.
-errors_invalid_asset_address = Invalid %@ address
-errors_dust_threshold = The transaction failed because the amount is too small to meet the %@ network's minimum requirement (dust threshold). This limit ensures the transaction value covers the fees and processing costs.
+errors_invalid_address_name = Adresă sau nume nevalide
+errors_invalid_amount = Sumă nevalidă
+errors_token_invalid_id = ID token nevalid
+errors_import_invalid_secret_phrase = Expresie secretă nevalidă
+errors_import_invalid_secret_phrase_word = Cuvânt expresie secretă nevalid: %@
+errors_invalid_url = Adresă URL nevalidă
+errors_error_occured = A apărut o eroare!
+errors_invalid_network_id = ID de rețea nevalid
+errors_error = Eroare
+errors_connections_user_cancelled = Utilizatorul a fost anulat
+errors_not_supported = Nu este acceptat
+errors_permissions_not_granted = Permisiunile nu sunt acordate
+errors_decoding = Eroare de decodare
+errors_unknown = Necunoscut
+errors_not_supported_qr = Acest dispozitiv nu acceptă scanarea codurilor QR. Puteți selecta doar imaginea codului QR din bibliotecă.
+errors_camera_permissions_not_granted = Permisiunea camerei nu a fost acordată. Vă rugăm să activați accesul la cameră în setări pentru a scana codul QR.
+errors_decoding_qr = Nu s-a putut decoda codul QR. Vă rugăm să încercați din nou cu un alt cod QR.
+errors_transfer_error = Eroare de transfer
+errors_unable_estimate_network_fee = În prezent, nu putem calcula taxa de rețea.
+errors_invalid_asset_address = Adresă %@ nevalidă
+errors_dust_threshold = Tranzacția a eșuat deoarece suma este prea mică pentru a îndeplini cerințele minime ale rețelei %@ (pragul de praf). Această limită asigură că valoarea tranzacției acoperă taxele și costurile de procesare.
 errors_swap_no_quote_available = Nu există nicio cotație disponibilă.
-errors_swap_not_supported_chain = Not supported chain.
-errors_swap_not_supported_asset = Not supported asset.
-errors_swap_not_supported_pair = Not supported pair.
-errors_connections_invalid_send_parameters = Invalid parameters provided for sending a transaction.
-errors_connections_invalid_sign_parameters = Invalid parameters provided for signing.
+errors_swap_not_supported_chain = Lanț neacceptat.
+errors_swap_not_supported_asset = Activ neacceptat.
+errors_swap_not_supported_pair = Perechea nu este acceptată.
+errors_connections_invalid_send_parameters = Parametri nevalidi furnizați pentru trimiterea unei tranzacții.
+errors_connections_invalid_sign_parameters = Parametrii nevalidi furnizați pentru semnare.
 errors_connections_no_supported_wallets = Nu sunt disponibile portofele acceptate.
 errors_connections_unsupported_chain = Lanțul furnizat nu este acceptat.
 errors_connections_unsupported_method = Metoda solicitată nu este acceptată.
@@ -237,71 +236,71 @@ errors_dust_threshold_short = Rețeaua consideră această cantitate drept praf 
 errors_swap_minimum_amount = Suma minimă a tranzacției este %@Vă rugăm să introduceți o sumă mai mare.
 errors_perpetual_trigger_price_lower = Prețul de declanșare trebuie să fie mai mic decât prețul pieței
 errors_perpetual_trigger_price_higher = Prețul de declanșare trebuie să fie mai mare decât prețul pieței
-errors_token_unable_fetch_token_information = Unable to fetch token information: %@
-errors_unknown_try_again = An unknown error occurred. Please try again.
+errors_token_unable_fetch_token_information = Nu se pot prelua informații despre simbol: %@
+errors_unknown_try_again = A apărut o eroare necunoscută. Vă rugăm să încercați din nou.
 errors_network_error = Eroare de rețea: %@
 errors_network_offline = Conexiunea la internet pare să fie offline.
 
 # Activity
 
-activity_title = Activity
+activity_title = Activitate
 activity_state_empty_title = Activitatea ta va apărea aici
 activity_state_empty_description = Efectuați prima tranzacție
 activity_state_empty_search_description = Ștergeți filtrele pentru a vă reîmprospăta activitățile
-activity_state_empty_search_title = No activities found
+activity_state_empty_search_title = Nu s-au găsit activități
 
 # Update App
 
-update_app_title = New update available!
-update_app_description = Version %@ of the app is now available. Update and enjoy the latest features and improvements.
-update_app_action = Update
-update_app_permission_title = Allow installation
+update_app_title = Noua actualizare disponibila!
+update_app_description = Versiunea %@ a aplicației este acum disponibilă. Actualizați și bucurați-vă de cele mai recente funcții și îmbunătățiri.
+update_app_action = Actualizare
+update_app_permission_title = Permite instalarea
 update_app_permission_description = Accesați setările și permiteți instalarea din surse externe
 update_app_permission_open_settings = Accesați setările
-update_app_downloading = Downloading...
+update_app_downloading = Se descarcă...
 
 # Transaction
 
-transaction_recipient = Recipient
-transaction_sender = Sender
-transaction_date = Date
-transaction_view_on = View on %@
-transaction_status = Status
-transaction_status_confirmed = Successful
-transaction_status_pending = Pending
-transaction_status_failed = Failed
-transaction_status_reverted = Reverted
-transaction_title_received = Received
-transaction_title_sent = Sent
+transaction_recipient = Destinatar
+transaction_sender = Expeditorul
+transaction_date = Data
+transaction_view_on = Vizualizați pe %@
+transaction_status = Stare
+transaction_status_confirmed = De succes
+transaction_status_pending = În așteptare
+transaction_status_failed = A eșuat
+transaction_status_reverted = Întors
+transaction_title_received = Primit
+transaction_title_sent = Trimis
 transaction_swap_again = Schimbați din nou
-transaction_status_completed = Completed
-transaction_status_inprogress = In Progress
+transaction_status_completed = Terminat
+transaction_status_inprogress = În curs
 transaction_status_refunded = Rambursat
 
 # Asset
 
-asset_balances = Balances
-asset_balances_available = Available
-asset_price = Price
-asset_market_cap = Market Cap
-asset_trading_volume = Trading Volume (24h)
-asset_market_cap_rank = Market Cap Rank
-asset_total_supply = Total Supply
-asset_circulating_supply = Circulating Supply
+asset_balances = Solduri
+asset_balances_available = Disponibil
+asset_price = Preț
+asset_market_cap = Capitalizarea pieței
+asset_trading_volume = Volumul tranzacțiilor (24h)
+asset_market_cap_rank = Poziția de capitalizare a pieței
+asset_total_supply = Aprovizionare totală
+asset_circulating_supply = Aprovizionare în circulație
 asset_balances_reserved = Rezervat
-asset_view_token_on = View token on %@
-asset_view_address_on = View address on %@
-asset_name = Name
-asset_symbol = Symbol
-asset_decimals = Decimals
+asset_view_token_on = Vizualizați simbolul pe %@
+asset_view_address_on = Vezi adresa pe %@
+asset_name = Nume
+asset_symbol = Simbol
+asset_decimals = Zecimale
 asset_token_id = ID-ul jetonului
 asset_contract = Contract
 asset_state_empty_title = Tranzacțiile tale vor apărea aici️
 asset_state_empty_description = Primește, schimbă sau cumpără %@
 asset_verification_unverified = Neverificat
 asset_verification_suspicious = Suspect
-asset_verification_warning_title = Know What You're Adding
-asset_verification_warning_message = Anyone can create one - including fake or malicious tokens.
+asset_verification_warning_title = Aflați ce adăugați
+asset_verification_warning_message = Oricine poate crea unul - inclusiv jetoane false sau rău intenționate.
 asset_buy_asset = Cumpără %@
 asset_add_to_wallet = Adaugă în portofel
 asset_hide_from_wallet = Ascunde din portofel
@@ -317,8 +316,8 @@ charts_hour = 1H
 charts_week = 1W
 charts_month = 1M
 charts_year = 1Y
-charts_all = All
-charts_entry = Entry
+charts_all = Toate
+charts_entry = Intrarea
 charts_price_open = Deschide
 charts_price_close = Aproape
 charts_price_high = Ridicat
@@ -327,55 +326,55 @@ charts_price_change = Schimba
 
 # Date
 
-date_today = Today
-date_yesterday = Yesterday
+date_today = Astăzi
+date_yesterday = Ieri
 
 # Wallet Connect
 
 wallet_connect_title = WalletConnect
-wallet_connect_connection_title = Connection
-wallet_connect_disconnect = Disconnect
-wallet_connect_connect_title = Connect
+wallet_connect_connection_title = Conexiune
+wallet_connect_disconnect = Deconectați-vă
+wallet_connect_connect_title = Conectați-vă
 wallet_connect_app = App
-wallet_connect_website = Website
+wallet_connect_website = Site-ul web
 wallet_connect_brand_name = WalletConnect
-wallet_connect_no_active_connections = No active connections
+wallet_connect_no_active_connections = Nu există conexiuni active
 wallet_connect_state_empty_description = Scanați sau lipiți codul pentru a vă conecta la DApp
-wallet_connect_domain = Domain
+wallet_connect_domain = Domeniul
 wallet_connect_permissions_title = Permisiuni
 wallet_connect_permissions_view_balance = Vizualizați soldul și activitatea dvs.
 wallet_connect_permissions_approval_requests = Trimiteți cereri de aprobare
 
 # Swap
 
-swap_you_pay = You Pay
-swap_you_receive = You Receive
-swap_price_impact = Price Impact
-swap_slippage = Slippage
+swap_you_pay = Plătiți
+swap_you_receive = Tu Primești
+swap_price_impact = Impactul prețului
+swap_slippage = Alunecare
 swap_price_impact_warning_description = Vei pierde %@ din %@ în această tranzacție. Ești sigur că vrei să continui?
-swap_price_impact_warning_title = High Price Impact
-swap_estimated_time_title = Estimated Time
+swap_price_impact_warning_title = Impactul ridicat al prețului
+swap_estimated_time_title = Timp estimat
 swap_min_receive = Primire minimă
 swap_use_minimum_amount = Utilizați suma minimă
 
 # Stake
 
-stake_active = Active
-stake_pending = Pending
-stake_rewards = Rewards
+stake_active = Activ
+stake_pending = În așteptare
+stake_rewards = Recompense
 stake_validator = Validator
-stake_validators = Validators
+stake_validators = Validatori
 stake_apr = APR %@
-stake_available_in = Available In
-stake_inactive = Inactive
-stake_lock_time = Lock Time
-stake_activating = Activating
-stake_deactivating = Deactivating
-stake_awaiting_withdrawal = Awaiting Withdrawal
+stake_available_in = Disponibil în
+stake_inactive = Inactiv
+stake_lock_time = Blocare Timp
+stake_activating = Activare
+stake_deactivating = Dezactivare
+stake_awaiting_withdrawal = În așteptarea retragerii
 stake_active_in = Active In
 stake_minimum_amount = Suma minimă
-stake_viagem = Stake via Gem Wallet
-stake_no_active_staking = No active staking yet.
+stake_viagem = Mizați prin Gem Wallet
+stake_no_active_staking = Nicio miză activă încă.
 stake_state_empty_title = Mizele tale vor apărea aici
 stake_state_empty_description = Mizează primul tău %@
 stake_resource = Resursă
@@ -385,29 +384,30 @@ stake_delegations = Delegații
 
 # Assets
 
-assets_no_assets_found = No assets found
-assets_add_custom_token = Add Custom Token
-assets_select_asset = Select Asset
+assets_no_assets_found = Nu au fost găsite active
+assets_add_custom_token = Adăugați un simbol personalizat
+assets_select_asset = Selectați Asset
+assets_popular = Active populare
 assets_tags_trending = În tendințe
-assets_tags_gainers = Gainers
-assets_tags_losers = Losers
-assets_tags_new = New
-assets_tags_stablecoins = Stablecoins
+assets_tags_gainers = Câștigători
+assets_tags_losers = Învinși
+assets_tags_new = Nou
+assets_tags_stablecoins = Monede stabile
 assets_state_empty_search_description = Poți încerca să-l adaugi manual
 assets_title = Active
 
 # Sign Message
 
-sign_message_title = Sign Message
-sign_message_message = Message
-sign_message_view_full_message = View Full Message
+sign_message_title = Semnează mesajul
+sign_message_message = Mesaj
+sign_message_view_full_message = Vezi mesajul complet
 
 # Secret Phrase
 
-secret_phrase_do_not_share_title = Do not share your Secret Phrase!
-secret_phrase_do_not_share_description = If someone has your secret phrase they will have full control of your wallet!
-secret_phrase_save_phrase_safely = Save your Secret Phrase in a secure place \nthat only you control.
-secret_phrase_confirm_quick_test_title = Complete this quick test to confirm you've saved everything correctly.
+secret_phrase_do_not_share_title = Nu împărtășiți expresia dvs. secretă!
+secret_phrase_do_not_share_description = Dacă cineva are expresia ta secretă, va avea control total asupra portofelului tău!
+secret_phrase_save_phrase_safely = Salvează-ți fraza secretă într-un loc sigur \npe care doar tu îl controlezi.
+secret_phrase_confirm_quick_test_title = Finalizați acest test rapid pentru a confirma că ați salvat totul corect.
 secret_phrase_screenshot_detected_title = Captură de ecran detectată
 secret_phrase_screenshot_detected_description = Capturile de ecran pot fi accesibile altor aplicații, dar pot pune în pericol fraza ta secretă dacă sunt salvate în acest fel.
 secret_phrase_content_hidden_description = Conținut ascuns în timpul înregistrării ecranului
@@ -432,23 +432,23 @@ social_coinmarketcap = CoinMarketCap
 
 # Nodes
 
-nodes_import_node_title = Add node
-nodes_import_node_chain_id = Chain ID
-nodes_import_node_in_sync = In Sync
-nodes_import_node_latest_block = Latest Block
-nodes_import_node_latency = Latency
+nodes_import_node_title = Adăugați nod
+nodes_import_node_chain_id = ID lanț
+nodes_import_node_in_sync = În sincronizare
+nodes_import_node_latest_block = Ultimul bloc
+nodes_import_node_latency = Latența
 nodes_gem_wallet_node = Gem Wallet Node
 nodes_import_node_warning_message = Nodurile personalizate pot fi rău intenționate și pot expune datele tranzacțiilor sau pot furniza informații false.
 
 # Library
 
-library_select_from_photo_library = Select from Photo Library
+library_select_from_photo_library = Selectați din Biblioteca foto
 
 # Fee Rates
 
-fee_rates_info = Speed of transaction is determined by network fee paid to the network miners.
-fee_rates_slow = Slow
-fee_rates_fast = Fast
+fee_rates_info = Viteza tranzacției este determinată de taxa de rețea plătită minerilor din rețea.
+fee_rates_slow = Încet
+fee_rates_fast = Rapid
 fee_rates_normal = Normal
 
 # Fee Rate
@@ -459,34 +459,34 @@ fee_rate_gwei = %@ gwei
 
 # Banner
 
-banner_account_activation_title = Account Activation Fee
-banner_account_activation_description = The %@ network requires a one time fee of %@.
-banner_stake_title = Start staking %@
-banner_stake_description = Earn %@ rewards on your stake while you sleep.
-banner_enable_notifications_title = Enable Notifications
-banner_enable_notifications_description = Stay on top of your wallet activity.
-banner_activate_asset_description = To use the %@ asset, you must first enable it on the %@ network by fulfilling the network's specific requirements.
-banner_asset_status_title = Suspicious Asset
-banner_asset_status_description = Token may be unsafe or misleading. Proceed only if you fully trust it.
+banner_account_activation_title = Taxa de activare a contului
+banner_account_activation_description = Rețeaua %@ necesită o taxă unică de %@.
+banner_stake_title = Începeți miza %@
+banner_stake_description = Câștigă %@ recompense pe miza ta în timp ce dormi.
+banner_enable_notifications_title = Activați notificările
+banner_enable_notifications_description = Rămâneți la curent cu activitatea din portofel.
+banner_activate_asset_description = Pentru a utiliza activul %@, trebuie mai întâi să îl activați în rețeaua %@ îndeplinind cerințele specifice ale rețelei.
+banner_asset_status_title = Activ suspect
+banner_asset_status_description = Tokenul poate fi nesigur sau înșelător. Continuați doar dacă aveți deplină încredere în el.
 banner_onboarding_title = Portofelul tău este gata
 banner_onboarding_description = Cumpără sau primește criptomonede pentru a începe
-banner_perpetuals_title = Trade Perpetuals on Hyperliquid
-banner_perpetuals_description = Deposit, trade, and earn with Hyperliquid perpetuals
+banner_perpetuals_title = Tranzacționează Perpetuals pe Hyperliquid
+banner_perpetuals_description = Depuneți, tranzacționați și câștigați cu Hyperliquid perpetuals
 
 # Filter
 
-filter_clear = Clear
-filter_title = Filters
-filter_types = Types
+filter_clear = Clar
+filter_title = Filtre
+filter_types = Tipuri
 filter_has_balance = Are echilibru
 
 # Price Alerts
 
-price_alerts_enabled_for = Price alert enabled for %@
-price_alerts_disabled_for = Price alert disabled for %@
-price_alerts_get_notified_explain_message = Get notified when there's a significant price change in your favorite crypto assets.
-price_alerts_direction_over = Over
-price_alerts_direction_under = Under
+price_alerts_enabled_for = Alerta de preț activată pentru %@
+price_alerts_disabled_for = Alerta de preț a fost dezactivată pentru %@
+price_alerts_get_notified_explain_message = Primiți notificări când există o schimbare semnificativă a prețului activelor dvs. cripto preferate.
+price_alerts_direction_over = Peste
+price_alerts_direction_under = Sub
 price_alerts_direction_increases_by = Crește cu
 price_alerts_direction_decreases_by = Scăde cu
 price_alerts_set_alert_price_over = Când prețul este peste
@@ -503,24 +503,24 @@ price_alerts_set_alert_title = Setați alertă de preț
 
 # Lock
 
-lock_immediately = Immediately
-lock_one_minute = 1 minute
-lock_five_minutes = 5 minutes
-lock_fifteen_minutes = 15 minutes
-lock_one_hour = 1 hour
-lock_six_hours = 6 hours
-lock_require_authentication = Require authentication
-lock_unlock = Unlock
-lock_privacy_lock = Privacy Lock
+lock_immediately = Imediat
+lock_one_minute = 1 minut
+lock_five_minutes = 5 minute
+lock_fifteen_minutes = 15 minute
+lock_one_hour = 1 oră
+lock_six_hours = 6 ore
+lock_require_authentication = Necesită autentificare
+lock_unlock = Deblocați
+lock_privacy_lock = Blocare confidențialitate
 lock_footer = Protejați accesul la această aplicație pe dispozitivul dvs.
 
 # Verify
 
-verify_phrase_title = Confirm
+verify_phrase_title = Confirmați
 
 # Warnings
 
-warnings_multi_signature_blocked = Do not transfer funds to this %@ Multi-Signature wallet unless you are certain you control the private keys. Failure to do so could expose you to scams, and you may permanently lose your assets.
+warnings_multi_signature_blocked = Nu transferați fonduri în acest portofel %@ cu semnături multiple decât dacă sunteți sigur că controlați cheile private. Nerespectarea acestui lucru vă poate expune la escrocherii și vă puteți pierde definitiv bunurile.
 
 # Sell
 
@@ -528,15 +528,15 @@ sell_title = Vânzare %@
 
 # Info
 
-info_network_fee_title = Network Fee
+info_network_fee_title = Taxa de retea
 info_watch_wallet_title = Watch Wallet
-info_watch_wallet_description = A wallet that you do not have access to, but you can watch its transactions and movements.
-info_network_fee_description = Every transaction on the %@ network requires a fee in %@ paid to miners to process your transaction, not Gem Wallet. Network fees varies based on network usage.
-info_transaction_error_description = The transaction could not be completed due to an error, such as insufficient funds, invalid input, or rejection by the network. Please review the details and try again.
-info_transaction_pending_description = The transaction has been submitted and is awaiting confirmation on the network. Processing times may vary. Please check back for updates.
-info_transaction_success_description = The transaction has been completed and confirmed on the network. You can review the details to verify its status.
-info_lock_time_description = Lock time, also known as the unbonding or unfreezing period, is the duration during which staked assets are inaccessible after you decide to unstake them.
-info_price_impact_description = Price impact is the change in token price caused by your trade size. Higher price impact means you receive fewer tokens due to low liquidity or a large order size.
+info_watch_wallet_description = Un portofel la care nu ai acces, dar îi poți urmări tranzacțiile și mișcările.
+info_network_fee_description = Fiecare tranzacție din rețeaua %@ necesită o taxă în %@ plătită minerilor pentru a vă procesa tranzacția, nu Gem Wallet. Taxele de rețea variază în funcție de utilizarea rețelei.
+info_transaction_error_description = Tranzacția nu a putut fi finalizată din cauza unei erori, cum ar fi fonduri insuficiente, introducere nevalidă sau respingere din partea rețelei. Vă rugăm să examinați detaliile și să încercați din nou.
+info_transaction_pending_description = Tranzacția a fost trimisă și așteaptă confirmarea în rețea. Timpii de procesare pot varia. Vă rugăm să verificați din nou pentru actualizări.
+info_transaction_success_description = Tranzacția a fost finalizată și confirmată în rețea. Puteți examina detaliile pentru a verifica starea acestuia.
+info_lock_time_description = Timpul de blocare, cunoscut și ca perioada de dezlegare sau dezghețare, este durata în care activele mizate sunt inaccesibile după ce decideți să le dezlegați.
+info_price_impact_description = Impactul prețului este modificarea prețului simbolului cauzată de dimensiunea tranzacției dvs. Impactul mai mare al prețului înseamnă că primiți mai puține jetoane din cauza lichidității scăzute sau a unei comenzi mari.
 info_slippage_description = Alunecarea se referă la diferența dintre prețul așteptat al unei tranzacții și prețul real la care aceasta este executată.
 info_asset_status_unverified_description = Token-urile neverificate nu au fost suficient verificate de servicii terțe de încredere. Acestea pot apărea în portofelul dvs. din cauza lansărilor prin airdrop, transferurilor sau importurilor manuale.
 info_asset_status_suspicious_description = Tokenurile suspecte sau spam sunt identificate ca potențiale escrocherii sau active dăunătoare. Acestea pot apărea în portofelul dvs. din cauza lansărilor prin airdrop, transferuri sau importuri manuale.
@@ -545,14 +545,14 @@ info_insufficient_network_fee_balance_description = Această tranzacție necesit
 info_insufficient_balance_title = Sold insuficient
 info_insufficient_balance_description = Nu aveți suficienți %@ pentru a finaliza această tranzacție. Vă rugăm să încărcați, să primiți sau să schimbați contul în portofelul dvs. și să încercați din nou.
 info_account_minimum_balance_title = Sold minim
-info_perpetual_funding_payments_title = Funding Payments
-info_perpetual_funding_payments_description = Funding payments are periodic payments between traders to keep the perpetual contract price close to the underlying asset's spot price. Positive funding means long positions pay short positions, while negative funding means short positions pay long positions.
-info_perpetual_funding_rate_title = Funding
-info_perpetual_funding_rate_description = The funding rate determines the cost of holding a perpetual position. It is calculated hourly and helps maintain price equilibrium between the perpetual contract and the underlying asset's spot price.
+info_perpetual_funding_payments_title = Plăți de finanțare
+info_perpetual_funding_payments_description = Plățile de finanțare sunt plăți periodice între comercianți pentru a menține prețul contractului perpetuu aproape de prețul spot al activului suport. Finanțarea pozitivă înseamnă că pozițiile lungi plătesc poziții scurte, în timp ce finanțarea negativă înseamnă că pozițiile scurte plătesc poziții lungi.
+info_perpetual_funding_rate_title = Finanțare
+info_perpetual_funding_rate_description = Rata de finanțare determină costul deținerii unei poziții perpetue. Este calculat pe oră și ajută la menținerea echilibrului prețurilor între contractul perpetuu și prețul spot al activului suport.
 info_perpetual_liquidation_price_title = Preț de lichidare
-info_perpetual_liquidation_price_description = The liquidation price is the price level at which your position will be automatically closed to prevent further losses. When the market price reaches this level, your position is liquidated and you lose your margin.
-info_perpetual_open_interest_title = Open Interest
-info_perpetual_open_interest_description = Open interest represents the total value of all outstanding perpetual contracts that have not been settled. It provides insight into market activity and liquidity.
+info_perpetual_liquidation_price_description = Prețul de lichidare este nivelul prețului la care poziția dvs. va fi închisă automat pentru a preveni alte pierderi. Când prețul pieței atinge acest nivel, poziția ta este lichidată și îți pierzi marja.
+info_perpetual_open_interest_title = Interes deschis
+info_perpetual_open_interest_description = Dobânda deschisă reprezintă valoarea totală a tuturor contractelor perpetue restante care nu au fost decontate. Oferă o perspectivă asupra activității pieței și a lichidității.
 info_no_quote_description = Nu se poate returna o cotație pentru perechea de tokenuri selectată, posibil din cauza sumei mici, a lipsei de lichiditate sau a limitărilor tehnice.
 info_stake_reserved_title = Rezervat pentru comision de rețea
 info_stake_reserved_description = O sumă mică rămâne în portofelul tău pentru a acoperi comisioanele aferente operațiunilor precum unstaking-ul sau revendicarea recompenselor.
@@ -564,22 +564,22 @@ info_circulating_supply_description = Numărul de monede disponibile în prezent
 info_total_supply_description = Numărul total de monede existente, inclusiv monedele blocate sau rezervate.
 info_max_supply_title = Aprovizionare maximă
 info_max_supply_description = Numărul maxim de monede care vor exista vreodată.
-info_perpetual_funding_apr_title = Funding APR
-info_perpetual_funding_apr_description = The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.
-info_minimum_amount_title = Minimum Amount
+info_perpetual_funding_apr_title = APR finanțare
+info_perpetual_funding_apr_description = Rata anualizată la care plățile lungi plătesc scurt-uri (dacă este negativ, scurt-urile plătesc lungi). Nu există taxe asociate cu finanțarea, care este un transfer peer-to-peer între utilizatori pentru a împinge prețurile către prețul spot.
+info_minimum_amount_title = Suma minima
 info_minimum_amount_description = În rețeaua %@, suma minimă pentru această tranzacție este %@.
 
 # Input
 
-input_enter_amount_to = Please enter amount to %@
+input_enter_amount_to = Vă rugăm să introduceți suma până la %@
 
 # Nft
 
-nft_properties = Properties
-nft_collections = Collections
-nft_collection = Collection
-nft_save_to_photos = Save to Photos
-nft_set_as_avatar = Set as Avatar
+nft_properties = Proprietăți
+nft_collections = Colecții
+nft_collection = Colecție
+nft_save_to_photos = Salvați în Fotografii
+nft_set_as_avatar = Setați ca Avatar
 nft_state_empty_title = NFT-urile tale vor apărea aici️
 nft_state_empty_description = Primește primul tău NFT
 nft_report_reason_spam = Spam
@@ -590,12 +590,12 @@ nft_report_report_button_title = Raportează
 
 # Permissions
 
-permissions_access_denied = Access Denied
-permissions_image_photo_access_denied_description = This app does not have permission to access your photo library. Please enable access in your device settings.
+permissions_access_denied = Acces refuzat
+permissions_image_photo_access_denied_description = Această aplicație nu are permisiunea de a accesa biblioteca dvs. de fotografii. Vă rugăm să activați accesul în setările dispozitivului dvs.
 
 # Markets
 
-markets_title = Markets
+markets_title = Piețele
 markets_state_empty_title = Datele dvs. de piață vor apărea aici
 markets_daily_volume = Volum 24h
 
@@ -610,19 +610,19 @@ networks_state_empty_search_title = Nu s-au găsit rețele
 # Onboarding
 
 onboarding_security_create_wallet_intro_title = Vei primi o Frază Secretă — este singura modalitate de a accesa portofelul tău.
-onboarding_security_create_wallet_confirm_title = I understand and want to continue
-onboarding_security_create_wallet_do_not_share_title = Do Not Share It With Anyone
-onboarding_security_create_wallet_do_not_share_subtitle = Anyone who gets your secret phrase can take full control of your wallet.
-onboarding_security_create_wallet_keep_safe_subtitle = The secret phrase is only way to access your wallet.
-onboarding_security_create_wallet_no_recovery_subtitle = If you lose your secret phrase, you lose access to your wallet.
+onboarding_security_create_wallet_confirm_title = Înțeleg și vreau să continui
+onboarding_security_create_wallet_do_not_share_title = Nu-l împărtăși cu nimeni
+onboarding_security_create_wallet_do_not_share_subtitle = Oricine primește fraza ta secretă poate prelua controlul total asupra portofelului tău.
+onboarding_security_create_wallet_keep_safe_subtitle = Fraza secretă este singura modalitate de a vă accesa portofelul.
+onboarding_security_create_wallet_no_recovery_subtitle = Dacă îți pierzi fraza secretă, pierzi accesul la portofel.
 onboarding_security_create_wallet_keep_safe_title = Depozitați-l într-un loc sigur
 onboarding_security_create_wallet_no_recovery_title = Nu te putem ajuta să-l recuperezi
 onboarding_accept_terms_title = Acceptați Termenii și Condițiile
 onboarding_accept_terms_message = Vă rugăm să citiți și să acceptați următorii termeni înainte de a continua.
 onboarding_accept_terms_item1_message = Înțeleg că eu sunt singurul responsabil pentru securitatea și backup-ul portofelelor mele, nu Gem.
 onboarding_accept_terms_item2_message = Înțeleg că Gem nu este o bancă sau o bursă, iar utilizarea sa în scopuri ilegale este strict interzisă.
-onboarding_accept_terms_item3_message = I understand that if I ever lose access to my wallets, Gem is not liable and cannot help in any way.
-onboarding_accept_terms_continue = Agree and Continue
+onboarding_accept_terms_item3_message = Înțeleg că, dacă pierd vreodată accesul la portofelele mele, Gem nu este responsabil și nu poate ajuta în niciun fel.
+onboarding_accept_terms_continue = De acord și continua
 
 # Brand
 
@@ -636,8 +636,8 @@ perpetual_margin = Marjă
 perpetual_position = Poziţie
 perpetual_close_position = Poziție închisă
 perpetual_pnl = PnL
-perpetual_long = Long
-perpetual_short = Short
+perpetual_long = Lung
+perpetual_short = Scurt
 perpetual_entry_price = Preț de intrare
 perpetual_modify = Modifica
 perpetual_reduce_position = Reduceți poziția
@@ -657,21 +657,21 @@ perpetual_reduce_direction = Reduceți %@
 perpetual_auto_close_expected_profit = Profit așteptat
 perpetual_auto_close_expected_loss = Pierderea așteptată
 perpetual_modify_position = Modificare poziție
-perpetual_auto_close_stop_loss = Stop loss
+perpetual_auto_close_stop_loss = Opriți pierderea
 perpetual_value = Valoare
 perpetual_unrealized_pnl = PnL nerealizat
 perpetual_volume = Volum
 perpetual_all_time_pnl = PnL din toate timpurile
 perpetual_margin_usage = Utilizarea marjei
 perpetual_account_leverage = Levierul contului
-perpetual_margin_cross = Cross
-perpetual_margin_isolated = Isolated
+perpetual_margin_cross = Cruce
+perpetual_margin_isolated = Izolat
 
 # Perpetuals
 
-perpetuals_title = Perpetuals
-perpetuals_markets = Markets
-perpetuals_empty_state_no_markets = No markets
+perpetuals_title = Perpetue
+perpetuals_markets = Piețele
+perpetuals_empty_state_no_markets = Fara piete
 perpetuals_empty_state_no_markets_found = Nu s-au găsit piețe
 
 # Rewards
@@ -682,7 +682,7 @@ rewards_my_referral_code = Codul meu de recomandare
 rewards_invite_friends_title = Invită prieteni
 rewards_invite_friends_description = Câştiga %@ puncte pentru fiecare prieten care se alătură.
 rewards_referral_code = Cod de recomandare
-rewards_invited_by = Invited By
+rewards_invited_by = Invitat de
 rewards_points = Puncte
 rewards_referrals = Recomandări
 rewards_earn_points_title = Câștigă puncte
@@ -706,8 +706,8 @@ rewards_unverified_description = Recompensele se activează automat pe măsură 
 # Recent Activity
 
 recent_activity_title = Recente
-recent_activity_state_empty_title = Your recents will appear here
-recent_activity_state_empty_description = Assets you've recently used will appear here
+recent_activity_state_empty_title = Recentele dvs. vor apărea aici
+recent_activity_state_empty_description = Elementele pe care le-ați folosit recent vor apărea aici
 
 # Notifications
 
@@ -742,19 +742,19 @@ application_name = Gem
 
 # Camera Permission
 
-camera_permission_request_camera = Camera permission required for QR Code scan.\nPlease grant permission.
+camera_permission_request_camera = Este necesară permisiunea camerei pentru scanarea codului QR.\nVă rugăm să acordați permisiunea.
 
 # Notifications Permission
 
-notifications_permission_request_notification = Post Notifications permission required for get notifications about new transactions.\nPlease grant permission.
+notifications_permission_request_notification = Este necesară permisiunea de a posta notificări pentru a primi notificări despre tranzacții noi.\nVă rugăm să acordați permisiunea.
 
 # Confirm
 
-confirm_fee_error = Fee calculation error
+confirm_fee_error = Eroare de calcul a taxei
 
 # Rootcheck
 
-rootcheck_security_alert = Security Warning
-rootcheck_body = Your device appears to have root access, which can significantly increase security risks. Using this app on a rooted device may expose your assets to unauthorized access and potential loss. For the safety of your funds, we strongly recommend using a non-rooted device.
-rootcheck_ignore = Ignore
-rootcheck_exit = Exit
+rootcheck_security_alert = Avertisment de securitate
+rootcheck_body = Dispozitivul dvs. pare să aibă acces root, ceea ce poate crește semnificativ riscurile de securitate. Utilizarea acestei aplicații pe un dispozitiv înrădăcinat poate expune activele dvs. la acces neautorizat și la o potențială pierdere. Pentru siguranța fondurilor dvs., vă recomandăm insistent să utilizați un dispozitiv care nu este rootat.
+rootcheck_ignore = Ignora
+rootcheck_exit = Ieșire

@@ -39,7 +39,6 @@
   <string name="common_skip">スキップ</string>
   <string name="common_warning">警告</string>
   <string name="common_learn_more">もっと詳しく知る</string>
-  <string name="common_popular">人気</string>
   <string name="common_short_name">Gem</string>
   <string name="common_description">説明</string>
   <string name="common_emoji">絵文字</string>
@@ -52,7 +51,7 @@
   <string name="common_details">ディテール</string>
   <string name="common_info">情報</string>
   <string name="common_get_started">始める</string>
-  <string name="common_earn">Earn</string>
+  <string name="common_earn">稼ぐ</string>
   <string name="common_method">方法</string>
   <string name="common_token">トークン</string>
   <string name="common_suspicious_address">不審な住所</string>
@@ -125,7 +124,7 @@
   <string name="transfer_withdraw_title">引き出す</string>
   <string name="transfer_rewards_title">リワード</string>
   <string name="transfer_minimum_amount">最小金額は%1$sです</string>
-  <string name="transfer_activate_asset_title">Activate Asset</string>
+  <string name="transfer_activate_asset_title">アセットのアクティブ化</string>
   <string name="transfer_recipient_my_wallets">マイウォレット</string>
   <string name="transfer_recipient_view_wallets">ウォレットを表示</string>
   <string name="transfer_minimum_account_balance">残高をすべて使用しない限り、この後も最低%1$s残高が残っている必要があります。</string>
@@ -241,8 +240,8 @@
   <string name="transaction_title_received">受け</string>
   <string name="transaction_title_sent">送金</string>
   <string name="transaction_swap_again">再度スワップ</string>
-  <string name="transaction_status_completed">Completed</string>
-  <string name="transaction_status_inprogress">In Progress</string>
+  <string name="transaction_status_completed">完了</string>
+  <string name="transaction_status_inprogress">進行中</string>
   <string name="transaction_status_refunded">返金済み</string>
   <string name="asset_balances">残高</string>
   <string name="asset_balances_available">利用可能</string>
@@ -279,7 +278,7 @@
   <string name="charts_month">1月</string>
   <string name="charts_year">1年</string>
   <string name="charts_all">全て</string>
-  <string name="charts_entry">Entry</string>
+  <string name="charts_entry">エントリー</string>
   <string name="charts_price_open">開ける</string>
   <string name="charts_price_close">近い</string>
   <string name="charts_price_high">高い</string>
@@ -314,7 +313,7 @@
   <string name="stake_rewards">報酬</string>
   <string name="stake_validator">バリデーター</string>
   <string name="stake_validators">バリデーター</string>
-  <string name="stake_apr">APR %1$s</string>
+  <string name="stake_apr">4 月 %1$s</string>
   <string name="stake_available_in">入手可能</string>
   <string name="stake_inactive">非アクティブ</string>
   <string name="stake_lock_time">ロック時間</string>
@@ -323,7 +322,7 @@
   <string name="stake_awaiting_withdrawal">引き出し待ち</string>
   <string name="stake_active_in">アクティブ</string>
   <string name="stake_minimum_amount">最小額</string>
-  <string name="stake_viagem">Stake via Gem Wallet</string>
+  <string name="stake_viagem">Gem ウォレット経由でステークする</string>
   <string name="stake_no_active_staking">アクティブなステーキングはまだありません。</string>
   <string name="stake_state_empty_title">ステークはここに表示されます</string>
   <string name="stake_state_empty_description">初めてステーキング %1$s</string>
@@ -334,6 +333,7 @@
   <string name="assets_no_assets_found">資産なし</string>
   <string name="assets_add_custom_token">カスタム・トークンの追加</string>
   <string name="assets_select_asset">資産を選択</string>
+  <string name="assets_popular">人気のアセット</string>
   <string name="assets_tags_trending">トレンド</string>
   <string name="assets_tags_gainers">値上がりランキング</string>
   <string name="assets_tags_losers">値下がりランキング</string>
@@ -392,8 +392,8 @@
   <string name="banner_asset_status_description">トークンは安全でないか、誤解を招く可能性がある。完全に信頼できる場合のみ手続きを行ってください。</string>
   <string name="banner_onboarding_title">ウォレットの準備ができました</string>
   <string name="banner_onboarding_description">始めるには暗号通貨を購入または受け取りましょう</string>
-  <string name="banner_perpetuals_title">Trade Perpetuals on Hyperliquid</string>
-  <string name="banner_perpetuals_description">Deposit, trade, and earn with Hyperliquid perpetuals</string>
+  <string name="banner_perpetuals_title">Hyperliquidで永久取引をする</string>
+  <string name="banner_perpetuals_description">Hyperliquid perpetuals で入金、取引、収益を得る</string>
   <string name="filter_clear">クリア</string>
   <string name="filter_title">フィルター</string>
   <string name="filter_types">種類</string>
@@ -465,9 +465,9 @@
   <string name="info_total_supply_description">ロックされたコインや予約されたコインを含む、存在するコインの合計数。</string>
   <string name="info_max_supply_title">最大供給</string>
   <string name="info_max_supply_description">これまでに存在するコインの最大数。</string>
-  <string name="info_perpetual_funding_apr_title">Funding APR</string>
-  <string name="info_perpetual_funding_apr_description">The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.</string>
-  <string name="info_minimum_amount_title">Minimum Amount</string>
+  <string name="info_perpetual_funding_apr_title">年利の資金調達</string>
+  <string name="info_perpetual_funding_apr_description">ロングがショートに支払う年率 (マイナスの場合、ショートがロングに支払う)。価格をスポット価格に近づけるためのユーザー間のピアツーピア転送である資金調達に関連する手数料はありません。</string>
+  <string name="info_minimum_amount_title">最低金額</string>
   <string name="info_minimum_amount_description">%1$s ネットワークで、この取引の最低金額は %2$s です。</string>
   <string name="input_enter_amount_to">%1$sの金額を入力してください</string>
   <string name="nft_properties">プロパティ</string>
@@ -538,11 +538,11 @@
   <string name="perpetual_all_time_pnl">これまでの損益</string>
   <string name="perpetual_margin_usage">マージンの使用</string>
   <string name="perpetual_account_leverage">アカウントレバレッジ</string>
-  <string name="perpetual_margin_cross">Cross</string>
-  <string name="perpetual_margin_isolated">Isolated</string>
+  <string name="perpetual_margin_cross">クロス</string>
+  <string name="perpetual_margin_isolated">孤立した</string>
   <string name="perpetuals_title">パーペチュアル</string>
-  <string name="perpetuals_markets">Markets</string>
-  <string name="perpetuals_empty_state_no_markets">No markets</string>
+  <string name="perpetuals_markets">市場</string>
+  <string name="perpetuals_empty_state_no_markets">市場がない</string>
   <string name="perpetuals_empty_state_no_markets_found">市場が見つかりません</string>
   <string name="rewards_title">報酬</string>
   <string name="rewards_share_text">参加する Gem Wallet 私の紹介リンクを使用して報酬を獲得しましょう: %1$s</string>
@@ -550,7 +550,7 @@
   <string name="rewards_invite_friends_title">友達を招待</string>
   <string name="rewards_invite_friends_description">得る %1$s 参加した友達ごとにポイントが付与されます。</string>
   <string name="rewards_referral_code">紹介コード</string>
-  <string name="rewards_invited_by">Invited By</string>
+  <string name="rewards_invited_by">招待者</string>
   <string name="rewards_points">ポイント</string>
   <string name="rewards_referrals">紹介</string>
   <string name="rewards_earn_points_title">ポイントを獲得</string>
@@ -571,8 +571,8 @@
   <string name="rewards_unverified_title">特典はまだ有効になっていません。</string>
   <string name="rewards_unverified_description">アプリの利用頻度が高くなるにつれて、特典が自動的に付与されます。</string>
   <string name="recent_activity_title">最近</string>
-  <string name="recent_activity_state_empty_title">Your recents will appear here</string>
-  <string name="recent_activity_state_empty_description">Assets you\'ve recently used will appear here</string>
+  <string name="recent_activity_state_empty_title">最近のものがここに表示されます</string>
+  <string name="recent_activity_state_empty_description">最近使用したアセットがここに表示されます</string>
   <string name="notifications_inapp_state_empty_title">まだ通知はありません</string>
   <string name="notifications_inapp_state_empty_description">通知に関する最新情報はここで確認できます</string>
   <string name="notifications_inapp_rewards_invite_subtitle">友達を招待して一緒に報酬を獲得しましょう</string>

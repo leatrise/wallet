@@ -39,7 +39,6 @@
   <string name="common_skip">跳过</string>
   <string name="common_warning">警告</string>
   <string name="common_learn_more">了解更多</string>
-  <string name="common_popular">热门</string>
   <string name="common_short_name">Gem</string>
   <string name="common_description">描述</string>
   <string name="common_emoji">表情符号</string>
@@ -52,7 +51,7 @@
   <string name="common_details">详情</string>
   <string name="common_info">信息</string>
   <string name="common_get_started">开始使用</string>
-  <string name="common_earn">Earn</string>
+  <string name="common_earn">赚取</string>
   <string name="common_method">方法</string>
   <string name="common_token">令牌</string>
   <string name="common_suspicious_address">可疑地址</string>
@@ -241,8 +240,8 @@
   <string name="transaction_title_received">已收到</string>
   <string name="transaction_title_sent">已发送</string>
   <string name="transaction_swap_again">再次兑换</string>
-  <string name="transaction_status_completed">Completed</string>
-  <string name="transaction_status_inprogress">In Progress</string>
+  <string name="transaction_status_completed">已完成</string>
+  <string name="transaction_status_inprogress">进行中</string>
   <string name="transaction_status_refunded">已退款</string>
   <string name="asset_balances">余额</string>
   <string name="asset_balances_available">可用余额</string>
@@ -279,7 +278,7 @@
   <string name="charts_month">1月</string>
   <string name="charts_year">1年</string>
   <string name="charts_all">全部</string>
-  <string name="charts_entry">Entry</string>
+  <string name="charts_entry">参赛作品</string>
   <string name="charts_price_open">打开</string>
   <string name="charts_price_close">关闭</string>
   <string name="charts_price_high">高的</string>
@@ -323,7 +322,7 @@
   <string name="stake_awaiting_withdrawal">等待赎回</string>
   <string name="stake_active_in">激活于</string>
   <string name="stake_minimum_amount">最低金额</string>
-  <string name="stake_viagem">Stake via Gem Wallet</string>
+  <string name="stake_viagem">通过 Gem 钱包质押</string>
   <string name="stake_no_active_staking">当前没有激活的质押</string>
   <string name="stake_state_empty_title">质押将显示在这里️</string>
   <string name="stake_state_empty_description">质押第一个%1$s</string>
@@ -334,6 +333,7 @@
   <string name="assets_no_assets_found">未找到资产</string>
   <string name="assets_add_custom_token">添加自定义代币</string>
   <string name="assets_select_asset">选择资产</string>
+  <string name="assets_popular">热门资产</string>
   <string name="assets_tags_trending">热门</string>
   <string name="assets_tags_gainers">涨幅榜</string>
   <string name="assets_tags_losers">跌幅榜</string>
@@ -346,7 +346,7 @@
   <string name="sign_message_view_full_message">查看完整消息</string>
   <string name="secret_phrase_do_not_share_title">切勿泄露助记词！</string>
   <string name="secret_phrase_do_not_share_description">任何人只要拥有助记词，就能完全控制这个钱包！</string>
-  <string name="secret_phrase_save_phrase_safely">请将助记词保存在只有自己能掌控的安全位置。</string>
+  <string name="secret_phrase_save_phrase_safely">请将助记词保存在安全位置，\n且只有您可以掌控。</string>
   <string name="secret_phrase_confirm_quick_test_title">完成这个快速测试，确认是否已正确保存所有内容。</string>
   <string name="secret_phrase_screenshot_detected_title">检测到屏幕截图</string>
   <string name="secret_phrase_screenshot_detected_description">其他应用程序可能可以访问屏幕截图，如果以这种方式保存，可能会泄露您的密码短语。</string>
@@ -392,8 +392,8 @@
   <string name="banner_asset_status_description">代币可能不安全或具有误导性。请仅在完全信任的情况下继续操作。</string>
   <string name="banner_onboarding_title">您的钱包已准备就绪</string>
   <string name="banner_onboarding_description">购买或接收加密货币即可开始</string>
-  <string name="banner_perpetuals_title">Trade Perpetuals on Hyperliquid</string>
-  <string name="banner_perpetuals_description">Deposit, trade, and earn with Hyperliquid perpetuals</string>
+  <string name="banner_perpetuals_title">在超流动性上交易永续合约</string>
+  <string name="banner_perpetuals_description">使用 Hyperliquid 永续合约进行存款、交易和赚取收益</string>
   <string name="filter_clear">清除</string>
   <string name="filter_title">筛选</string>
   <string name="filter_types">类型</string>
@@ -465,9 +465,9 @@
   <string name="info_total_supply_description">现存硬币总数，包括已锁定或已预留的硬币。</string>
   <string name="info_max_supply_title">最大供应</string>
   <string name="info_max_supply_description">硬币的最大存世量。</string>
-  <string name="info_perpetual_funding_apr_title">Funding APR</string>
-  <string name="info_perpetual_funding_apr_description">The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.</string>
-  <string name="info_minimum_amount_title">Minimum Amount</string>
+  <string name="info_perpetual_funding_apr_title">资助年利率</string>
+  <string name="info_perpetual_funding_apr_description">多头支付空头的年化利率（如果为负，则空头支付多头）。融资不收取任何费用，融资是用户之间的点对点转账，旨在将价格推向现货价格。</string>
+  <string name="info_minimum_amount_title">最低金额</string>
   <string name="info_minimum_amount_description">在 %1$s 网络上，此交易的最低金额为 %2$s。</string>
   <string name="input_enter_amount_to">输入%1$s的数量</string>
   <string name="nft_properties">特性</string>
@@ -538,11 +538,11 @@
   <string name="perpetual_all_time_pnl">总损益</string>
   <string name="perpetual_margin_usage">边际利用率</string>
   <string name="perpetual_account_leverage">账户杠杆</string>
-  <string name="perpetual_margin_cross">Cross</string>
-  <string name="perpetual_margin_isolated">Isolated</string>
+  <string name="perpetual_margin_cross">克罗斯</string>
+  <string name="perpetual_margin_isolated">隔离</string>
   <string name="perpetuals_title">永久</string>
-  <string name="perpetuals_markets">Markets</string>
-  <string name="perpetuals_empty_state_no_markets">No markets</string>
+  <string name="perpetuals_markets">市场</string>
+  <string name="perpetuals_empty_state_no_markets">没有市场</string>
   <string name="perpetuals_empty_state_no_markets_found">未找到任何市场</string>
   <string name="rewards_title">奖励</string>
   <string name="rewards_share_text">加入 Gem Wallet 使用我的推荐链接，即可获得奖励： %1$s</string>
@@ -550,7 +550,7 @@
   <string name="rewards_invite_friends_title">邀请好友</string>
   <string name="rewards_invite_friends_description">赚 %1$s 每邀请一位好友加入，即可获得积分。</string>
   <string name="rewards_referral_code">推荐码</string>
-  <string name="rewards_invited_by">Invited By</string>
+  <string name="rewards_invited_by">邀请者</string>
   <string name="rewards_points">积分</string>
   <string name="rewards_referrals">转诊</string>
   <string name="rewards_earn_points_title">赚取积分</string>
@@ -571,8 +571,8 @@
   <string name="rewards_unverified_title">奖励尚未激活。</string>
   <string name="rewards_unverified_description">您使用应用程序的次数越多，奖励就会自动激活。</string>
   <string name="recent_activity_title">近期</string>
-  <string name="recent_activity_state_empty_title">Your recents will appear here</string>
-  <string name="recent_activity_state_empty_description">Assets you\'ve recently used will appear here</string>
+  <string name="recent_activity_state_empty_title">您最近的记录将显示在这里</string>
+  <string name="recent_activity_state_empty_description">您最近使用过的资源将显示在此处</string>
   <string name="notifications_inapp_state_empty_title">暂无通知</string>
   <string name="notifications_inapp_state_empty_description">您可以在这里查看通知更新。</string>
   <string name="notifications_inapp_rewards_invite_subtitle">邀请好友，一起赢取奖励</string>

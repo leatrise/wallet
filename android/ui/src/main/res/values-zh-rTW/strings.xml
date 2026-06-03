@@ -39,7 +39,6 @@
   <string name="common_skip">跳過</string>
   <string name="common_warning">警告</string>
   <string name="common_learn_more">了解更多</string>
-  <string name="common_popular">熱門</string>
   <string name="common_short_name">Gem</string>
   <string name="common_description">描述</string>
   <string name="common_emoji">表情符號</string>
@@ -52,7 +51,7 @@
   <string name="common_details">詳情</string>
   <string name="common_info">資訊</string>
   <string name="common_get_started">開始使用</string>
-  <string name="common_earn">Earn</string>
+  <string name="common_earn">賺取</string>
   <string name="common_method">方法</string>
   <string name="common_token">令牌</string>
   <string name="common_suspicious_address">可疑地址</string>
@@ -241,8 +240,8 @@
   <string name="transaction_title_received">已收到</string>
   <string name="transaction_title_sent">已發送</string>
   <string name="transaction_swap_again">再次交換</string>
-  <string name="transaction_status_completed">Completed</string>
-  <string name="transaction_status_inprogress">In Progress</string>
+  <string name="transaction_status_completed">已完成</string>
+  <string name="transaction_status_inprogress">進行中</string>
   <string name="transaction_status_refunded">已退款</string>
   <string name="asset_balances">餘額</string>
   <string name="asset_balances_available">可用餘額</string>
@@ -279,7 +278,7 @@
   <string name="charts_month">1月</string>
   <string name="charts_year">1年</string>
   <string name="charts_all">全部</string>
-  <string name="charts_entry">Entry</string>
+  <string name="charts_entry">參賽作品</string>
   <string name="charts_price_open">打開</string>
   <string name="charts_price_close">關閉</string>
   <string name="charts_price_high">高的</string>
@@ -323,7 +322,7 @@
   <string name="stake_awaiting_withdrawal">等待贖回</string>
   <string name="stake_active_in">激活於</string>
   <string name="stake_minimum_amount">最低金額</string>
-  <string name="stake_viagem">Stake via Gem Wallet</string>
+  <string name="stake_viagem">透過 Gem 錢包質押</string>
   <string name="stake_no_active_staking">當前沒有啟用的質押</string>
   <string name="stake_state_empty_title">您的質押將顯示在這裡️</string>
   <string name="stake_state_empty_description">質押第一個%1$s</string>
@@ -334,6 +333,7 @@
   <string name="assets_no_assets_found">未找到資產</string>
   <string name="assets_add_custom_token">添加自訂代幣</string>
   <string name="assets_select_asset">選擇資產</string>
+  <string name="assets_popular">熱門資產</string>
   <string name="assets_tags_trending">熱門</string>
   <string name="assets_tags_gainers">漲幅榜</string>
   <string name="assets_tags_losers">跌幅榜</string>
@@ -346,7 +346,7 @@
   <string name="sign_message_view_full_message">查看完整訊息</string>
   <string name="secret_phrase_do_not_share_title">切勿洩漏助記詞！</string>
   <string name="secret_phrase_do_not_share_description">任何人只要擁有助記詞，就能完全控制这个錢包！</string>
-  <string name="secret_phrase_save_phrase_safely">請妥善保管您的助記詞，確保只有你自己可以訪問</string>
+  <string name="secret_phrase_save_phrase_safely">請將助記詞保存在安全位置，\n且只有您可以掌控。</string>
   <string name="secret_phrase_confirm_quick_test_title">完成這個快速測試，以確認您已正確保存所有內容</string>
   <string name="secret_phrase_screenshot_detected_title">偵測到螢幕截圖</string>
   <string name="secret_phrase_screenshot_detected_description">其他應用程式可能可以存取螢幕截圖，如果以這種方式儲存，可能會洩露您的密碼短語。</string>
@@ -392,8 +392,8 @@
   <string name="banner_asset_status_description">代幣可能不安全或具有誤導性。請僅在完全信任的情況下繼續操作。</string>
   <string name="banner_onboarding_title">您的錢包已準備就緒</string>
   <string name="banner_onboarding_description">購買或接收加密貨幣即可開始</string>
-  <string name="banner_perpetuals_title">Trade Perpetuals on Hyperliquid</string>
-  <string name="banner_perpetuals_description">Deposit, trade, and earn with Hyperliquid perpetuals</string>
+  <string name="banner_perpetuals_title">在超流動性上交易永續合約</string>
+  <string name="banner_perpetuals_description">使用 Hyperliquid 永續合約進行存款、交易和賺取收益</string>
   <string name="filter_clear">清除</string>
   <string name="filter_title">篩選</string>
   <string name="filter_types">類型</string>
@@ -465,9 +465,9 @@
   <string name="info_total_supply_description">現存硬幣總數，包括已鎖定或已預留的硬幣。</string>
   <string name="info_max_supply_title">最大供應</string>
   <string name="info_max_supply_description">硬幣的最大存世量。</string>
-  <string name="info_perpetual_funding_apr_title">Funding APR</string>
-  <string name="info_perpetual_funding_apr_description">The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.</string>
-  <string name="info_minimum_amount_title">Minimum Amount</string>
+  <string name="info_perpetual_funding_apr_title">資助年利率</string>
+  <string name="info_perpetual_funding_apr_description">多頭支付空頭的年化利率（如果為負，則空頭支付多頭）。融資不收取任何費用，融資是用戶之間的點對點轉賬，旨在將價格推向現貨價格。</string>
+  <string name="info_minimum_amount_title">最低金額</string>
   <string name="info_minimum_amount_description">在 %1$s 網路上，此交易的最低金額為 %2$s。</string>
   <string name="input_enter_amount_to">請輸入您要%1$s的數量</string>
   <string name="nft_properties">特性</string>
@@ -538,11 +538,11 @@
   <string name="perpetual_all_time_pnl">總損益</string>
   <string name="perpetual_margin_usage">邊際利用率</string>
   <string name="perpetual_account_leverage">帳戶槓桿</string>
-  <string name="perpetual_margin_cross">Cross</string>
-  <string name="perpetual_margin_isolated">Isolated</string>
+  <string name="perpetual_margin_cross">克羅斯</string>
+  <string name="perpetual_margin_isolated">隔離</string>
   <string name="perpetuals_title">永久</string>
-  <string name="perpetuals_markets">Markets</string>
-  <string name="perpetuals_empty_state_no_markets">No markets</string>
+  <string name="perpetuals_markets">市場</string>
+  <string name="perpetuals_empty_state_no_markets">沒有市場</string>
   <string name="perpetuals_empty_state_no_markets_found">未找到任何市場</string>
   <string name="rewards_title">獎勵</string>
   <string name="rewards_share_text">加入 Gem Wallet 使用我的推薦鏈接，即可獲得獎勵： %1$s</string>
@@ -550,7 +550,7 @@
   <string name="rewards_invite_friends_title">邀請好友</string>
   <string name="rewards_invite_friends_description">賺 %1$s 每邀請一位好友加入，即可獲得分數。</string>
   <string name="rewards_referral_code">推薦碼</string>
-  <string name="rewards_invited_by">Invited By</string>
+  <string name="rewards_invited_by">邀請者</string>
   <string name="rewards_points">積分</string>
   <string name="rewards_referrals">轉診</string>
   <string name="rewards_earn_points_title">賺取積分</string>
@@ -571,8 +571,8 @@
   <string name="rewards_unverified_title">獎勵尚未激活。</string>
   <string name="rewards_unverified_description">您使用應用程式的次數越多，獎勵就會自動啟動。</string>
   <string name="recent_activity_title">近期</string>
-  <string name="recent_activity_state_empty_title">Your recents will appear here</string>
-  <string name="recent_activity_state_empty_description">Assets you\'ve recently used will appear here</string>
+  <string name="recent_activity_state_empty_title">您最近的記錄將顯示在這裡</string>
+  <string name="recent_activity_state_empty_description">您最近使用過的資源將顯示在此處</string>
   <string name="notifications_inapp_state_empty_title">暫無通知</string>
   <string name="notifications_inapp_state_empty_description">您可以在這裡查看通知更新。</string>
   <string name="notifications_inapp_rewards_invite_subtitle">邀請好友，一起贏取獎勵</string>

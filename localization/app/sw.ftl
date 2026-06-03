@@ -1,74 +1,73 @@
 # Common
 
 common_cancel = Ghairi
-common_done = Done
+common_done = Imekamilika
 common_secret_phrase = Kifungu cha Siri
-common_next = Next
-common_copy = Copy
-common_share = Share
-common_continue = Continue
-common_provider = Provider
-common_loading = Loading
-common_address = Address
-common_back = Back
-common_try_again = Try Again
-common_paste = Paste
-common_delete = Delete
+common_next = Inayofuata
+common_copy = Nakili
+common_share = Shiriki
+common_continue = Endelea
+common_provider = Mtoa huduma
+common_loading = Inapakia
+common_address = Anwani
+common_back = Nyuma
+common_try_again = Jaribu Tena
+common_paste = Bandika
+common_delete = Futa
 common_delete_confirmation = Je, una uhakika unataka kufuta %@?
-common_hide = Hide
-common_wallet = Wallet
+common_hide = Ficha
+common_wallet = Mkoba
 common_show = Onyesha %@
-common_copied = Copied: %@
-common_recommended = Recommended
-common_all = All
-common_not_available = Not Available
-common_phrase = Phrase
-common_manage = Manage
-common_type = Type
-common_no_results_found = No Results Found
-common_yes = Yes
-common_no = No
+common_copied = Imenakiliwa: %@
+common_recommended = Imependekezwa
+common_all = Wote
+common_not_available = Haipatikani
+common_phrase = Maneno
+common_manage = Dhibiti
+common_type = Aina
+common_no_results_found = Hakuna Matokeo Yaliyopatikana
+common_yes = Ndiyo
+common_no = Hapana
 common_none = Hakuna
 common_url = URL
-common_private_key = Private Key
+common_private_key = Ufunguo wa Kibinafsi
 common_latency_in_ms = %d ms
-common_open_settings = Open settings
-common_pin = Pin
-common_pinned = Pinned
-common_unpin = Unpin
-common_skip = Skip
+common_open_settings = Fungua mipangilio
+common_pin = Bandika
+common_pinned = Imebandikwa
+common_unpin = Bandua
+common_skip = Ruka
 common_warning = Onyo
-common_learn_more = Learn More
-common_popular = Popular
+common_learn_more = Jifunze Zaidi
 common_short_name = Gem
-common_description = Description
+common_description = Maelezo
 common_emoji = Emoji
-common_style = Style
+common_style = Mtindo
 common_avatar = Avatar
-common_photo = Photo
-common_save = Save
-common_edit = Edit
+common_photo = Picha
+common_save = Hifadhi
+common_edit = Hariri
 common_percentage = Asilimia
 common_details = Maelezo
 common_info = Habari
 common_get_started = Anza
-common_earn = Earn
+common_earn = Pata
 common_method = Mbinu
 common_token = Tokeni
 common_suspicious_address = Anwani ya kutiliwa shaka
 common_refresh = Onyesha upya
-common_no_thanks = No thanks
-common_grant_permission = Grant permission
-common_required_field = %@ is required
+common_no_thanks = Hapana, asante
+common_grant_permission = Toa ruhusa
+common_required_field = %@ inahitajika
 
 # Welcome
 
-welcome_title = Welcome to Gem Family
+welcome_title = Karibu kwenye Gem Family
 
 # Wallet
 
-wallet_create_new_wallet = Create a New Wallet
-wallet_import_existing_wallet = Import an Existing Wallet
+wallet_create_new_wallet = Unda Mkoba Mpya
+wallet_import_existing_wallet = Ingiza Wallet Iliyopo
 wallet_send = Tuma
 wallet_receive = Pokea
 wallet_buy = Nunua
@@ -77,23 +76,23 @@ wallet_import_title = Ingiza Pochi
 wallet_new_title = Pochi Mpya
 wallet_name = Jina
 wallet_import_action = Ingiza
-wallet_multicoin = Multi-Coin
-wallet_import_address_field = Address or Name
+wallet_multicoin = Sarafu nyingi
+wallet_import_address_field = Anwani au Jina
 wallet_manage_token_list = Dhibiti Tokeni
-wallet_scan_qr_code = Scan QR Code
-wallet_scan = Scan
+wallet_scan_qr_code = Changanua Msimbo wa QR
+wallet_scan = Changanua
 wallet_default_name = Wallet #%d
 wallet_default_name_chain = %@ Wallet #%d
-wallet_copy_address = Copy Address
-wallet_watch_tooltip_title = You are watching this wallet.
-wallet_stake = Stake
-wallet_receive_no_memo_required = No memo required
-wallet_receive_no_destination_tag_required = No destination tag required
-wallet_title = Wallet
-wallet_add_token_title = Add Token
-wallet_sell = Sell
-wallet_receive_collection = Receive Collection
-wallet_more = More
+wallet_copy_address = Nakili Anwani
+wallet_watch_tooltip_title = Unatazama pochi hii.
+wallet_stake = Wadau
+wallet_receive_no_memo_required = Hakuna memo inahitajika
+wallet_receive_no_destination_tag_required = Hakuna lebo ya lengwa inahitajika
+wallet_title = Mkoba
+wallet_add_token_title = Ongeza Ishara
+wallet_sell = Uza
+wallet_receive_collection = Pokea Mkusanyiko
+wallet_more = Zaidi
 wallet_import_contract_address_field = Mkataba au ID ya Token
 wallet_import_address_warning = Unaweza kuangalia salio na miamala ya anwani hii, lakini **haiwezi kutuma au kuuza fedha**.
 wallet_deposit = Amana
@@ -104,8 +103,8 @@ wallet_import_already_imported_message = Pochi hii tayari imeingizwa.
 
 # Wallets
 
-wallets_title = Wallets
-wallets_watch = Watch
+wallets_title = Pochi
+wallets_watch = Tazama
 
 # Receive
 
@@ -115,74 +114,74 @@ receive_warning = Hii ni anwani yako — tuma pekee %@ kwenye %@ mtandao.
 # Buy
 
 buy_title = Nunua %@
-buy_providers_title = Providers
-buy_rate = Rate
-buy_no_results = No quotes available
+buy_providers_title = Watoa huduma
+buy_rate = Kiwango
+buy_no_results = Hakuna nukuu zinazopatikana
 
 # Transfer
 
-transfer_network_fee = Network Fee
+transfer_network_fee = Ada ya Mtandao
 transfer_memo = Memo
-transfer_confirm = Confirm
-transfer_from = From
-transfer_to = To
+transfer_confirm = Thibitisha
+transfer_from = Kutoka
+transfer_to = Kwa
 transfer_max = Max
-transfer_network = Network
-transfer_recipient_title = Recipient
-transfer_balance = Balance: %@
-transfer_title = Transfer
-transfer_recipient_address_field = Address or Name
+transfer_network = Mtandao
+transfer_recipient_title = Mpokeaji
+transfer_balance = Salio: %@
+transfer_title = Uhamisho
+transfer_recipient_address_field = Anwani au Jina
 transfer_send_title = Tuma
-transfer_insufficient_balance = Insufficient %@ balance.
-transfer_insufficient_network_fee_balance = Insufficient %@ balance to cover network fees.
-transfer_approve_title = Approve
+transfer_insufficient_balance = Salio la %@ halitoshi.
+transfer_insufficient_network_fee_balance = Salio la %@ halitoshi kulipia ada za mtandao.
+transfer_approve_title = Idhinisha
 transfer_stake_title = Wadau
-transfer_claim_rewards_title = Claim Rewards
-transfer_unstake_title = Unstake
-transfer_redelegate_title = Redelegate
+transfer_claim_rewards_title = Dai Zawadi
+transfer_unstake_title = Ondoa hisa
+transfer_redelegate_title = Mkabidhi tena madaraka
 transfer_withdraw_title = Ondoa
-transfer_rewards_title = Rewards
-transfer_minimum_amount = Minimum Amount is %@
-transfer_activate_asset_title = Activate Asset
+transfer_rewards_title = Zawadi
+transfer_minimum_amount = Kiasi cha chini ni %@
+transfer_activate_asset_title = Washa Kipengee
 transfer_recipient_my_wallets = Pochi Zangu
 transfer_recipient_view_wallets = Tazama Pochi
 transfer_minimum_account_balance = Salio la chini la %@ lazima lisalie baada ya hili, isipokuwa kama unatumia salio lako kamili.
-transfer_smart_contract_title = Smart Contract
-transfer_other_title = Other
-transfer_maximum_amount = Maximum Amount is %@
+transfer_smart_contract_title = Mkataba wa Smart
+transfer_other_title = Nyingine
+transfer_maximum_amount = Kiasi cha juu ni %@
 transfer_reserved_fees = Tumeacha %@ katika salio lako ili kulipia ada za mtandao za siku zijazo.
 transfer_freeze_title = Kuganda
 transfer_unfreeze_title = Ondoa kuganda
 transfer_sign_transaction_title = Saini Muamala
 transfer_review_request = Ombi la Uhakiki
-transfer_amount = Amount
-transfer_amount_title = Amount
+transfer_amount = Kiasi
+transfer_amount_title = Kiasi
 
 # Settings
 
-settings_terms_of_services = Terms of Services
-settings_privacy_policy = Privacy Policy
+settings_terms_of_services = Masharti ya Huduma
+settings_privacy_policy = Sera ya Faragha
 settings_title = Mipangilio
-settings_developer = Developer
-settings_version = Version
-settings_community = Community
-settings_aboutus = About Us
-settings_networks_title = Networks
-settings_networks_source = Source
-settings_networks_explorer = Explorer
-settings_currency = Currency
-settings_rate_app = Rate App
-settings_website = Visit Website
-settings_security = Security
-settings_enable_value = Enable %@
-settings_enable_passcode = Enable Passcode
-settings_security_authentication = Authentication
-settings_notifications_title = Notifications
-settings_language = Language
-settings_help_center = Help Center
-settings_support = Support
-settings_price_alerts_title = Price Alerts
-settings_hide_balance = Hide Balance
+settings_developer = Msanidi
+settings_version = Toleo
+settings_community = Jumuiya
+settings_aboutus = Kuhusu Sisi
+settings_networks_title = Mitandao
+settings_networks_source = Chanzo
+settings_networks_explorer = Mchunguzi
+settings_currency = Sarafu
+settings_rate_app = Kadiria Programu
+settings_website = Tembelea Tovuti
+settings_security = Usalama
+settings_enable_value = Washa %@
+settings_enable_passcode = Washa Nambari ya siri
+settings_security_authentication = Uthibitishaji
+settings_notifications_title = Arifa
+settings_language = Lugha
+settings_help_center = Kituo cha Usaidizi
+settings_support = Msaada
+settings_price_alerts_title = Tahadhari za Bei
+settings_hide_balance = Ficha Mizani
 settings_disable_value = Zima %@
 settings_preferences_title = Mapendeleo
 settings_preferences_perpetual_default_leverage = Njia Chaguomsingi
@@ -194,33 +193,33 @@ settings_preferences_perpetual_default_stop_loss = Stop Loss chaguomsingi
 errors_transfer = Hitilafu ya Kuhamisha: %@
 errors_validation = Hitilafu ya Uthibitishaji: %@
 errors_create_wallet = Hitilafu ya kuunda Wallet: %@
-errors_invalid_address_name = Invalid address or name
-errors_invalid_amount = Invalid amount
-errors_token_invalid_id = Invalid Token ID
-errors_import_invalid_secret_phrase = Invalid Secret Phrase
-errors_import_invalid_secret_phrase_word = Invalid Secret Phrase word: %@
-errors_invalid_url = Invalid URL
-errors_error_occured = An error occurred!
-errors_invalid_network_id = Invalid Network ID
-errors_error = Error
-errors_connections_user_cancelled = User cancelled
-errors_not_supported = Not Supported
-errors_permissions_not_granted = Permissions Not Granted
-errors_decoding = Decoding Error
-errors_unknown = Unknown
-errors_not_supported_qr = This device does not support QR code scanning. You can only select QR code image from library.
-errors_camera_permissions_not_granted = Camera permission not granted. Please enable camera access in settings to scan QR code.
-errors_decoding_qr = Failed to decode the QR code. Please try again with a different QR code.
-errors_transfer_error = Transfer Error
-errors_unable_estimate_network_fee = We are currently unable to calculate the network fee.
-errors_invalid_asset_address = Invalid %@ address
-errors_dust_threshold = The transaction failed because the amount is too small to meet the %@ network's minimum requirement (dust threshold). This limit ensures the transaction value covers the fees and processing costs.
+errors_invalid_address_name = Anwani au jina si sahihi
+errors_invalid_amount = Kiasi kisicho sahihi
+errors_token_invalid_id = Kitambulisho Batili cha Tokeni
+errors_import_invalid_secret_phrase = Maneno ya Siri Batili
+errors_import_invalid_secret_phrase_word = Neno batili la Neno la Siri: %@
+errors_invalid_url = URL batili
+errors_error_occured = Hitilafu imetokea!
+errors_invalid_network_id = Kitambulisho batili cha Mtandao
+errors_error = Hitilafu
+errors_connections_user_cancelled = Mtumiaji ameghairiwa
+errors_not_supported = Haitumiki
+errors_permissions_not_granted = Ruhusa Hazijatolewa
+errors_decoding = Hitilafu ya Kusimbua
+errors_unknown = Haijulikani
+errors_not_supported_qr = Kifaa hiki hakitumii uchanganuzi wa msimbo wa QR. Unaweza tu kuchagua picha ya msimbo wa QR kutoka maktaba.
+errors_camera_permissions_not_granted = Ruhusa ya kamera haijatolewa. Tafadhali washa ufikiaji wa kamera katika mipangilio ili kuchanganua msimbo wa QR.
+errors_decoding_qr = Imeshindwa kusimbua msimbo wa QR. Tafadhali jaribu tena ukitumia msimbo tofauti wa QR.
+errors_transfer_error = Hitilafu ya Kuhamisha
+errors_unable_estimate_network_fee = Kwa sasa hatuwezi kukokotoa ada ya mtandao.
+errors_invalid_asset_address = Anwani %@ si sahihi
+errors_dust_threshold = Muamala haukufaulu kwa sababu kiasi hicho ni kidogo sana kutosheleza mahitaji ya chini ya mtandao %@ (kiwango cha juu cha vumbi). Kikomo hiki kinahakikisha thamani ya muamala inashughulikia ada na gharama za usindikaji.
 errors_swap_no_quote_available = Hakuna nukuu inayopatikana.
-errors_swap_not_supported_chain = Not supported chain.
-errors_swap_not_supported_asset = Not supported asset.
-errors_swap_not_supported_pair = Not supported pair.
-errors_connections_invalid_send_parameters = Invalid parameters provided for sending a transaction.
-errors_connections_invalid_sign_parameters = Invalid parameters provided for signing.
+errors_swap_not_supported_chain = Mnyororo hautumiki.
+errors_swap_not_supported_asset = Kipengee hakitumiki.
+errors_swap_not_supported_pair = Jozi haitumiki.
+errors_connections_invalid_send_parameters = Vigezo batili vimetolewa kwa ajili ya kutuma muamala.
+errors_connections_invalid_sign_parameters = Vigezo batili vimetolewa kwa ajili ya kusaini.
 errors_connections_no_supported_wallets = Hakuna pochi zinazotumika zinazopatikana.
 errors_connections_unsupported_chain = Msururu uliotolewa hautumiki.
 errors_connections_unsupported_method = Mbinu iliyoombwa haitumiki.
@@ -237,71 +236,71 @@ errors_dust_threshold_short = Mtandao unazingatia kiasi hiki cha vumbi - ada ni 
 errors_swap_minimum_amount = Kiwango cha chini cha biashara ni %@Tafadhali weka kiasi cha juu zaidi.
 errors_perpetual_trigger_price_lower = Bei ya kichochezi inapaswa kuwa chini ya bei ya soko
 errors_perpetual_trigger_price_higher = Bei ya kichochezi inapaswa kuwa juu ya bei ya soko
-errors_token_unable_fetch_token_information = Unable to fetch token information: %@
-errors_unknown_try_again = An unknown error occurred. Please try again.
+errors_token_unable_fetch_token_information = Imeshindwa kuleta maelezo ya tokeni: %@
+errors_unknown_try_again = Hitilafu isiyojulikana imetokea. Tafadhali jaribu tena.
 errors_network_error = Hitilafu ya mtandao: %@
 errors_network_offline = Muunganisho wa intaneti unaonekana kuwa nje ya mtandao.
 
 # Activity
 
-activity_title = Activity
+activity_title = Shughuli
 activity_state_empty_title = Shughuli yako itaonekana hapa
 activity_state_empty_description = Fanya muamala wako wa kwanza
 activity_state_empty_search_description = Futa vichujio ili kuonyesha upya shughuli zako
-activity_state_empty_search_title = No activities found
+activity_state_empty_search_title = Hakuna shughuli zilizopatikana
 
 # Update App
 
-update_app_title = New update available!
-update_app_description = Version %@ of the app is now available. Update and enjoy the latest features and improvements.
-update_app_action = Update
-update_app_permission_title = Allow installation
+update_app_title = Sasisho jipya linapatikana!
+update_app_description = Toleo la %@ la programu sasa linapatikana. Sasisha na ufurahie vipengele na maboresho ya hivi punde.
+update_app_action = Sasisha
+update_app_permission_title = Ruhusu usakinishaji
 update_app_permission_description = Nenda kwa mipangilio na uruhusu usakinishaji kutoka kwa vyanzo vya nje
 update_app_permission_open_settings = Nenda kwa mipangilio
-update_app_downloading = Downloading...
+update_app_downloading = Inapakua...
 
 # Transaction
 
-transaction_recipient = Recipient
-transaction_sender = Sender
-transaction_date = Date
-transaction_view_on = View on %@
-transaction_status = Status
-transaction_status_confirmed = Successful
-transaction_status_pending = Pending
-transaction_status_failed = Failed
-transaction_status_reverted = Reverted
-transaction_title_received = Received
-transaction_title_sent = Sent
+transaction_recipient = Mpokeaji
+transaction_sender = Mtumaji
+transaction_date = Tarehe
+transaction_view_on = Tazama kwenye %@
+transaction_status = Hali
+transaction_status_confirmed = Imefanikiwa
+transaction_status_pending = Inasubiri
+transaction_status_failed = Imeshindwa
+transaction_status_reverted = Imerejeshwa
+transaction_title_received = Imepokelewa
+transaction_title_sent = Imetumwa
 transaction_swap_again = Badilika Tena
-transaction_status_completed = Completed
-transaction_status_inprogress = In Progress
+transaction_status_completed = Imekamilika
+transaction_status_inprogress = Inaendelea
 transaction_status_refunded = Imerejeshwa
 
 # Asset
 
-asset_balances = Balances
-asset_balances_available = Available
-asset_price = Price
-asset_market_cap = Market Cap
-asset_trading_volume = Trading Volume (24h)
-asset_market_cap_rank = Market Cap Rank
-asset_total_supply = Total Supply
-asset_circulating_supply = Circulating Supply
+asset_balances = Mizani
+asset_balances_available = Inapatikana
+asset_price = Bei
+asset_market_cap = Sura ya Soko
+asset_trading_volume = Kiasi cha Biashara (saa 24)
+asset_market_cap_rank = Nafasi ya Soko
+asset_total_supply = Jumla ya Ugavi
+asset_circulating_supply = Ugavi wa Kuzunguka
 asset_balances_reserved = Imehifadhiwa
-asset_view_token_on = View token on %@
-asset_view_address_on = View address on %@
-asset_name = Name
-asset_symbol = Symbol
-asset_decimals = Decimals
+asset_view_token_on = Tazama tokeni kwenye %@
+asset_view_address_on = Tazama anwani kwenye %@
+asset_name = Jina
+asset_symbol = Alama
+asset_decimals = Desimali
 asset_token_id = Kitambulisho cha Tokeni
-asset_contract = Contract
+asset_contract = Mkataba
 asset_state_empty_title = Shughuli zako za malipo zitaonekana hapa️
 asset_state_empty_description = Pokea, badilisha au nunua %@
 asset_verification_unverified = Haijathibitishwa
 asset_verification_suspicious = Inatia shaka
-asset_verification_warning_title = Know What You're Adding
-asset_verification_warning_message = Anyone can create one - including fake or malicious tokens.
+asset_verification_warning_title = Jua Unachoongeza
+asset_verification_warning_message = Mtu yeyote anaweza kuunda moja - ikiwa ni pamoja na ishara bandia au hasidi.
 asset_buy_asset = Nunua %@
 asset_add_to_wallet = Ongeza kwenye mkoba
 asset_hide_from_wallet = Ficha kutoka kwa mkoba
@@ -317,8 +316,8 @@ charts_hour = 1H
 charts_week = 1W
 charts_month = 1M
 charts_year = 1Y
-charts_all = All
-charts_entry = Entry
+charts_all = Wote
+charts_entry = Kuingia
 charts_price_open = Fungua
 charts_price_close = Funga
 charts_price_high = Juu
@@ -327,55 +326,55 @@ charts_price_change = Badilisha
 
 # Date
 
-date_today = Today
-date_yesterday = Yesterday
+date_today = Leo
+date_yesterday = Jana
 
 # Wallet Connect
 
 wallet_connect_title = WalletConnect
-wallet_connect_connection_title = Connection
-wallet_connect_disconnect = Disconnect
-wallet_connect_connect_title = Connect
-wallet_connect_app = App
-wallet_connect_website = Website
+wallet_connect_connection_title = Muunganisho
+wallet_connect_disconnect = Tenganisha
+wallet_connect_connect_title = Unganisha
+wallet_connect_app = Programu
+wallet_connect_website = Tovuti
 wallet_connect_brand_name = WalletConnect
-wallet_connect_no_active_connections = No active connections
+wallet_connect_no_active_connections = Hakuna miunganisho inayotumika
 wallet_connect_state_empty_description = Changanua au ubandike msimbo ili kuunganisha kwenye DApp
-wallet_connect_domain = Domain
+wallet_connect_domain = Kikoa
 wallet_connect_permissions_title = Ruhusa
 wallet_connect_permissions_view_balance = Tazama salio na shughuli zako
 wallet_connect_permissions_approval_requests = Tuma maombi ya idhini
 
 # Swap
 
-swap_you_pay = You Pay
-swap_you_receive = You Receive
-swap_price_impact = Price Impact
-swap_slippage = Slippage
+swap_you_pay = Unalipa
+swap_you_receive = Wewe Pokea
+swap_price_impact = Athari ya Bei
+swap_slippage = Kuteleza
 swap_price_impact_warning_description = Utapoteza %@ ya %@ yako katika biashara hii. Je, una uhakika unataka kuendelea?
-swap_price_impact_warning_title = High Price Impact
-swap_estimated_time_title = Estimated Time
+swap_price_impact_warning_title = Athari ya Bei ya Juu
+swap_estimated_time_title = Muda Unaokadiriwa
 swap_min_receive = Kiasi cha chini cha kupokea
 swap_use_minimum_amount = Tumia Kiasi cha Chini Zaidi
 
 # Stake
 
-stake_active = Active
-stake_pending = Pending
-stake_rewards = Rewards
-stake_validator = Validator
-stake_validators = Validators
+stake_active = Inayotumika
+stake_pending = Inasubiri
+stake_rewards = Zawadi
+stake_validator = Kithibitishaji
+stake_validators = Vithibitishaji
 stake_apr = APR %@
-stake_available_in = Available In
-stake_inactive = Inactive
-stake_lock_time = Lock Time
-stake_activating = Activating
-stake_deactivating = Deactivating
-stake_awaiting_withdrawal = Awaiting Withdrawal
-stake_active_in = Active In
+stake_available_in = Inapatikana Katika
+stake_inactive = Isiyotumika
+stake_lock_time = Muda wa Kufunga
+stake_activating = Inawasha
+stake_deactivating = Inazima
+stake_awaiting_withdrawal = Inasubiri Kuondolewa
+stake_active_in = Inayotumika Katika
 stake_minimum_amount = Kiasi cha chini
-stake_viagem = Stake via Gem Wallet
-stake_no_active_staking = No active staking yet.
+stake_viagem = Shika kupitia Gem Wallet
+stake_no_active_staking = Bado hakuna uwekaji hisa.
 stake_state_empty_title = Hisa zako zitaonekana hapa
 stake_state_empty_description = Shiriki %@ yako ya kwanza
 stake_resource = Rasilimali
@@ -385,29 +384,30 @@ stake_delegations = Uwakilishi
 
 # Assets
 
-assets_no_assets_found = No assets found
-assets_add_custom_token = Add Custom Token
-assets_select_asset = Select Asset
+assets_no_assets_found = Hakuna mali iliyopatikana
+assets_add_custom_token = Ongeza Tokeni Maalum
+assets_select_asset = Chagua Kipengee
+assets_popular = Rasilimali maarufu
 assets_tags_trending = Zinazovuma
-assets_tags_gainers = Gainers
-assets_tags_losers = Losers
-assets_tags_new = New
+assets_tags_gainers = Washindi
+assets_tags_losers = Walioshindwa
+assets_tags_new = Mpya
 assets_tags_stablecoins = Stablecoins
 assets_state_empty_search_description = Unaweza kujaribu kuiongeza wewe mwenyewe
 assets_title = Mali
 
 # Sign Message
 
-sign_message_title = Sign Message
-sign_message_message = Message
-sign_message_view_full_message = View Full Message
+sign_message_title = Saini Ujumbe
+sign_message_message = Ujumbe
+sign_message_view_full_message = Tazama Ujumbe Kamili
 
 # Secret Phrase
 
-secret_phrase_do_not_share_title = Do not share your Secret Phrase!
-secret_phrase_do_not_share_description = If someone has your secret phrase they will have full control of your wallet!
-secret_phrase_save_phrase_safely = Save your Secret Phrase in a secure place \nthat only you control.
-secret_phrase_confirm_quick_test_title = Complete this quick test to confirm you've saved everything correctly.
+secret_phrase_do_not_share_title = Usishiriki Maneno yako ya Siri!
+secret_phrase_do_not_share_description = Ikiwa mtu ana maneno yako ya siri atakuwa na udhibiti kamili wa pochi yako!
+secret_phrase_save_phrase_safely = Hifadhi Maneno yako ya Siri mahali salama \nambayo unadhibiti wewe tu.
+secret_phrase_confirm_quick_test_title = Kamilisha jaribio hili la haraka ili kuthibitisha kuwa umehifadhi kila kitu kwa usahihi.
 secret_phrase_screenshot_detected_title = Picha ya skrini imegunduliwa
 secret_phrase_screenshot_detected_description = Picha za skrini zinaweza kupatikana kwa programu zingine, zinaweza kuweka maneno yako ya siri hatarini ikiwa yamehifadhiwa kwa njia hii.
 secret_phrase_content_hidden_description = Maudhui yaliyofichwa wakati wa kurekodi skrini
@@ -432,24 +432,24 @@ social_coinmarketcap = CoinMarketCap
 
 # Nodes
 
-nodes_import_node_title = Add node
-nodes_import_node_chain_id = Chain ID
-nodes_import_node_in_sync = In Sync
-nodes_import_node_latest_block = Latest Block
-nodes_import_node_latency = Latency
+nodes_import_node_title = Ongeza nodi
+nodes_import_node_chain_id = Kitambulisho cha mnyororo
+nodes_import_node_in_sync = Katika Usawazishaji
+nodes_import_node_latest_block = Block Karibuni
+nodes_import_node_latency = Kuchelewa
 nodes_gem_wallet_node = Gem Wallet Node
 nodes_import_node_warning_message = Nodi maalum zinaweza kuwa na nia mbaya na zinaweza kufichua data ya muamala wako au kutoa taarifa za uongo.
 
 # Library
 
-library_select_from_photo_library = Select from Photo Library
+library_select_from_photo_library = Chagua kutoka kwa Maktaba ya Picha
 
 # Fee Rates
 
-fee_rates_info = Speed of transaction is determined by network fee paid to the network miners.
-fee_rates_slow = Slow
-fee_rates_fast = Fast
-fee_rates_normal = Normal
+fee_rates_info = Kasi ya ununuzi imedhamiriwa na ada ya mtandao inayolipwa kwa wachimbaji wa mtandao.
+fee_rates_slow = Polepole
+fee_rates_fast = Haraka
+fee_rates_normal = Kawaida
 
 # Fee Rate
 
@@ -459,34 +459,34 @@ fee_rate_gwei = %@ gwei
 
 # Banner
 
-banner_account_activation_title = Account Activation Fee
-banner_account_activation_description = The %@ network requires a one time fee of %@.
-banner_stake_title = Start staking %@
-banner_stake_description = Earn %@ rewards on your stake while you sleep.
-banner_enable_notifications_title = Enable Notifications
-banner_enable_notifications_description = Stay on top of your wallet activity.
-banner_activate_asset_description = To use the %@ asset, you must first enable it on the %@ network by fulfilling the network's specific requirements.
-banner_asset_status_title = Suspicious Asset
-banner_asset_status_description = Token may be unsafe or misleading. Proceed only if you fully trust it.
+banner_account_activation_title = Ada ya Kuanzisha Akaunti
+banner_account_activation_description = Mtandao wa %@ unahitaji ada ya mara moja ya %@.
+banner_stake_title = Anza kugoma %@
+banner_stake_description = Pata zawadi %@ kwenye hisa yako unapolala.
+banner_enable_notifications_title = Washa Arifa
+banner_enable_notifications_description = Endelea kufuatilia shughuli zako za pochi.
+banner_activate_asset_description = Ili kutumia kipengee %@, lazima kwanza uiwashe kwenye mtandao wa %@ kwa kutimiza mahitaji mahususi ya mtandao.
+banner_asset_status_title = Mali inayoshukiwa
+banner_asset_status_description = Ishara inaweza kuwa si salama au inapotosha. Endelea tu ikiwa unaiamini kikamilifu.
 banner_onboarding_title = Pochi yako iko tayari
 banner_onboarding_description = Nunua au Upokee crypto ili kuanza
-banner_perpetuals_title = Trade Perpetuals on Hyperliquid
-banner_perpetuals_description = Deposit, trade, and earn with Hyperliquid perpetuals
+banner_perpetuals_title = Biashara ya kudumu kwenye Hyperliquid
+banner_perpetuals_description = Weka, fanya biashara na upate pesa kwa kutumia Hyperliquid perpetals
 
 # Filter
 
-filter_clear = Clear
-filter_title = Filters
-filter_types = Types
+filter_clear = Wazi
+filter_title = Vichujio
+filter_types = Aina
 filter_has_balance = Ina usawa
 
 # Price Alerts
 
-price_alerts_enabled_for = Price alert enabled for %@
-price_alerts_disabled_for = Price alert disabled for %@
-price_alerts_get_notified_explain_message = Get notified when there's a significant price change in your favorite crypto assets.
-price_alerts_direction_over = Over
-price_alerts_direction_under = Under
+price_alerts_enabled_for = Arifa ya bei imewashwa kwa %@
+price_alerts_disabled_for = Arifa ya bei imezimwa kwa %@
+price_alerts_get_notified_explain_message = Pata arifa kunapokuwa na mabadiliko makubwa ya bei katika vipengee unavyovipenda vya crypto.
+price_alerts_direction_over = Zaidi
+price_alerts_direction_under = Chini ya
 price_alerts_direction_increases_by = Huongezeka kwa
 price_alerts_direction_decreases_by = Hupungua kwa
 price_alerts_set_alert_price_over = Wakati bei imekwisha
@@ -503,24 +503,24 @@ price_alerts_set_alert_title = Weka Arifa ya Bei
 
 # Lock
 
-lock_immediately = Immediately
-lock_one_minute = 1 minute
-lock_five_minutes = 5 minutes
-lock_fifteen_minutes = 15 minutes
-lock_one_hour = 1 hour
-lock_six_hours = 6 hours
-lock_require_authentication = Require authentication
-lock_unlock = Unlock
-lock_privacy_lock = Privacy Lock
+lock_immediately = Mara moja
+lock_one_minute = Dakika 1
+lock_five_minutes = Dakika 5
+lock_fifteen_minutes = Dakika 15
+lock_one_hour = Saa 1
+lock_six_hours = 6 masaa
+lock_require_authentication = Inahitaji uthibitishaji
+lock_unlock = Fungua
+lock_privacy_lock = Kufuli ya Faragha
 lock_footer = Linda ufikiaji wa programu hii kwenye kifaa chako
 
 # Verify
 
-verify_phrase_title = Confirm
+verify_phrase_title = Thibitisha
 
 # Warnings
 
-warnings_multi_signature_blocked = Do not transfer funds to this %@ Multi-Signature wallet unless you are certain you control the private keys. Failure to do so could expose you to scams, and you may permanently lose your assets.
+warnings_multi_signature_blocked = Usihamishe pesa kwa %@ pochi hii ya Sahihi nyingi isipokuwa una uhakika kuwa unadhibiti funguo za faragha. Kukosa kufanya hivyo kunaweza kukuweka kwenye ulaghai, na unaweza kupoteza mali yako kabisa.
 
 # Sell
 
@@ -528,15 +528,15 @@ sell_title = Uza %@
 
 # Info
 
-info_network_fee_title = Network Fee
-info_watch_wallet_title = Watch Wallet
-info_watch_wallet_description = A wallet that you do not have access to, but you can watch its transactions and movements.
-info_network_fee_description = Every transaction on the %@ network requires a fee in %@ paid to miners to process your transaction, not Gem Wallet. Network fees varies based on network usage.
-info_transaction_error_description = The transaction could not be completed due to an error, such as insufficient funds, invalid input, or rejection by the network. Please review the details and try again.
-info_transaction_pending_description = The transaction has been submitted and is awaiting confirmation on the network. Processing times may vary. Please check back for updates.
-info_transaction_success_description = The transaction has been completed and confirmed on the network. You can review the details to verify its status.
-info_lock_time_description = Lock time, also known as the unbonding or unfreezing period, is the duration during which staked assets are inaccessible after you decide to unstake them.
-info_price_impact_description = Price impact is the change in token price caused by your trade size. Higher price impact means you receive fewer tokens due to low liquidity or a large order size.
+info_network_fee_title = Ada ya Mtandao
+info_watch_wallet_title = Tazama Wallet
+info_watch_wallet_description = Mkoba ambao huna ufikiaji, lakini unaweza kutazama shughuli na harakati zake.
+info_network_fee_description = Kila muamala kwenye mtandao wa %@ unahitaji ada ya %@ kulipwa kwa wachimbaji ili kushughulikia muamala wako, si Gem Wallet. Ada za mtandao hutofautiana kulingana na matumizi ya mtandao.
+info_transaction_error_description = Muamala haukuweza kukamilika kwa sababu ya hitilafu, kama vile uhaba wa fedha, ingizo batili au kukataliwa na mtandao. Tafadhali kagua maelezo na ujaribu tena.
+info_transaction_pending_description = Muamala umewasilishwa na unasubiri uthibitisho kwenye mtandao. Nyakati za usindikaji zinaweza kutofautiana. Tafadhali angalia tena kwa sasisho.
+info_transaction_success_description = Muamala umekamilika na kuthibitishwa kwenye mtandao. Unaweza kukagua maelezo ili kuthibitisha hali yake.
+info_lock_time_description = Muda wa kufunga, unaojulikana pia kama kipindi cha kuunganisha au kufungia, ni muda ambao mali zilizowekwa kwenye hisa haziwezi kufikiwa baada ya kuamua kuziondoa.
+info_price_impact_description = Athari ya bei ni mabadiliko ya bei ya tokeni yanayosababishwa na ukubwa wa biashara yako. Athari ya bei ya juu inamaanisha unapokea tokeni chache kutokana na ukwasi mdogo au ukubwa mkubwa wa agizo.
 info_slippage_description = Slippage inarejelea tofauti kati ya bei inayotarajiwa ya biashara na bei halisi ambayo inatekelezwa.
 info_asset_status_unverified_description = Tokeni ambazo hazijathibitishwa hazijathibitishwa vya kutosha na huduma zinazoaminika za wahusika wengine. Huenda zikaonekana kwenye mkoba wako kwa sababu ya matone ya hewa, uhamisho, au uagizaji wa mikono.
 info_asset_status_suspicious_description = Tokeni zinazotiliwa shaka au taka zinatambuliwa kuwa ulaghai au mali hatari. Huenda zikaonekana kwenye mkoba wako kwa sababu ya matone ya hewa, uhamisho, au uagizaji wa mikono.
@@ -545,14 +545,14 @@ info_insufficient_network_fee_balance_description = Muamala huu unahitaji %@ ili
 info_insufficient_balance_title = Mizani isiyotosha
 info_insufficient_balance_description = Huna %@ ya kutosha kukamilisha muamala huu. Tafadhali jaza, pokea, au ubadilishe pochi yako na ujaribu tena.
 info_account_minimum_balance_title = Kiwango cha chini cha usawa
-info_perpetual_funding_payments_title = Funding Payments
-info_perpetual_funding_payments_description = Funding payments are periodic payments between traders to keep the perpetual contract price close to the underlying asset's spot price. Positive funding means long positions pay short positions, while negative funding means short positions pay long positions.
-info_perpetual_funding_rate_title = Funding
-info_perpetual_funding_rate_description = The funding rate determines the cost of holding a perpetual position. It is calculated hourly and helps maintain price equilibrium between the perpetual contract and the underlying asset's spot price.
+info_perpetual_funding_payments_title = Malipo ya Ufadhili
+info_perpetual_funding_payments_description = Malipo ya ufadhili ni malipo ya mara kwa mara kati ya wafanyabiashara ili kuweka bei ya kudumu ya mkataba karibu na bei ya msingi ya mali. Ufadhili mzuri unamaanisha nafasi ndefu kulipa nafasi fupi, wakati ufadhili hasi unamaanisha nafasi fupi kulipa nafasi ndefu.
+info_perpetual_funding_rate_title = Ufadhili
+info_perpetual_funding_rate_description = Kiwango cha ufadhili huamua gharama ya kushikilia nafasi ya kudumu. Hukokotolewa kila saa na husaidia kudumisha usawa wa bei kati ya mkataba wa kudumu na bei ya msingi ya kipengee.
 info_perpetual_liquidation_price_title = Bei ya Kukomesha
-info_perpetual_liquidation_price_description = The liquidation price is the price level at which your position will be automatically closed to prevent further losses. When the market price reaches this level, your position is liquidated and you lose your margin.
-info_perpetual_open_interest_title = Open Interest
-info_perpetual_open_interest_description = Open interest represents the total value of all outstanding perpetual contracts that have not been settled. It provides insight into market activity and liquidity.
+info_perpetual_liquidation_price_description = Bei ya kufilisi ni kiwango cha bei ambapo nafasi yako itafungwa kiotomatiki ili kuzuia hasara zaidi. Wakati bei ya soko inafikia kiwango hiki, nafasi yako inafutwa na unapoteza kiasi chako.
+info_perpetual_open_interest_title = Fungua Maslahi
+info_perpetual_open_interest_description = Riba ya wazi inawakilisha jumla ya thamani ya kandarasi zote za kudumu ambazo hazijatatuliwa. Inatoa maarifa juu ya shughuli za soko na ukwasi.
 info_no_quote_description = Haikuweza kurejesha nukuu kwa jozi ya tokeni iliyochaguliwa, labda kwa sababu ya kiasi kidogo, ukosefu wa ukwasi, au vikwazo vya kiufundi.
 info_stake_reserved_title = Imehifadhiwa kwa Ada ya Mtandao
 info_stake_reserved_description = Kiasi kidogo husalia kwenye mkoba wako ili kulipia ada za shughuli kama vile kutoweka au kudai zawadi.
@@ -564,22 +564,22 @@ info_circulating_supply_description = Idadi ya sarafu zinazopatikana sasa na zin
 info_total_supply_description = Jumla ya sarafu zilizopo, ikijumuisha sarafu zilizofungwa au zilizohifadhiwa.
 info_max_supply_title = Ugavi wa Juu Zaidi
 info_max_supply_description = Idadi ya juu zaidi ya sarafu zitakazokuwepo.
-info_perpetual_funding_apr_title = Funding APR
-info_perpetual_funding_apr_description = The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.
-info_minimum_amount_title = Minimum Amount
+info_perpetual_funding_apr_title = Ufadhili wa APR
+info_perpetual_funding_apr_description = Kiwango cha kila mwaka ambacho urefu hulipa kaptula (ikiwa hasi, kaptula hulipa muda mrefu). Hakuna ada zinazohusishwa na ufadhili, ambao ni uhamishaji kati ya watumiaji kati ya watumiaji ili kusukuma bei kuelekea bei inayotarajiwa.
+info_minimum_amount_title = Kiasi cha Chini
 info_minimum_amount_description = Kwenye mtandao wa %@, kiasi cha chini kwa muamala huu ni %@.
 
 # Input
 
-input_enter_amount_to = Please enter amount to %@
+input_enter_amount_to = Tafadhali weka kiasi hadi %@
 
 # Nft
 
-nft_properties = Properties
-nft_collections = Collections
-nft_collection = Collection
-nft_save_to_photos = Save to Photos
-nft_set_as_avatar = Set as Avatar
+nft_properties = Mali
+nft_collections = Mikusanyiko
+nft_collection = Mkusanyiko
+nft_save_to_photos = Hifadhi kwa Picha
+nft_set_as_avatar = Weka kama Avatar
 nft_state_empty_title = NFT zako zitaonekana hapa️
 nft_state_empty_description = Pokea NFT yako ya kwanza
 nft_report_reason_spam = Barua taka
@@ -590,12 +590,12 @@ nft_report_report_button_title = Ripoti
 
 # Permissions
 
-permissions_access_denied = Access Denied
-permissions_image_photo_access_denied_description = This app does not have permission to access your photo library. Please enable access in your device settings.
+permissions_access_denied = Ufikiaji Umekataliwa
+permissions_image_photo_access_denied_description = Programu hii haina ruhusa ya kufikia maktaba yako ya picha. Tafadhali wezesha ufikiaji katika mipangilio ya kifaa chako.
 
 # Markets
 
-markets_title = Markets
+markets_title = Masoko
 markets_state_empty_title = Data yako ya masoko itaonekana hapa
 markets_daily_volume = Sauti ya 24h
 
@@ -610,19 +610,19 @@ networks_state_empty_search_title = Hakuna mitandao iliyopatikana
 # Onboarding
 
 onboarding_security_create_wallet_intro_title = Utapata Maneno ya Siri - ndiyo njia pekee ya kufikia pochi yako.
-onboarding_security_create_wallet_confirm_title = I understand and want to continue
-onboarding_security_create_wallet_do_not_share_title = Do Not Share It With Anyone
-onboarding_security_create_wallet_do_not_share_subtitle = Anyone who gets your secret phrase can take full control of your wallet.
-onboarding_security_create_wallet_keep_safe_subtitle = The secret phrase is only way to access your wallet.
-onboarding_security_create_wallet_no_recovery_subtitle = If you lose your secret phrase, you lose access to your wallet.
+onboarding_security_create_wallet_confirm_title = Ninaelewa na ninataka kuendelea
+onboarding_security_create_wallet_do_not_share_title = Usimshirikishe Mtu Yeyote
+onboarding_security_create_wallet_do_not_share_subtitle = Mtu yeyote anayepata maneno yako ya siri anaweza kuchukua udhibiti kamili wa pochi yako.
+onboarding_security_create_wallet_keep_safe_subtitle = Maneno ya siri ndiyo njia pekee ya kufikia mkoba wako.
+onboarding_security_create_wallet_no_recovery_subtitle = Ukipoteza maneno yako ya siri, utapoteza ufikiaji wa mkoba wako.
 onboarding_security_create_wallet_keep_safe_title = Ihifadhi Mahali Pengine Salama
 onboarding_security_create_wallet_no_recovery_title = Hatuwezi Kukusaidia Kuirejesha
 onboarding_accept_terms_title = Kubali Masharti
 onboarding_accept_terms_message = Tafadhali soma na ukubali masharti yafuatayo kabla hujaendelea.
 onboarding_accept_terms_item1_message = Ninaelewa kuwa ninawajibika pekee kwa usalama na hifadhi rudufu ya pochi zangu, si Gem.
 onboarding_accept_terms_item2_message = Ninaelewa kuwa Gem si benki au ubadilishaji, na kuitumia kwa madhumuni yasiyo halali ni marufuku kabisa.
-onboarding_accept_terms_item3_message = I understand that if I ever lose access to my wallets, Gem is not liable and cannot help in any way.
-onboarding_accept_terms_continue = Agree and Continue
+onboarding_accept_terms_item3_message = Ninaelewa kuwa nikipoteza ufikiaji wa pochi zangu, Gem haiwajibikiwi na haiwezi kusaidia kwa njia yoyote.
+onboarding_accept_terms_continue = Kubali na Uendelee
 
 # Brand
 
@@ -636,8 +636,8 @@ perpetual_margin = Pembezoni
 perpetual_position = Nafasi
 perpetual_close_position = Msimamo wa karibu
 perpetual_pnl = PnL
-perpetual_long = Long
-perpetual_short = Short
+perpetual_long = Muda mrefu
+perpetual_short = Mfupi
 perpetual_entry_price = Bei ya Kuingia
 perpetual_modify = Rekebisha
 perpetual_reduce_position = Punguza Nafasi
@@ -664,14 +664,14 @@ perpetual_volume = Kiasi
 perpetual_all_time_pnl = PnL ya Wakati Wote
 perpetual_margin_usage = Matumizi ya Pambizo
 perpetual_account_leverage = Ufaidi wa Akaunti
-perpetual_margin_cross = Cross
-perpetual_margin_isolated = Isolated
+perpetual_margin_cross = Msalaba
+perpetual_margin_isolated = Imetengwa
 
 # Perpetuals
 
 perpetuals_title = Milele
-perpetuals_markets = Markets
-perpetuals_empty_state_no_markets = No markets
+perpetuals_markets = Masoko
+perpetuals_empty_state_no_markets = Hakuna masoko
 perpetuals_empty_state_no_markets_found = Hakuna masoko yaliyopatikana
 
 # Rewards
@@ -682,7 +682,7 @@ rewards_my_referral_code = Nambari yangu ya rufaa
 rewards_invite_friends_title = Alika Marafiki
 rewards_invite_friends_description = Pata %@ pointi kwa kila rafiki anayejiunga.
 rewards_referral_code = Nambari ya Rufaa
-rewards_invited_by = Invited By
+rewards_invited_by = Alialikwa Na
 rewards_points = Pointi
 rewards_referrals = Marejeleo
 rewards_earn_points_title = Pata Pointi
@@ -706,8 +706,8 @@ rewards_unverified_description = Zawadi huamilishwa kiotomatiki unapotumia progr
 # Recent Activity
 
 recent_activity_title = Hivi karibuni
-recent_activity_state_empty_title = Your recents will appear here
-recent_activity_state_empty_description = Assets you've recently used will appear here
+recent_activity_state_empty_title = Habari zako za hivi majuzi zitaonekana hapa
+recent_activity_state_empty_description = Vipengee ambavyo umetumia hivi karibuni vitaonekana hapa
 
 # Notifications
 
@@ -742,19 +742,19 @@ application_name = Gem
 
 # Camera Permission
 
-camera_permission_request_camera = Camera permission required for QR Code scan.\nPlease grant permission.
+camera_permission_request_camera = Ruhusa ya kamera inahitajika ili kuchanganua Msimbo wa QR.\nTafadhali toa ruhusa.
 
 # Notifications Permission
 
-notifications_permission_request_notification = Post Notifications permission required for get notifications about new transactions.\nPlease grant permission.
+notifications_permission_request_notification = Ruhusa ya Arifa za Machapisho inahitajika ili kupata arifa kuhusu miamala mipya.\nTafadhali toa ruhusa.
 
 # Confirm
 
-confirm_fee_error = Fee calculation error
+confirm_fee_error = Hitilafu ya kuhesabu ada
 
 # Rootcheck
 
-rootcheck_security_alert = Security Warning
-rootcheck_body = Your device appears to have root access, which can significantly increase security risks. Using this app on a rooted device may expose your assets to unauthorized access and potential loss. For the safety of your funds, we strongly recommend using a non-rooted device.
-rootcheck_ignore = Ignore
-rootcheck_exit = Exit
+rootcheck_security_alert = Onyo la Usalama
+rootcheck_body = Kifaa chako kinaonekana kuwa na ufikiaji wa mizizi, ambayo inaweza kuongeza hatari za usalama kwa kiasi kikubwa. Kutumia programu hii kwenye kifaa kilichozinduliwa kunaweza kufichua mali yako kwa ufikiaji usioidhinishwa na uwezekano wa hasara. Kwa usalama wa pesa zako, tunapendekeza sana kutumia kifaa kisicho na mizizi.
+rootcheck_ignore = Puuza
+rootcheck_exit = Toka

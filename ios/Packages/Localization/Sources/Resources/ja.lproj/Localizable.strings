@@ -37,7 +37,6 @@
 "common.skip" = "スキップ";
 "common.warning" = "警告";
 "common.learn_more" = "もっと詳しく知る";
-"common.popular" = "人気";
 "common.short_name" = "Gem";
 "common.description" = "説明";
 "common.emoji" = "絵文字";
@@ -50,7 +49,7 @@
 "common.details" = "ディテール";
 "common.info" = "情報";
 "common.get_started" = "始める";
-"common.earn" = "Earn";
+"common.earn" = "稼ぐ";
 "common.method" = "方法";
 "common.token" = "トークン";
 "common.suspicious_address" = "不審な住所";
@@ -120,7 +119,7 @@
 "transfer.withdraw.title" = "引き出す";
 "transfer.rewards.title" = "リワード";
 "transfer.minimum_amount" = "最小金額は%@です";
-"transfer.activate_asset.title" = "Activate Asset";
+"transfer.activate_asset.title" = "アセットのアクティブ化";
 "transfer.recipient.my_wallets" = "マイウォレット";
 "transfer.recipient.view_wallets" = "ウォレットを表示";
 "transfer.minimum_account_balance" = "残高をすべて使用しない限り、この後も最低%@残高が残っている必要があります。";
@@ -226,8 +225,8 @@
 "transaction.title.received" = "受け";
 "transaction.title.sent" = "送金";
 "transaction.swap_again" = "再度スワップ";
-"transaction.status.completed" = "Completed";
-"transaction.status.inprogress" = "In Progress";
+"transaction.status.completed" = "完了";
+"transaction.status.inprogress" = "進行中";
 "transaction.status.refunded" = "返金済み";
 "asset.balances" = "残高";
 "asset.balances.available" = "利用可能";
@@ -264,7 +263,7 @@
 "charts.month" = "1月";
 "charts.year" = "1年";
 "charts.all" = "全て";
-"charts.entry" = "Entry";
+"charts.entry" = "エントリー";
 "charts.price.open" = "開ける";
 "charts.price.close" = "近い";
 "charts.price.high" = "高い";
@@ -299,7 +298,7 @@
 "stake.rewards" = "報酬";
 "stake.validator" = "バリデーター";
 "stake.validators" = "バリデーター";
-"stake.apr" = "APR %@";
+"stake.apr" = "4 月 %@";
 "stake.available_in" = "入手可能";
 "stake.inactive" = "非アクティブ";
 "stake.lock_time" = "ロック時間";
@@ -308,7 +307,7 @@
 "stake.awaiting_withdrawal" = "引き出し待ち";
 "stake.active_in" = "アクティブ";
 "stake.minimum_amount" = "最小額";
-"stake.viagem" = "Stake via Gem Wallet";
+"stake.viagem" = "Gem ウォレット経由でステークする";
 "stake.no_active_staking" = "アクティブなステーキングはまだありません。";
 "stake.state.empty.title" = "ステークはここに表示されます";
 "stake.state.empty.description" = "初めてステーキング %@";
@@ -319,6 +318,7 @@
 "assets.no_assets_found" = "資産なし";
 "assets.add_custom_token" = "カスタム・トークンの追加";
 "assets.select_asset" = "資産を選択";
+"assets.popular" = "人気のアセット";
 "assets.tags.trending" = "トレンド";
 "assets.tags.gainers" = "値上がりランキング";
 "assets.tags.losers" = "値下がりランキング";
@@ -377,8 +377,8 @@
 "banner.asset_status.description" = "トークンは安全でないか、誤解を招く可能性がある。完全に信頼できる場合のみ手続きを行ってください。";
 "banner.onboarding.title" = "ウォレットの準備ができました";
 "banner.onboarding.description" = "始めるには暗号通貨を購入または受け取りましょう";
-"banner.perpetuals.title" = "Trade Perpetuals on Hyperliquid";
-"banner.perpetuals.description" = "Deposit, trade, and earn with Hyperliquid perpetuals";
+"banner.perpetuals.title" = "Hyperliquidで永久取引をする";
+"banner.perpetuals.description" = "Hyperliquid perpetuals で入金、取引、収益を得る";
 "filter.clear" = "クリア";
 "filter.title" = "フィルター";
 "filter.types" = "種類";
@@ -450,9 +450,9 @@
 "info.total_supply.description" = "ロックされたコインや予約されたコインを含む、存在するコインの合計数。";
 "info.max_supply.title" = "最大供給";
 "info.max_supply.description" = "これまでに存在するコインの最大数。";
-"info.perpetual.funding_apr.title" = "Funding APR";
-"info.perpetual.funding_apr.description" = "The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.";
-"info.minimum_amount.title" = "Minimum Amount";
+"info.perpetual.funding_apr.title" = "年利の資金調達";
+"info.perpetual.funding_apr.description" = "ロングがショートに支払う年率 (マイナスの場合、ショートがロングに支払う)。価格をスポット価格に近づけるためのユーザー間のピアツーピア転送である資金調達に関連する手数料はありません。";
+"info.minimum_amount.title" = "最低金額";
 "info.minimum_amount.description" = "%@ ネットワークで、この取引の最低金額は %@ です。";
 "input.enter_amount_to" = "%@の金額を入力してください";
 "nft.properties" = "プロパティ";
@@ -523,11 +523,11 @@
 "perpetual.all_time_pnl" = "これまでの損益";
 "perpetual.margin_usage" = "マージンの使用";
 "perpetual.account_leverage" = "アカウントレバレッジ";
-"perpetual.margin.cross" = "Cross";
-"perpetual.margin.isolated" = "Isolated";
+"perpetual.margin.cross" = "クロス";
+"perpetual.margin.isolated" = "孤立した";
 "perpetuals.title" = "パーペチュアル";
-"perpetuals.markets" = "Markets";
-"perpetuals.empty_state.no_markets" = "No markets";
+"perpetuals.markets" = "市場";
+"perpetuals.empty_state.no_markets" = "市場がない";
 "perpetuals.empty_state.no_markets_found" = "市場が見つかりません";
 "rewards.title" = "報酬";
 "rewards.share_text" = "参加する Gem Wallet 私の紹介リンクを使用して報酬を獲得しましょう: %@";
@@ -535,7 +535,7 @@
 "rewards.invite_friends.title" = "友達を招待";
 "rewards.invite_friends.description" = "得る %@ 参加した友達ごとにポイントが付与されます。";
 "rewards.referral_code" = "紹介コード";
-"rewards.invited_by" = "Invited By";
+"rewards.invited_by" = "招待者";
 "rewards.points" = "ポイント";
 "rewards.referrals" = "紹介";
 "rewards.earn_points.title" = "ポイントを獲得";
@@ -556,8 +556,8 @@
 "rewards.unverified.title" = "特典はまだ有効になっていません。";
 "rewards.unverified.description" = "アプリの利用頻度が高くなるにつれて、特典が自動的に付与されます。";
 "recent_activity.title" = "最近";
-"recent_activity.state.empty.title" = "Your recents will appear here";
-"recent_activity.state.empty.description" = "Assets you've recently used will appear here";
+"recent_activity.state.empty.title" = "最近のものがここに表示されます";
+"recent_activity.state.empty.description" = "最近使用したアセットがここに表示されます";
 "notifications.inapp.state.empty.title" = "まだ通知はありません";
 "notifications.inapp.state.empty.description" = "通知に関する最新情報はここで確認できます";
 "notifications.inapp.rewards.invite.subtitle" = "友達を招待して一緒に報酬を獲得しましょう";

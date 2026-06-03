@@ -1,74 +1,73 @@
 # Common
 
 common_cancel = Ophæve
-common_done = Done
+common_done = Færdig
 common_secret_phrase = Hemmelig sætning
-common_next = Next
-common_copy = Copy
-common_share = Share
-common_continue = Continue
-common_provider = Provider
-common_loading = Loading
-common_address = Address
-common_back = Back
-common_try_again = Try Again
-common_paste = Paste
-common_delete = Delete
+common_next = Næste
+common_copy = Kopiér
+common_share = Del
+common_continue = Fortsæt
+common_provider = Udbyder
+common_loading = Indlæser
+common_address = Adresse
+common_back = Tilbage
+common_try_again = Prøv igen
+common_paste = Indsæt
+common_delete = Slet
 common_delete_confirmation = Er du sikker på, at du vil slette %@?
-common_hide = Hide
-common_wallet = Wallet
+common_hide = Skjul
+common_wallet = Tegnebog
 common_show = Vise %@
-common_copied = Copied: %@
-common_recommended = Recommended
-common_all = All
-common_not_available = Not Available
-common_phrase = Phrase
-common_manage = Manage
+common_copied = Kopieret: %@
+common_recommended = Anbefales
+common_all = Alle
+common_not_available = Ikke tilgængelig
+common_phrase = Sætning
+common_manage = Administrer
 common_type = Type
-common_no_results_found = No Results Found
-common_yes = Yes
-common_no = No
+common_no_results_found = Ingen resultater fundet
+common_yes = Ja
+common_no = Nej
 common_none = Ingen
 common_url = URL
-common_private_key = Private Key
+common_private_key = Privat nøgle
 common_latency_in_ms = %d ms
-common_open_settings = Open settings
-common_pin = Pin
-common_pinned = Pinned
-common_unpin = Unpin
-common_skip = Skip
+common_open_settings = Åbn indstillinger
+common_pin = Stift
+common_pinned = Fastgjort
+common_unpin = Frigør
+common_skip = Spring over
 common_warning = Advarsel
-common_learn_more = Learn More
-common_popular = Popular
+common_learn_more = Lær mere
 common_short_name = Gem
-common_description = Description
+common_description = Beskrivelse
 common_emoji = Emoji
-common_style = Style
+common_style = Stil
 common_avatar = Avatar
-common_photo = Photo
-common_save = Save
-common_edit = Edit
+common_photo = Foto
+common_save = Gem
+common_edit = Rediger
 common_percentage = Procent
 common_details = Detaljer
 common_info = Info
 common_get_started = Kom i gang
-common_earn = Earn
+common_earn = Tjen
 common_method = Metode
 common_token = Token
 common_suspicious_address = Mistænkelig adresse
 common_refresh = Opfriske
-common_no_thanks = No thanks
-common_grant_permission = Grant permission
-common_required_field = %@ is required
+common_no_thanks = Nej tak
+common_grant_permission = Giv tilladelse
+common_required_field = %@ er påkrævet
 
 # Welcome
 
-welcome_title = Welcome to Gem Family
+welcome_title = Velkommen til Gem Family
 
 # Wallet
 
-wallet_create_new_wallet = Create a New Wallet
-wallet_import_existing_wallet = Import an Existing Wallet
+wallet_create_new_wallet = Opret en ny tegnebog
+wallet_import_existing_wallet = Importer en eksisterende tegnebog
 wallet_send = Sende
 wallet_receive = Modtage
 wallet_buy = Købe
@@ -77,23 +76,23 @@ wallet_import_title = Importér tegnebog
 wallet_new_title = Ny tegnebog
 wallet_name = Navn
 wallet_import_action = Importere
-wallet_multicoin = Multi-Coin
-wallet_import_address_field = Address or Name
+wallet_multicoin = Multi-mønt
+wallet_import_address_field = Adresse eller Navn
 wallet_manage_token_list = Administrer tokens
-wallet_scan_qr_code = Scan QR Code
+wallet_scan_qr_code = Scan QR-kode
 wallet_scan = Scan
-wallet_default_name = Wallet #%d
-wallet_default_name_chain = %@ Wallet #%d
-wallet_copy_address = Copy Address
-wallet_watch_tooltip_title = You are watching this wallet.
-wallet_stake = Stake
-wallet_receive_no_memo_required = No memo required
-wallet_receive_no_destination_tag_required = No destination tag required
-wallet_title = Wallet
-wallet_add_token_title = Add Token
-wallet_sell = Sell
-wallet_receive_collection = Receive Collection
-wallet_more = More
+wallet_default_name = Tegnebog #%d
+wallet_default_name_chain = %@ tegnebog #%d
+wallet_copy_address = Kopiér adresse
+wallet_watch_tooltip_title = Du holder øje med denne pung.
+wallet_stake = Indsats
+wallet_receive_no_memo_required = Intet notat påkrævet
+wallet_receive_no_destination_tag_required = Der kræves ingen destinationsmærke
+wallet_title = Tegnebog
+wallet_add_token_title = Tilføj token
+wallet_sell = Sælg
+wallet_receive_collection = Modtag samling
+wallet_more = Mere
 wallet_import_contract_address_field = Kontrakt eller token-ID
 wallet_import_address_warning = Du kan se saldi og transaktioner for denne adresse, men **kan ikke sende eller sælge penge**.
 wallet_deposit = Depositum
@@ -104,8 +103,8 @@ wallet_import_already_imported_message = Denne tegnebog er allerede blevet impor
 
 # Wallets
 
-wallets_title = Wallets
-wallets_watch = Watch
+wallets_title = Tegnebøger
+wallets_watch = Se
 
 # Receive
 
@@ -115,74 +114,74 @@ receive_warning = Dette er din adresse — kun forsendelse %@ på %@ netværk.
 # Buy
 
 buy_title = Køb %@
-buy_providers_title = Providers
-buy_rate = Rate
-buy_no_results = No quotes available
+buy_providers_title = Udbydere
+buy_rate = Bedøm
+buy_no_results = Ingen tilbud tilgængelige
 
 # Transfer
 
-transfer_network_fee = Network Fee
+transfer_network_fee = Netværksgebyr
 transfer_memo = Memo
-transfer_confirm = Confirm
-transfer_from = From
-transfer_to = To
-transfer_max = Max
-transfer_network = Network
-transfer_recipient_title = Recipient
-transfer_balance = Balance: %@
-transfer_title = Transfer
-transfer_recipient_address_field = Address or Name
+transfer_confirm = Bekræft
+transfer_from = Fra
+transfer_to = Til
+transfer_max = Maks
+transfer_network = Netværk
+transfer_recipient_title = Modtager
+transfer_balance = Saldo: %@
+transfer_title = Overførsel
+transfer_recipient_address_field = Adresse eller Navn
 transfer_send_title = Sende
-transfer_insufficient_balance = Insufficient %@ balance.
-transfer_insufficient_network_fee_balance = Insufficient %@ balance to cover network fees.
-transfer_approve_title = Approve
+transfer_insufficient_balance = Utilstrækkelig %@ saldo.
+transfer_insufficient_network_fee_balance = Utilstrækkelig %@ saldo til at dække netværksgebyrer.
+transfer_approve_title = Godkend
 transfer_stake_title = Indsats
-transfer_claim_rewards_title = Claim Rewards
+transfer_claim_rewards_title = Gør krav på belønninger
 transfer_unstake_title = Unstake
-transfer_redelegate_title = Redelegate
+transfer_redelegate_title = Omdelegere
 transfer_withdraw_title = Hæv
-transfer_rewards_title = Rewards
-transfer_minimum_amount = Minimum Amount is %@
-transfer_activate_asset_title = Activate Asset
+transfer_rewards_title = Belønninger
+transfer_minimum_amount = Minimumsbeløb er %@
+transfer_activate_asset_title = Aktiver aktiv
 transfer_recipient_my_wallets = Mine tegnebøger
 transfer_recipient_view_wallets = Se tegnebøger
 transfer_minimum_account_balance = Der skal være en minimumsaldo på %@ tilbage efter dette, medmindre du bruger din fulde saldo.
-transfer_smart_contract_title = Smart Contract
-transfer_other_title = Other
-transfer_maximum_amount = Maximum Amount is %@
+transfer_smart_contract_title = Smart kontrakt
+transfer_other_title = Andet
+transfer_maximum_amount = Det maksimale beløb er %@
 transfer_reserved_fees = Vi har efterladt %@ på din saldo til dækning af fremtidige netværksgebyrer.
 transfer_freeze_title = Fryse
 transfer_unfreeze_title = Optø
 transfer_sign_transaction_title = Underskriv transaktion
 transfer_review_request = Anmodning om gennemgang
-transfer_amount = Amount
-transfer_amount_title = Amount
+transfer_amount = Beløb
+transfer_amount_title = Beløb
 
 # Settings
 
-settings_terms_of_services = Terms of Services
-settings_privacy_policy = Privacy Policy
+settings_terms_of_services = Servicevilkår
+settings_privacy_policy = Privatlivspolitik
 settings_title = Indstillinger
-settings_developer = Developer
+settings_developer = Udvikler
 settings_version = Version
-settings_community = Community
-settings_aboutus = About Us
-settings_networks_title = Networks
-settings_networks_source = Source
+settings_community = Fællesskab
+settings_aboutus = Om os
+settings_networks_title = Netværk
+settings_networks_source = Kilde
 settings_networks_explorer = Explorer
-settings_currency = Currency
-settings_rate_app = Rate App
-settings_website = Visit Website
-settings_security = Security
-settings_enable_value = Enable %@
-settings_enable_passcode = Enable Passcode
-settings_security_authentication = Authentication
-settings_notifications_title = Notifications
-settings_language = Language
-settings_help_center = Help Center
-settings_support = Support
-settings_price_alerts_title = Price Alerts
-settings_hide_balance = Hide Balance
+settings_currency = Valuta
+settings_rate_app = Bedøm app
+settings_website = Besøg hjemmesiden
+settings_security = Sikkerhed
+settings_enable_value = Aktiver %@
+settings_enable_passcode = Aktiver adgangskode
+settings_security_authentication = Autentificering
+settings_notifications_title = Meddelelser
+settings_language = Sprog
+settings_help_center = Hjælpecenter
+settings_support = Støtte
+settings_price_alerts_title = Prisadvarsler
+settings_hide_balance = Skjul saldo
 settings_disable_value = Deaktiver %@
 settings_preferences_title = Præferencer
 settings_preferences_perpetual_default_leverage = Standardgearing
@@ -194,33 +193,33 @@ settings_preferences_perpetual_default_stop_loss = Standard Stop Loss
 errors_transfer = Overførselsfejl: %@
 errors_validation = Valideringsfejl: %@
 errors_create_wallet = Fejl ved oprettelse af tegnebog: %@
-errors_invalid_address_name = Invalid address or name
-errors_invalid_amount = Invalid amount
-errors_token_invalid_id = Invalid Token ID
-errors_import_invalid_secret_phrase = Invalid Secret Phrase
-errors_import_invalid_secret_phrase_word = Invalid Secret Phrase word: %@
-errors_invalid_url = Invalid URL
-errors_error_occured = An error occurred!
-errors_invalid_network_id = Invalid Network ID
-errors_error = Error
-errors_connections_user_cancelled = User cancelled
-errors_not_supported = Not Supported
-errors_permissions_not_granted = Permissions Not Granted
-errors_decoding = Decoding Error
-errors_unknown = Unknown
-errors_not_supported_qr = This device does not support QR code scanning. You can only select QR code image from library.
-errors_camera_permissions_not_granted = Camera permission not granted. Please enable camera access in settings to scan QR code.
-errors_decoding_qr = Failed to decode the QR code. Please try again with a different QR code.
-errors_transfer_error = Transfer Error
-errors_unable_estimate_network_fee = We are currently unable to calculate the network fee.
-errors_invalid_asset_address = Invalid %@ address
-errors_dust_threshold = The transaction failed because the amount is too small to meet the %@ network's minimum requirement (dust threshold). This limit ensures the transaction value covers the fees and processing costs.
+errors_invalid_address_name = Ugyldig adresse eller navn
+errors_invalid_amount = Ugyldigt beløb
+errors_token_invalid_id = Ugyldigt token-id
+errors_import_invalid_secret_phrase = Ugyldig hemmelig sætning
+errors_import_invalid_secret_phrase_word = Ugyldigt hemmeligt ord frase: %@
+errors_invalid_url = Ugyldig URL
+errors_error_occured = Der opstod en fejl!
+errors_invalid_network_id = Ugyldigt netværks-id
+errors_error = Fejl
+errors_connections_user_cancelled = Bruger annulleret
+errors_not_supported = Ikke understøttet
+errors_permissions_not_granted = Tilladelser ikke givet
+errors_decoding = Afkodningsfejl
+errors_unknown = Ukendt
+errors_not_supported_qr = Denne enhed understøtter ikke QR-kodescanning. Du kan kun vælge QR-kodebillede fra biblioteket.
+errors_camera_permissions_not_granted = Kameratilladelse ikke givet. Aktiver kameraadgang i indstillingerne for at scanne QR-koden.
+errors_decoding_qr = Kunne ikke afkode QR-koden. Prøv venligst igen med en anden QR-kode.
+errors_transfer_error = Overførselsfejl
+errors_unable_estimate_network_fee = Vi er i øjeblikket ikke i stand til at beregne netværksgebyret.
+errors_invalid_asset_address = Ugyldig %@ adresse
+errors_dust_threshold = Transaktionen mislykkedes, fordi beløbet er for lille til at opfylde %@ netværkets minimumskrav (støvtærskel). Denne grænse sikrer, at transaktionsværdien dækker gebyrer og behandlingsomkostninger.
 errors_swap_no_quote_available = Ingen pris er tilgængelig.
-errors_swap_not_supported_chain = Not supported chain.
-errors_swap_not_supported_asset = Not supported asset.
-errors_swap_not_supported_pair = Not supported pair.
-errors_connections_invalid_send_parameters = Invalid parameters provided for sending a transaction.
-errors_connections_invalid_sign_parameters = Invalid parameters provided for signing.
+errors_swap_not_supported_chain = Ikke understøttet kæde.
+errors_swap_not_supported_asset = Ikke understøttet aktiv.
+errors_swap_not_supported_pair = Ikke understøttet par.
+errors_connections_invalid_send_parameters = Ugyldige parametre angivet til afsendelse af en transaktion.
+errors_connections_invalid_sign_parameters = Ugyldige parametre angivet til signering.
 errors_connections_no_supported_wallets = Ingen understøttede tegnebøger er tilgængelige.
 errors_connections_unsupported_chain = Den angivne kæde understøttes ikke.
 errors_connections_unsupported_method = Den ønskede metode understøttes ikke.
@@ -237,71 +236,71 @@ errors_dust_threshold_short = Netværket anser denne mængde for støv – gebyr
 errors_swap_minimum_amount = Minimumsbeløbet for handel er %@Indtast venligst et højere beløb.
 errors_perpetual_trigger_price_lower = Triggerprisen skal være lavere end markedsprisen
 errors_perpetual_trigger_price_higher = Triggerprisen skal være højere end markedsprisen
-errors_token_unable_fetch_token_information = Unable to fetch token information: %@
-errors_unknown_try_again = An unknown error occurred. Please try again.
+errors_token_unable_fetch_token_information = Kan ikke hente tokenoplysninger: %@
+errors_unknown_try_again = Der opstod en ukendt fejl. Prøv venligst igen.
 errors_network_error = Netværksfejl: %@
 errors_network_offline = Internetforbindelsen ser ud til at være offline.
 
 # Activity
 
-activity_title = Activity
+activity_title = Aktivitet
 activity_state_empty_title = Din aktivitet vil blive vist her
 activity_state_empty_description = Foretag din første transaktion
 activity_state_empty_search_description = Ryd filtre for at opdatere dine aktiviteter
-activity_state_empty_search_title = No activities found
+activity_state_empty_search_title = Ingen aktiviteter fundet
 
 # Update App
 
-update_app_title = New update available!
-update_app_description = Version %@ of the app is now available. Update and enjoy the latest features and improvements.
-update_app_action = Update
-update_app_permission_title = Allow installation
+update_app_title = Ny opdatering tilgængelig!
+update_app_description = Version %@ af appen er nu tilgængelig. Opdater og nyd de nyeste funktioner og forbedringer.
+update_app_action = Opdatering
+update_app_permission_title = Tillad installation
 update_app_permission_description = Gå til indstillinger og tillad installation fra eksterne kilder
 update_app_permission_open_settings = Gå til indstillinger
-update_app_downloading = Downloading...
+update_app_downloading = Downloader...
 
 # Transaction
 
-transaction_recipient = Recipient
-transaction_sender = Sender
-transaction_date = Date
-transaction_view_on = View on %@
+transaction_recipient = Modtager
+transaction_sender = Afsender
+transaction_date = Dato
+transaction_view_on = Se på %@
 transaction_status = Status
-transaction_status_confirmed = Successful
-transaction_status_pending = Pending
-transaction_status_failed = Failed
-transaction_status_reverted = Reverted
-transaction_title_received = Received
-transaction_title_sent = Sent
+transaction_status_confirmed = Vellykket
+transaction_status_pending = Afventer
+transaction_status_failed = Mislykkedes
+transaction_status_reverted = Tilbageført
+transaction_title_received = Modtaget
+transaction_title_sent = Sendt
 transaction_swap_again = Byt igen
-transaction_status_completed = Completed
-transaction_status_inprogress = In Progress
-transaction_status_refunded = Refunded
+transaction_status_completed = Afsluttet
+transaction_status_inprogress = Igangværende
+transaction_status_refunded = Refunderet
 
 # Asset
 
-asset_balances = Balances
-asset_balances_available = Available
-asset_price = Price
-asset_market_cap = Market Cap
-asset_trading_volume = Trading Volume (24h)
-asset_market_cap_rank = Market Cap Rank
-asset_total_supply = Total Supply
-asset_circulating_supply = Circulating Supply
+asset_balances = Balancer
+asset_balances_available = Tilgængelig
+asset_price = Pris
+asset_market_cap = Markedsværdi
+asset_trading_volume = Handelsvolumen (24 timer)
+asset_market_cap_rank = Markedsværdirangering
+asset_total_supply = Samlet Udbud
+asset_circulating_supply = Cirkulerende forsyning
 asset_balances_reserved = Reserveret
-asset_view_token_on = View token on %@
-asset_view_address_on = View address on %@
-asset_name = Name
+asset_view_token_on = Se token på %@
+asset_view_address_on = Se adresse på %@
+asset_name = Navn
 asset_symbol = Symbol
-asset_decimals = Decimals
+asset_decimals = Decimaler
 asset_token_id = Token-ID
-asset_contract = Contract
+asset_contract = Kontrakt
 asset_state_empty_title = Dine transaktioner vil blive vist her️
 asset_state_empty_description = Modtag, byt eller køb %@
 asset_verification_unverified = Ubekræftet
 asset_verification_suspicious = Mistænksom
-asset_verification_warning_title = Know What You're Adding
-asset_verification_warning_message = Anyone can create one - including fake or malicious tokens.
+asset_verification_warning_title = Ved, hvad du tilføjer
+asset_verification_warning_message = Alle kan oprette en - inklusive falske eller ondsindede tokens.
 asset_buy_asset = Køb %@
 asset_add_to_wallet = Tilføj til tegnebog
 asset_hide_from_wallet = Skjul fra tegnebogen
@@ -317,8 +316,8 @@ charts_hour = 1H
 charts_week = 1W
 charts_month = 1M
 charts_year = 1Y
-charts_all = All
-charts_entry = Entry
+charts_all = Alle
+charts_entry = Indgang
 charts_price_open = Åben
 charts_price_close = Tæt
 charts_price_high = Høj
@@ -327,55 +326,55 @@ charts_price_change = Forandring
 
 # Date
 
-date_today = Today
-date_yesterday = Yesterday
+date_today = I dag
+date_yesterday = I går
 
 # Wallet Connect
 
 wallet_connect_title = WalletConnect
-wallet_connect_connection_title = Connection
-wallet_connect_disconnect = Disconnect
-wallet_connect_connect_title = Connect
+wallet_connect_connection_title = Forbindelse
+wallet_connect_disconnect = Afbryd forbindelsen
+wallet_connect_connect_title = Forbind
 wallet_connect_app = App
-wallet_connect_website = Website
+wallet_connect_website = Hjemmeside
 wallet_connect_brand_name = WalletConnect
-wallet_connect_no_active_connections = No active connections
+wallet_connect_no_active_connections = Ingen aktive forbindelser
 wallet_connect_state_empty_description = Scan eller indsæt kode for at oprette forbindelse til DApp'en
-wallet_connect_domain = Domain
+wallet_connect_domain = Domæne
 wallet_connect_permissions_title = Tilladelser
 wallet_connect_permissions_view_balance = Se din saldo og aktivitet
 wallet_connect_permissions_approval_requests = Send godkendelsesanmodninger
 
 # Swap
 
-swap_you_pay = You Pay
-swap_you_receive = You Receive
-swap_price_impact = Price Impact
-swap_slippage = Slippage
+swap_you_pay = Du betaler
+swap_you_receive = Du modtager
+swap_price_impact = Prispåvirkning
+swap_slippage = Skridning
 swap_price_impact_warning_description = Du vil miste %@ af dine %@ i denne handel. Er du sikker på, at du vil fortsætte?
-swap_price_impact_warning_title = High Price Impact
-swap_estimated_time_title = Estimated Time
+swap_price_impact_warning_title = Høj prispåvirkning
+swap_estimated_time_title = Anslået Tid
 swap_min_receive = Minimumsmodtagelse
 swap_use_minimum_amount = Brug minimumsbeløb
 
 # Stake
 
-stake_active = Active
-stake_pending = Pending
-stake_rewards = Rewards
+stake_active = Aktiv
+stake_pending = Afventer
+stake_rewards = Belønninger
 stake_validator = Validator
-stake_validators = Validators
-stake_apr = APR %@
-stake_available_in = Available In
-stake_inactive = Inactive
-stake_lock_time = Lock Time
-stake_activating = Activating
-stake_deactivating = Deactivating
-stake_awaiting_withdrawal = Awaiting Withdrawal
-stake_active_in = Active In
+stake_validators = Validatorer
+stake_apr = ÅOP %@
+stake_available_in = Tilgængelig i
+stake_inactive = Inaktiv
+stake_lock_time = Låsetid
+stake_activating = Aktiverer
+stake_deactivating = Deaktiverer
+stake_awaiting_withdrawal = Afventer tilbagetrækning
+stake_active_in = Aktiv i
 stake_minimum_amount = Minimumsbeløb
-stake_viagem = Stake via Gem Wallet
-stake_no_active_staking = No active staking yet.
+stake_viagem = Indsats via Gem Wallet
+stake_no_active_staking = Ingen aktiv indsats endnu.
 stake_state_empty_title = Dine indsatser vil blive vist her
 stake_state_empty_description = Indsæt dine første %@
 stake_resource = Ressource
@@ -385,29 +384,30 @@ stake_delegations = Delegationer
 
 # Assets
 
-assets_no_assets_found = No assets found
-assets_add_custom_token = Add Custom Token
-assets_select_asset = Select Asset
+assets_no_assets_found = Ingen aktiver fundet
+assets_add_custom_token = Tilføj brugerdefineret token
+assets_select_asset = Vælg Aktiv
+assets_popular = Populære aktiver
 assets_tags_trending = Trending
-assets_tags_gainers = Gainers
-assets_tags_losers = Losers
-assets_tags_new = New
+assets_tags_gainers = Vindere
+assets_tags_losers = Tabere
+assets_tags_new = Ny
 assets_tags_stablecoins = Stablecoins
 assets_state_empty_search_description = Du kan prøve at tilføje det manuelt
 assets_title = Aktiver
 
 # Sign Message
 
-sign_message_title = Sign Message
-sign_message_message = Message
-sign_message_view_full_message = View Full Message
+sign_message_title = Underskriv besked
+sign_message_message = Besked
+sign_message_view_full_message = Se hele beskeden
 
 # Secret Phrase
 
-secret_phrase_do_not_share_title = Do not share your Secret Phrase!
-secret_phrase_do_not_share_description = If someone has your secret phrase they will have full control of your wallet!
-secret_phrase_save_phrase_safely = Save your Secret Phrase in a secure place \nthat only you control.
-secret_phrase_confirm_quick_test_title = Complete this quick test to confirm you've saved everything correctly.
+secret_phrase_do_not_share_title = Del ikke din hemmelige sætning!
+secret_phrase_do_not_share_description = Hvis nogen har din hemmelige sætning, vil de have fuld kontrol over din tegnebog!
+secret_phrase_save_phrase_safely = Gem din hemmelige sætning på et sikkert sted \nsom kun du kontrollerer.
+secret_phrase_confirm_quick_test_title = Gennemfør denne hurtige test for at bekræfte, at du har gemt alt korrekt.
 secret_phrase_screenshot_detected_title = Skærmbillede fundet
 secret_phrase_screenshot_detected_description = Skærmbilleder kan være tilgængelige for andre apps, og de kan bringe din hemmelige frase i fare, hvis de gemmes på denne måde.
 secret_phrase_content_hidden_description = Indhold skjult under skærmoptagelse
@@ -432,23 +432,23 @@ social_coinmarketcap = CoinMarketCap
 
 # Nodes
 
-nodes_import_node_title = Add node
-nodes_import_node_chain_id = Chain ID
-nodes_import_node_in_sync = In Sync
-nodes_import_node_latest_block = Latest Block
+nodes_import_node_title = Tilføj node
+nodes_import_node_chain_id = Kæde ID
+nodes_import_node_in_sync = Synkroniseret
+nodes_import_node_latest_block = Seneste blok
 nodes_import_node_latency = Latency
 nodes_gem_wallet_node = Gem Wallet Node
 nodes_import_node_warning_message = Brugerdefinerede noder kan være skadelige og kan eksponere dine transaktionsdata eller give falske oplysninger.
 
 # Library
 
-library_select_from_photo_library = Select from Photo Library
+library_select_from_photo_library = Vælg fra fotobibliotek
 
 # Fee Rates
 
-fee_rates_info = Speed of transaction is determined by network fee paid to the network miners.
-fee_rates_slow = Slow
-fee_rates_fast = Fast
+fee_rates_info = Transaktionshastigheden bestemmes af netværksgebyr, der betales til netværksminearbejderne.
+fee_rates_slow = Langsomt
+fee_rates_fast = Hurtigt
 fee_rates_normal = Normal
 
 # Fee Rate
@@ -459,32 +459,32 @@ fee_rate_gwei = %@ gwei
 
 # Banner
 
-banner_account_activation_title = Account Activation Fee
-banner_account_activation_description = The %@ network requires a one time fee of %@.
-banner_stake_title = Start staking %@
-banner_stake_description = Earn %@ rewards on your stake while you sleep.
-banner_enable_notifications_title = Enable Notifications
-banner_enable_notifications_description = Stay on top of your wallet activity.
-banner_activate_asset_description = To use the %@ asset, you must first enable it on the %@ network by fulfilling the network's specific requirements.
-banner_asset_status_title = Suspicious Asset
-banner_asset_status_description = Token may be unsafe or misleading. Proceed only if you fully trust it.
+banner_account_activation_title = Kontoaktiveringsgebyr
+banner_account_activation_description = %@ netværket kræver et engangsgebyr på %@.
+banner_stake_title = Begynd at satse %@
+banner_stake_description = Optjen %@ belønninger på din indsats, mens du sover.
+banner_enable_notifications_title = Aktiver meddelelser
+banner_enable_notifications_description = Hold styr på din tegnebogsaktivitet.
+banner_activate_asset_description = For at bruge %@-aktivet skal du først aktivere det på %@-netværket ved at opfylde netværkets specifikke krav.
+banner_asset_status_title = Mistænkeligt aktiv
+banner_asset_status_description = Token kan være usikker eller vildledende. Fortsæt kun, hvis du har fuld tillid til det.
 banner_onboarding_title = Din tegnebog er klar
 banner_onboarding_description = Køb eller modtag krypto for at komme i gang
-banner_perpetuals_title = Trade Perpetuals on Hyperliquid
-banner_perpetuals_description = Deposit, trade, and earn with Hyperliquid perpetuals
+banner_perpetuals_title = Handle evigheder på Hyperliquid
+banner_perpetuals_description = Indbetal, byd og tjen med Hyperliquid perpetuals
 
 # Filter
 
-filter_clear = Clear
-filter_title = Filters
-filter_types = Types
+filter_clear = Ryd
+filter_title = Filtre
+filter_types = Typer
 filter_has_balance = Har balance
 
 # Price Alerts
 
-price_alerts_enabled_for = Price alert enabled for %@
-price_alerts_disabled_for = Price alert disabled for %@
-price_alerts_get_notified_explain_message = Get notified when there's a significant price change in your favorite crypto assets.
+price_alerts_enabled_for = Prisalarm aktiveret for %@
+price_alerts_disabled_for = Prisalarm deaktiveret for %@
+price_alerts_get_notified_explain_message = Få besked, når der er en betydelig prisændring på dine foretrukne kryptoaktiver.
 price_alerts_direction_over = Over
 price_alerts_direction_under = Under
 price_alerts_direction_increases_by = Stiger med
@@ -503,24 +503,24 @@ price_alerts_set_alert_title = Indstil prisalarm
 
 # Lock
 
-lock_immediately = Immediately
-lock_one_minute = 1 minute
-lock_five_minutes = 5 minutes
-lock_fifteen_minutes = 15 minutes
-lock_one_hour = 1 hour
-lock_six_hours = 6 hours
-lock_require_authentication = Require authentication
-lock_unlock = Unlock
-lock_privacy_lock = Privacy Lock
+lock_immediately = Straks
+lock_one_minute = 1 minut
+lock_five_minutes = 5 minutter
+lock_fifteen_minutes = 15 minutter
+lock_one_hour = 1 time
+lock_six_hours = 6 timer
+lock_require_authentication = Kræv godkendelse
+lock_unlock = Lås op
+lock_privacy_lock = Privatlivslås
 lock_footer = Beskyt adgangen til denne app på din enhed
 
 # Verify
 
-verify_phrase_title = Confirm
+verify_phrase_title = Bekræft
 
 # Warnings
 
-warnings_multi_signature_blocked = Do not transfer funds to this %@ Multi-Signature wallet unless you are certain you control the private keys. Failure to do so could expose you to scams, and you may permanently lose your assets.
+warnings_multi_signature_blocked = Overfør ikke penge til denne %@ Multi-Signatur-pung, medmindre du er sikker på, at du kontrollerer de private nøgler. Undladelse af at gøre det kan udsætte dig for svindel, og du kan permanent miste dine aktiver.
 
 # Sell
 
@@ -528,15 +528,15 @@ sell_title = Sælg %@
 
 # Info
 
-info_network_fee_title = Network Fee
+info_network_fee_title = Netværksgebyr
 info_watch_wallet_title = Watch Wallet
-info_watch_wallet_description = A wallet that you do not have access to, but you can watch its transactions and movements.
-info_network_fee_description = Every transaction on the %@ network requires a fee in %@ paid to miners to process your transaction, not Gem Wallet. Network fees varies based on network usage.
-info_transaction_error_description = The transaction could not be completed due to an error, such as insufficient funds, invalid input, or rejection by the network. Please review the details and try again.
-info_transaction_pending_description = The transaction has been submitted and is awaiting confirmation on the network. Processing times may vary. Please check back for updates.
-info_transaction_success_description = The transaction has been completed and confirmed on the network. You can review the details to verify its status.
-info_lock_time_description = Lock time, also known as the unbonding or unfreezing period, is the duration during which staked assets are inaccessible after you decide to unstake them.
-info_price_impact_description = Price impact is the change in token price caused by your trade size. Higher price impact means you receive fewer tokens due to low liquidity or a large order size.
+info_watch_wallet_description = En pung, som du ikke har adgang til, men du kan se dens transaktioner og bevægelser.
+info_network_fee_description = Hver transaktion på %@ netværket kræver et gebyr i %@ betalt til minearbejdere for at behandle din transaktion, ikke Gem Wallet. Netværksgebyrer varierer afhængigt af netværksbrug.
+info_transaction_error_description = Transaktionen kunne ikke gennemføres på grund af en fejl, såsom utilstrækkelige midler, ugyldigt input eller afvisning af netværket. Gennemgå venligst detaljerne og prøv igen.
+info_transaction_pending_description = Transaktionen er blevet indsendt og afventer bekræftelse på netværket. Behandlingstiderne kan variere. Kom venligst tilbage for opdateringer.
+info_transaction_success_description = Transaktionen er gennemført og bekræftet på netværket. Du kan gennemgå detaljerne for at bekræfte dens status.
+info_lock_time_description = Låsetid, også kendt som ophævelses- eller frigørelsesperioden, er den varighed, hvori satsede aktiver er utilgængelige, efter at du beslutter dig for at ophæve dem.
+info_price_impact_description = Prispåvirkning er ændringen i tokenpris forårsaget af din handelsstørrelse. Større prispåvirkning betyder, at du modtager færre tokens på grund af lav likviditet eller en stor ordrestørrelse.
 info_slippage_description = Slippage refererer til forskellen mellem den forventede pris på en handel og den faktiske pris, den udføres til.
 info_asset_status_unverified_description = Ubekræftede tokens er ikke blevet tilstrækkeligt verificeret af betroede tredjepartstjenester. De kan dukke op i din wallet på grund af airdrops, overførsler eller manuelle importer.
 info_asset_status_suspicious_description = Mistænkelige eller spam-tokens identificeres som potentielle svindelnumre eller skadelige aktiver. De kan dukke op i din wallet på grund af airdrops, overførsler eller manuelle importer.
@@ -545,14 +545,14 @@ info_insufficient_network_fee_balance_description = Denne transaktion kræver %@
 info_insufficient_balance_title = Utilstrækkelig saldo
 info_insufficient_balance_description = Du har ikke nok %@ til at gennemføre denne transaktion. Tank op, modtag eller veksle i din wallet, og prøv igen.
 info_account_minimum_balance_title = Minimumsaldo
-info_perpetual_funding_payments_title = Funding Payments
-info_perpetual_funding_payments_description = Funding payments are periodic payments between traders to keep the perpetual contract price close to the underlying asset's spot price. Positive funding means long positions pay short positions, while negative funding means short positions pay long positions.
-info_perpetual_funding_rate_title = Funding
-info_perpetual_funding_rate_description = The funding rate determines the cost of holding a perpetual position. It is calculated hourly and helps maintain price equilibrium between the perpetual contract and the underlying asset's spot price.
+info_perpetual_funding_payments_title = Finansieringsbetalinger
+info_perpetual_funding_payments_description = Finansieringsbetalinger er periodiske betalinger mellem handlende for at holde den evige kontraktpris tæt på det underliggende aktivs spotpris. Positiv finansiering betyder, at lange positioner betaler korte positioner, mens negativ funding betyder, at korte positioner betaler lange positioner.
+info_perpetual_funding_rate_title = Finansiering
+info_perpetual_funding_rate_description = Funding rate bestemmer omkostningerne ved at holde en evig position. Den beregnes hver time og hjælper med at opretholde prisligevægten mellem den evige kontrakt og det underliggende aktivs spotpris.
 info_perpetual_liquidation_price_title = Likvidationspris
-info_perpetual_liquidation_price_description = The liquidation price is the price level at which your position will be automatically closed to prevent further losses. When the market price reaches this level, your position is liquidated and you lose your margin.
-info_perpetual_open_interest_title = Open Interest
-info_perpetual_open_interest_description = Open interest represents the total value of all outstanding perpetual contracts that have not been settled. It provides insight into market activity and liquidity.
+info_perpetual_liquidation_price_description = Likvidationsprisen er det prisniveau, hvor din position automatisk lukkes for at forhindre yderligere tab. Når markedsprisen når dette niveau, er din position likvideret, og du mister din margin.
+info_perpetual_open_interest_title = Åben interesse
+info_perpetual_open_interest_description = Åben rente repræsenterer den samlede værdi af alle udestående evige kontrakter, der ikke er blevet afviklet. Det giver indsigt i markedsaktivitet og likviditet.
 info_no_quote_description = Kan ikke returnere en pris for det valgte tokenpar, muligvis på grund af lavt beløb, manglende likviditet eller tekniske begrænsninger.
 info_stake_reserved_title = Reserveret til netværksgebyr
 info_stake_reserved_description = Et lille beløb forbliver i din pung til at dække gebyrer for operationer som at fjerne indsatser eller gøre krav på belønninger.
@@ -564,22 +564,22 @@ info_circulating_supply_description = Antallet af tilgængelige og handlede møn
 info_total_supply_description = Det samlede antal mønter, der findes, inklusive låste eller reserverede mønter.
 info_max_supply_title = Maks. forsyning
 info_max_supply_description = Det maksimale antal mønter, der nogensinde vil eksistere.
-info_perpetual_funding_apr_title = Funding APR
-info_perpetual_funding_apr_description = The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.
-info_minimum_amount_title = Minimum Amount
+info_perpetual_funding_apr_title = Finansiering ÅOP
+info_perpetual_funding_apr_description = Den årlige sats, hvormed longs betaler shorts (hvis negative, shorts pay longs). Der er ingen gebyrer forbundet med finansiering, som er en peer-to-peer-overførsel mellem brugere for at presse priserne mod spotprisen.
+info_minimum_amount_title = Minimumsbeløb
 info_minimum_amount_description = På %@-netværket er minimumsbeløbet for denne transaktion %@.
 
 # Input
 
-input_enter_amount_to = Please enter amount to %@
+input_enter_amount_to = Indtast venligst beløb til %@
 
 # Nft
 
-nft_properties = Properties
-nft_collections = Collections
-nft_collection = Collection
-nft_save_to_photos = Save to Photos
-nft_set_as_avatar = Set as Avatar
+nft_properties = Egenskaber
+nft_collections = Samlinger
+nft_collection = Samling
+nft_save_to_photos = Gem til Fotos
+nft_set_as_avatar = Indstil som Avatar
 nft_state_empty_title = Dine NFT'er vil blive vist her️
 nft_state_empty_description = Modtag din første NFT
 nft_report_reason_spam = Spam
@@ -590,12 +590,12 @@ nft_report_report_button_title = Rapport
 
 # Permissions
 
-permissions_access_denied = Access Denied
-permissions_image_photo_access_denied_description = This app does not have permission to access your photo library. Please enable access in your device settings.
+permissions_access_denied = Adgang nægtet
+permissions_image_photo_access_denied_description = Denne app har ikke tilladelse til at få adgang til dit fotobibliotek. Aktiver venligst adgang i dine enhedsindstillinger.
 
 # Markets
 
-markets_title = Markets
+markets_title = Markeder
 markets_state_empty_title = Dine markedsdata vil blive vist her
 markets_daily_volume = 24-timers volumen
 
@@ -610,19 +610,19 @@ networks_state_empty_search_title = Ingen netværk fundet
 # Onboarding
 
 onboarding_security_create_wallet_intro_title = Du får en hemmelig sætning – det er den eneste måde at få adgang til din tegnebog på.
-onboarding_security_create_wallet_confirm_title = I understand and want to continue
-onboarding_security_create_wallet_do_not_share_title = Do Not Share It With Anyone
-onboarding_security_create_wallet_do_not_share_subtitle = Anyone who gets your secret phrase can take full control of your wallet.
-onboarding_security_create_wallet_keep_safe_subtitle = The secret phrase is only way to access your wallet.
-onboarding_security_create_wallet_no_recovery_subtitle = If you lose your secret phrase, you lose access to your wallet.
+onboarding_security_create_wallet_confirm_title = Jeg forstår og vil gerne fortsætte
+onboarding_security_create_wallet_do_not_share_title = Del det ikke med nogen
+onboarding_security_create_wallet_do_not_share_subtitle = Enhver, der får din hemmelige sætning, kan tage fuld kontrol over din pung.
+onboarding_security_create_wallet_keep_safe_subtitle = Den hemmelige sætning er den eneste måde at få adgang til din tegnebog.
+onboarding_security_create_wallet_no_recovery_subtitle = Hvis du mister din hemmelige sætning, mister du adgangen til din pung.
 onboarding_security_create_wallet_keep_safe_title = Opbevar det et sikkert sted
 onboarding_security_create_wallet_no_recovery_title = Vi kan ikke hjælpe dig med at gendanne den
 onboarding_accept_terms_title = Accepter vilkår
 onboarding_accept_terms_message = Læs og accepter venligst følgende vilkår, før du fortsætter.
 onboarding_accept_terms_item1_message = Jeg forstår, at jeg alene er ansvarlig for sikkerheden og backupen af mine tegnebøger, ikke Gem.
 onboarding_accept_terms_item2_message = Jeg forstår, at Gem ikke er en bank eller børs, og at det er strengt forbudt at bruge den til ulovlige formål.
-onboarding_accept_terms_item3_message = I understand that if I ever lose access to my wallets, Gem is not liable and cannot help in any way.
-onboarding_accept_terms_continue = Agree and Continue
+onboarding_accept_terms_item3_message = Jeg forstår, at hvis jeg nogensinde mister adgangen til mine tegnebøger, er Gem ikke ansvarlig og kan ikke hjælpe på nogen måde.
+onboarding_accept_terms_continue = Enig og fortsæt
 
 # Brand
 
@@ -633,11 +633,11 @@ brand_name = Gem Wallet
 perpetual_positions = Positioner
 perpetual_size = Størrelse
 perpetual_margin = Margin
-perpetual_position = Position
+perpetual_position = Stilling
 perpetual_close_position = Luk position
 perpetual_pnl = PnL
-perpetual_long = Long
-perpetual_short = Short
+perpetual_long = Lang
+perpetual_short = Kort
 perpetual_entry_price = Indgangspris
 perpetual_modify = Modificere
 perpetual_reduce_position = Reducer position
@@ -664,14 +664,14 @@ perpetual_volume = Bind
 perpetual_all_time_pnl = Alle tiders PnL
 perpetual_margin_usage = Marginforbrug
 perpetual_account_leverage = Kontogearing
-perpetual_margin_cross = Cross
-perpetual_margin_isolated = Isolated
+perpetual_margin_cross = Kors
+perpetual_margin_isolated = Isoleret
 
 # Perpetuals
 
 perpetuals_title = Evigvarende
-perpetuals_markets = Markets
-perpetuals_empty_state_no_markets = No markets
+perpetuals_markets = Markeder
+perpetuals_empty_state_no_markets = Ingen markeder
 perpetuals_empty_state_no_markets_found = Ingen markeder fundet
 
 # Rewards
@@ -682,7 +682,7 @@ rewards_my_referral_code = Min henvisningskode
 rewards_invite_friends_title = Inviter venner
 rewards_invite_friends_description = Optjen %@ point for hver ven, der tilmelder sig.
 rewards_referral_code = Henvisningskode
-rewards_invited_by = Invited By
+rewards_invited_by = Inviteret af
 rewards_points = Point
 rewards_referrals = Henvisninger
 rewards_earn_points_title = Optjen point
@@ -706,8 +706,8 @@ rewards_unverified_description = Belønninger aktiveres automatisk, når du brug
 # Recent Activity
 
 recent_activity_title = Seneste
-recent_activity_state_empty_title = Your recents will appear here
-recent_activity_state_empty_description = Assets you've recently used will appear here
+recent_activity_state_empty_title = Dine seneste vil blive vist her
+recent_activity_state_empty_description = Aktiver, du for nylig har brugt, vises her
 
 # Notifications
 
@@ -742,19 +742,19 @@ application_name = Gem
 
 # Camera Permission
 
-camera_permission_request_camera = Camera permission required for QR Code scan.\nPlease grant permission.
+camera_permission_request_camera = Kameratilladelse kræves til QR-kodescanning.\nGiv venligst tilladelse.
 
 # Notifications Permission
 
-notifications_permission_request_notification = Post Notifications permission required for get notifications about new transactions.\nPlease grant permission.
+notifications_permission_request_notification = Der kræves tilladelse til at sende meddelelser for at få meddelelser om nye transaktioner.\nGiv venligst tilladelse.
 
 # Confirm
 
-confirm_fee_error = Fee calculation error
+confirm_fee_error = Fejl ved gebyrberegning
 
 # Rootcheck
 
-rootcheck_security_alert = Security Warning
-rootcheck_body = Your device appears to have root access, which can significantly increase security risks. Using this app on a rooted device may expose your assets to unauthorized access and potential loss. For the safety of your funds, we strongly recommend using a non-rooted device.
-rootcheck_ignore = Ignore
-rootcheck_exit = Exit
+rootcheck_security_alert = Sikkerhedsadvarsel
+rootcheck_body = Din enhed ser ud til at have root-adgang, hvilket kan øge sikkerhedsrisiciene betydeligt. Brug af denne app på en rootet enhed kan udsætte dine aktiver for uautoriseret adgang og potentielt tab. Af hensyn til dine penges sikkerhed anbefaler vi kraftigt at bruge en enhed uden rod.
+rootcheck_ignore = Ignorer
+rootcheck_exit = Afslut

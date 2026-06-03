@@ -39,7 +39,6 @@
   <string name="common_skip">Skip</string>
   <string name="common_warning">Warning</string>
   <string name="common_learn_more">Learn More</string>
-  <string name="common_popular">Popular</string>
   <string name="common_short_name">Gem</string>
   <string name="common_description">Description</string>
   <string name="common_emoji">Emoji</string>
@@ -334,6 +333,7 @@
   <string name="assets_no_assets_found">No assets found</string>
   <string name="assets_add_custom_token">Add Custom Token</string>
   <string name="assets_select_asset">Select Asset</string>
+  <string name="assets_popular">Popular</string>
   <string name="assets_tags_trending">Trending</string>
   <string name="assets_tags_gainers">Gainers</string>
   <string name="assets_tags_losers">Losers</string>

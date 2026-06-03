@@ -7,59 +7,58 @@ common_next = Na gaba
 common_copy = Kwafi
 common_share = Raba
 common_continue = Ci gaba
-common_provider = Provider
+common_provider = Mai bayarwa
 common_loading = Ana lodawa
 common_address = Adireshi
-common_back = Back
-common_try_again = Try Again
-common_paste = Paste
-common_delete = Delete
-common_delete_confirmation = Are sure you want to delete %@?
-common_hide = Hide
+common_back = Baya
+common_try_again = Gwada kuma
+common_paste = Manna
+common_delete = Share
+common_delete_confirmation = Ka tabbata kana son share %@?
+common_hide = Boye
 common_wallet = Wallet
 common_show = Nuna %@
-common_copied = Copied: %@
-common_recommended = Recommended
-common_all = All
-common_not_available = Not Available
-common_phrase = Phrase
-common_manage = Manage
-common_type = Type
-common_no_results_found = No Results Found
-common_yes = Yes
-common_no = No
+common_copied = An Kwafi: %@
+common_recommended = Nasiha
+common_all = Duka
+common_not_available = Babu
+common_phrase = Jumla
+common_manage = Sarrafa
+common_type = Nau'in
+common_no_results_found = Ba a Samu Sakamako ba
+common_yes = Ee
+common_no = A'a
 common_none = Babu
 common_url = URL
-common_private_key = Private Key
+common_private_key = Keɓaɓɓen Maɓalli
 common_latency_in_ms = %d ms
-common_open_settings = Open settings
+common_open_settings = Buɗe saitunan
 common_pin = Pin
 common_pinned = Pinned
-common_unpin = Unpin
-common_skip = Skip
-common_warning = Warning
-common_learn_more = Learn More
-common_popular = Popular
+common_unpin = Cire
+common_skip = Tsallake
+common_warning = Gargadi
+common_learn_more = Ƙara Koyi
 common_short_name = Gem
-common_description = Description
+common_description = Bayani
 common_emoji = Emoji
-common_style = Style
+common_style = Salo
 common_avatar = Avatar
-common_photo = Photo
-common_save = Save
-common_edit = Edit
-common_percentage = Percentage
-common_details = Details
-common_info = Info
+common_photo = Hoto
+common_save = Ajiye
+common_edit = Gyara
+common_percentage = Kashi
+common_details = Cikakkun bayanai
+common_info = Bayani
 common_get_started = Fara
-common_earn = Earn
+common_earn = Sami
 common_method = Hanyar
 common_token = Alamar Token
 common_suspicious_address = Adireshin da ake zargi
 common_refresh = Sabuntawa
-common_no_thanks = No thanks
-common_grant_permission = Grant permission
-common_required_field = %@ is required
+common_no_thanks = A'a na gode
+common_grant_permission = Ba da izini
+common_required_field = %@ ana bukata
 
 # Welcome
 
@@ -78,34 +77,34 @@ wallet_new_title = Sabuwar Wallet
 wallet_name = Suna
 wallet_import_action = Shigo da
 wallet_multicoin = Multi-Coin
-wallet_import_address_field = Address or Name
-wallet_manage_token_list = Manage Tokens
-wallet_scan_qr_code = Scan QR Code
-wallet_scan = Scan
+wallet_import_address_field = Adireshi ko Suna
+wallet_manage_token_list = Sarrafa Alamu
+wallet_scan_qr_code = Duba lambar QR
+wallet_scan = Duba
 wallet_default_name = Wallet #%d
 wallet_default_name_chain = %@ Wallet #%d
-wallet_copy_address = Copy Address
-wallet_watch_tooltip_title = You are watching this wallet.
-wallet_stake = Stake
-wallet_receive_no_memo_required = No memo required
-wallet_receive_no_destination_tag_required = No destination tag required
+wallet_copy_address = Kwafi Adireshin
+wallet_watch_tooltip_title = Kuna kallon wannan walat.
+wallet_stake = Rago
+wallet_receive_no_memo_required = Babu memo da ake buƙata
+wallet_receive_no_destination_tag_required = Babu alamar makoma da ake buƙata
 wallet_title = Wallet
-wallet_add_token_title = Add Token
-wallet_sell = Sell
-wallet_receive_collection = Receive Collection
-wallet_more = More
-wallet_import_contract_address_field = Contract or Token ID
-wallet_import_address_warning = You can view balances and transactions for this address, but **cannot send or sell funds**.
+wallet_add_token_title = Ƙara Token
+wallet_sell = Sayarwa
+wallet_receive_collection = Karɓi Tarin
+wallet_more = Kara
+wallet_import_contract_address_field = Kwangila ko Token ID
+wallet_import_address_warning = Kuna iya duba ma'auni da ma'amaloli don wannan adireshin, amma ** ba za ku iya aikawa ko siyar da kuɗi ba**.
 wallet_deposit = Ajiya
 wallet_withdraw = Janyewa
-wallet_available_balance = Available: %@
+wallet_available_balance = Akwai: %@
 wallet_portfolio_title = Fayil ɗin Fayil
 wallet_import_already_imported_message = An riga an shigo da wannan walat ɗin.
 
 # Wallets
 
 wallets_title = Wallets
-wallets_watch = Watch
+wallets_watch = Kalli
 
 # Receive
 
@@ -115,48 +114,48 @@ receive_warning = Wannan shine adireshinka — aika kawai %@ a kan %@ hanyar sad
 # Buy
 
 buy_title = Saya %@
-buy_providers_title = Providers
+buy_providers_title = Masu bayarwa
 buy_rate = Rate
-buy_no_results = No quotes available
+buy_no_results = Babu abin da ake so
 
 # Transfer
 
 transfer_network_fee = Kudin hanyar sadarwa
 transfer_memo = Memo
-transfer_confirm = Confirm
-transfer_from = From
-transfer_to = To
+transfer_confirm = Tabbatar
+transfer_from = Daga
+transfer_to = Zuwa
 transfer_max = Max
-transfer_network = Network
-transfer_recipient_title = Recipient
-transfer_balance = Balance: %@
-transfer_title = Transfer
-transfer_recipient_address_field = Address or Name
+transfer_network = Cibiyar sadarwa
+transfer_recipient_title = Mai karɓa
+transfer_balance = Ma'auni: %@
+transfer_title = Canja wurin
+transfer_recipient_address_field = Adireshi ko Suna
 transfer_send_title = Aika
-transfer_insufficient_balance = Insufficient %@ balance.
-transfer_insufficient_network_fee_balance = Insufficient %@ balance to cover network fees.
-transfer_approve_title = Approve
-transfer_stake_title = Stake
-transfer_claim_rewards_title = Claim Rewards
-transfer_unstake_title = Unstake
-transfer_redelegate_title = Redelegate
-transfer_withdraw_title = Withdraw
-transfer_rewards_title = Rewards
-transfer_minimum_amount = Minimum Amount is %@
-transfer_activate_asset_title = Activate Asset
-transfer_recipient_my_wallets = My Wallets
-transfer_recipient_view_wallets = View Wallets
-transfer_minimum_account_balance = A minimum %@ balance must remain after this, unless you're using your full balance.
-transfer_smart_contract_title = Smart Contract
-transfer_other_title = Other
-transfer_maximum_amount = Maximum Amount is %@
-transfer_reserved_fees = We've left %@ in your balance to cover future network fees.
-transfer_freeze_title = Freeze
-transfer_unfreeze_title = Unfreeze
+transfer_insufficient_balance = Rashin isassun ma'auni %@.
+transfer_insufficient_network_fee_balance = Rashin isassun ma'auni %@ don biyan kuɗin hanyar sadarwa.
+transfer_approve_title = Amincewa
+transfer_stake_title = Rago
+transfer_claim_rewards_title = Da'awar Lada
+transfer_unstake_title = Cire hannun jari
+transfer_redelegate_title = Sake wakilci
+transfer_withdraw_title = Janye
+transfer_rewards_title = Kyauta
+transfer_minimum_amount = Mafi ƙarancin kuɗi shine %@
+transfer_activate_asset_title = Kunna Kadari
+transfer_recipient_my_wallets = Wallets dina
+transfer_recipient_view_wallets = Duba Wallet
+transfer_minimum_account_balance = Mafi ƙarancin ma'auni %@ dole ne ya kasance bayan wannan, sai dai idan kuna amfani da cikakken ma'aunin ku.
+transfer_smart_contract_title = Kwangilar Smart
+transfer_other_title = Sauran
+transfer_maximum_amount = Matsakaicin adadin shine %@
+transfer_reserved_fees = Mun bar %@ cikin ma'auni don biyan kuɗin hanyar sadarwa na gaba.
+transfer_freeze_title = Daskare
+transfer_unfreeze_title = Cire daskarewa
 transfer_sign_transaction_title = Sa hannu kan Ma'amala
 transfer_review_request = Buƙatar Bita
 transfer_amount = Adadin
-transfer_amount_title = Amount
+transfer_amount_title = Adadin
 
 # Settings
 
@@ -165,148 +164,148 @@ settings_privacy_policy = takardar kebantawa
 settings_title = Saituna
 settings_developer = Mai haɓakawa
 settings_version = Sigar
-settings_community = Community
-settings_aboutus = About Us
-settings_networks_title = Networks
+settings_community = Al'umma
+settings_aboutus = Game da Mu
+settings_networks_title = Hanyoyin sadarwa
 settings_networks_source = Source
 settings_networks_explorer = Explorer
-settings_currency = Currency
+settings_currency = Kudi
 settings_rate_app = Rate App
-settings_website = Visit Website
-settings_security = Security
-settings_enable_value = Enable %@
-settings_enable_passcode = Enable Passcode
-settings_security_authentication = Authentication
-settings_notifications_title = Notifications
-settings_language = Language
-settings_help_center = Help Center
-settings_support = Support
-settings_price_alerts_title = Price Alerts
-settings_hide_balance = Hide Balance
-settings_disable_value = Disable %@
-settings_preferences_title = Preferences
-settings_preferences_perpetual_default_leverage = Default Leverage
+settings_website = Ziyarci Yanar Gizo
+settings_security = Tsaro
+settings_enable_value = Kunna %@
+settings_enable_passcode = Kunna lambar wucewa
+settings_security_authentication = Tabbatarwa
+settings_notifications_title = Sanarwa
+settings_language = Harshe
+settings_help_center = Cibiyar Taimako
+settings_support = Taimako
+settings_price_alerts_title = Faɗakarwar Farashin
+settings_hide_balance = Boye Ma'auni
+settings_disable_value = A kashe %@
+settings_preferences_title = Abubuwan da ake so
+settings_preferences_perpetual_default_leverage = Tsohuwar Leverage
 settings_preferences_perpetual_default_take_profit = Take Profit na asali
 settings_preferences_perpetual_default_stop_loss = Stop Loss na asali
 
 # Errors
 
-errors_transfer = Transfer Error: %@
-errors_validation = Validation Error: %@
-errors_create_wallet = Create Wallet Error: %@
-errors_invalid_address_name = Invalid address or name
-errors_invalid_amount = Invalid amount
-errors_token_invalid_id = Invalid Token ID
-errors_import_invalid_secret_phrase = Invalid Secret Phrase
-errors_import_invalid_secret_phrase_word = Invalid Secret Phrase word: %@
-errors_invalid_url = Invalid URL
-errors_error_occured = An error occurred!
-errors_invalid_network_id = Invalid Network ID
-errors_error = Error
-errors_connections_user_cancelled = User cancelled
-errors_not_supported = Not Supported
-errors_permissions_not_granted = Permissions Not Granted
-errors_decoding = Decoding Error
-errors_unknown = Unknown
-errors_not_supported_qr = This device does not support QR code scanning. You can only select QR code image from library.
-errors_camera_permissions_not_granted = Camera permission not granted. Please enable camera access in settings to scan QR code.
-errors_decoding_qr = Failed to decode the QR code. Please try again with a different QR code.
-errors_transfer_error = Transfer Error
-errors_unable_estimate_network_fee = We are currently unable to calculate the network fee.
-errors_invalid_asset_address = Invalid %@ address
-errors_dust_threshold = The transaction failed because the amount is too small to meet the %@ network's minimum requirement (dust threshold). This limit ensures the transaction value covers the fees and processing costs.
+errors_transfer = Kuskuren Canja wurin: %@
+errors_validation = Kuskuren Tabbatarwa: %@
+errors_create_wallet = Ƙirƙiri Kuskuren Wallet: %@
+errors_invalid_address_name = Adireshi ko suna mara inganci
+errors_invalid_amount = Adadin da ba daidai ba
+errors_token_invalid_id = ID na Token mara inganci
+errors_import_invalid_secret_phrase = Kalmomin sirri mara inganci
+errors_import_invalid_secret_phrase_word = Kalmar Sirri mara inganci: %@
+errors_invalid_url = URL mara inganci
+errors_error_occured = An sami kuskure!
+errors_invalid_network_id = ID na hanyar sadarwa mara inganci
+errors_error = Kuskure
+errors_connections_user_cancelled = An soke mai amfani
+errors_not_supported = Ba a Tallafawa
+errors_permissions_not_granted = Ba a Ba da izini ba
+errors_decoding = Kuskuren yankewa
+errors_unknown = Ba a sani ba
+errors_not_supported_qr = Wannan na'urar baya goyan bayan duba lambar QR. Kuna iya zaɓar hoton lambar QR daga ɗakin karatu kawai.
+errors_camera_permissions_not_granted = Ba a ba da izinin kyamara ba. Da fatan za a ba da damar damar kyamara a cikin saitunan don bincika lambar QR.
+errors_decoding_qr = An kasa yanke lambar QR. Da fatan za a sake gwadawa tare da lambar QR daban.
+errors_transfer_error = Kuskuren Canja wurin
+errors_unable_estimate_network_fee = A halin yanzu ba mu iya ƙididdige kuɗin hanyar sadarwa.
+errors_invalid_asset_address = Adireshin %@ mara inganci
+errors_dust_threshold = Kasuwancin ya gaza saboda adadin ya yi ƙanƙanta da zai iya biyan mafi ƙarancin buƙatun hanyar sadarwa na %@ (ƙafar ƙura). Wannan iyaka yana tabbatar da ƙimar ciniki ta rufe kudade da farashin sarrafawa.
 errors_swap_no_quote_available = Babu farashi a halin yanzu.
-errors_swap_not_supported_chain = Not supported chain.
-errors_swap_not_supported_asset = Not supported asset.
-errors_swap_not_supported_pair = Not supported pair.
-errors_connections_invalid_send_parameters = Invalid parameters provided for sending a transaction.
-errors_connections_invalid_sign_parameters = Invalid parameters provided for signing.
-errors_connections_no_supported_wallets = No supported wallets are available.
-errors_connections_unsupported_chain = The provided chain is not supported.
-errors_connections_unsupported_method = The requested method is not supported.
-errors_swap_amount_too_small = Amount too small
-errors_required = %@ is required
-errors_scan_transaction_malicious_description = This transaction cannot be completed — the destination wallet address is linked to suspicious or harmful activity.
-errors_scan_transaction_memo_required = %@ destination wallet address requires a destination tag / memo
-errors_wallets_limit_title = Wallets Limit Reached
-errors_wallets_limit_description = You've reached the maximum number of wallets allowed (%d). Please remove an existing wallet to add or create a new one.
-errors_scan_transaction_malicious_title = Suspicious Activity
-errors_connections_malicious_origin = This connection comes from an untrusted source.
-errors_no_data_available = No data available
-errors_dust_threshold_short = The network considers this amount dust - the fee is higher than the amount itself.
+errors_swap_not_supported_chain = Sarkar da ba ta da goyan baya.
+errors_swap_not_supported_asset = Ba a goyan bayan kadari.
+errors_swap_not_supported_pair = Ba a goyan bayan nau'i biyu ba.
+errors_connections_invalid_send_parameters = An samar da sigogi marasa inganci don aika ma'amala.
+errors_connections_invalid_sign_parameters = An samar da sigogi marasa inganci don sa hannu.
+errors_connections_no_supported_wallets = Babu goyan bayan walat.
+errors_connections_unsupported_chain = Ba a tallafawa sarkar da aka bayar.
+errors_connections_unsupported_method = Hanyar da aka nema ba ta da tallafi.
+errors_swap_amount_too_small = Adadin yayi ƙanƙanta
+errors_required = %@ ana bukata
+errors_scan_transaction_malicious_description = Ba za a iya kammala wannan ma'amala ba - adireshin walat ɗin da ake nufi yana da alaƙa da ayyuka masu ban tsoro ko cutarwa.
+errors_scan_transaction_memo_required = %@ Adireshin walat ɗin manufa yana buƙatar alamar manufa / memo
+errors_wallets_limit_title = Iyakar Wallets
+errors_wallets_limit_description = Kun kai matsakaicin adadin walat ɗin da aka yarda (%d). Da fatan za a cire walat ɗin da ke akwai don ƙara ko ƙirƙirar sabo.
+errors_scan_transaction_malicious_title = Ayyukan tuhuma
+errors_connections_malicious_origin = Wannan haɗin ya fito daga tushen da ba a amince da shi ba.
+errors_no_data_available = Babu bayanai samuwa
+errors_dust_threshold_short = Cibiyar sadarwa tana la'akari da wannan adadin ƙura - kuɗin ya fi girma fiye da adadin kanta.
 errors_swap_minimum_amount = Mafi ƙarancin adadin ciniki shine %@. Da fatan a shigar da adadin da ya fi girma.
 errors_perpetual_trigger_price_lower = Farashin kunnawa ya kamata ya zama ƙasa da farashin kasuwa
 errors_perpetual_trigger_price_higher = Farashin kunnawa ya kamata ya zama sama da farashin kasuwa
-errors_token_unable_fetch_token_information = Unable to fetch token information: %@
-errors_unknown_try_again = An unknown error occurred. Please try again.
+errors_token_unable_fetch_token_information = Ba a iya samo bayanan alamar: %@
+errors_unknown_try_again = An sami kuskuren da ba a sani ba. Da fatan za a sake gwadawa.
 errors_network_error = Kuskuren hanyar sadarwa: %@
 errors_network_offline = Haɗin intanet ɗin ya bayyana a layi.
 
 # Activity
 
-activity_title = Activity
-activity_state_empty_title = Your activity will appear here
-activity_state_empty_description = Make your first transaction
-activity_state_empty_search_description = Clear filters to refresh your activities
-activity_state_empty_search_title = No activities found
+activity_title = Ayyuka
+activity_state_empty_title = Ayyukanku zai bayyana a nan
+activity_state_empty_description = Yi ciniki na farko
+activity_state_empty_search_description = Share masu tacewa don sabunta ayyukanku
+activity_state_empty_search_title = Babu ayyukan da aka samu
 
 # Update App
 
-update_app_title = New update available!
-update_app_description = Version %@ of the app is now available. Update and enjoy the latest features and improvements.
-update_app_action = Update
-update_app_permission_title = Allow installation
-update_app_permission_description = Go to settings and allow installation from external sources
-update_app_permission_open_settings = Go to settings
-update_app_downloading = Downloading...
+update_app_title = Akwai sabon sabuntawa!
+update_app_description = Shafin %@ na app yana nan yanzu. Sabunta kuma ji daɗin sabbin abubuwa da haɓakawa.
+update_app_action = Sabuntawa
+update_app_permission_title = Bada izinin shigarwa
+update_app_permission_description = Je zuwa saitunan kuma ba da izinin shigarwa daga kafofin waje
+update_app_permission_open_settings = Je zuwa saitunan
+update_app_downloading = Ana saukewa...
 
 # Transaction
 
-transaction_recipient = Recipient
-transaction_sender = Sender
-transaction_date = Date
-transaction_view_on = View on %@
-transaction_status = Status
-transaction_status_confirmed = Successful
-transaction_status_pending = Pending
-transaction_status_failed = Failed
-transaction_status_reverted = Reverted
-transaction_title_received = Received
-transaction_title_sent = Sent
-transaction_swap_again = Swap Again
-transaction_status_completed = Completed
-transaction_status_inprogress = In Progress
-transaction_status_refunded = Refunded
+transaction_recipient = Mai karɓa
+transaction_sender = Mai aikawa
+transaction_date = Kwanan wata
+transaction_view_on = Duba kan %@
+transaction_status = Matsayi
+transaction_status_confirmed = Nasara
+transaction_status_pending = Ana jiran
+transaction_status_failed = Ba a yi nasara ba
+transaction_status_reverted = Komawa
+transaction_title_received = An karɓa
+transaction_title_sent = An aika
+transaction_swap_again = Sauke Sake
+transaction_status_completed = An kammala
+transaction_status_inprogress = Ana kai
+transaction_status_refunded = An mayar da kuɗi
 
 # Asset
 
-asset_balances = Balances
-asset_balances_available = Available
-asset_price = Price
-asset_market_cap = Market Cap
-asset_trading_volume = Trading Volume (24h)
-asset_market_cap_rank = Market Cap Rank
-asset_total_supply = Total Supply
-asset_circulating_supply = Circulating Supply
-asset_balances_reserved = Reserved
-asset_view_token_on = View token on %@
-asset_view_address_on = View address on %@
-asset_name = Name
-asset_symbol = Symbol
+asset_balances = Ma'auni
+asset_balances_available = Akwai
+asset_price = Farashin
+asset_market_cap = Kasuwa Cap
+asset_trading_volume = Girman Kasuwanci (24h)
+asset_market_cap_rank = Matsayin Kasuwa
+asset_total_supply = Jimlar Kayyade
+asset_circulating_supply = Wadatar Dawowa
+asset_balances_reserved = Ajiye
+asset_view_token_on = Duba alamar akan %@
+asset_view_address_on = Duba adireshin akan %@
+asset_name = Suna
+asset_symbol = Alama
 asset_decimals = Decimals
 asset_token_id = ID na Alamar
-asset_contract = Contract
-asset_state_empty_title = Your transactions will appear here️
-asset_state_empty_description = Receive, swap or buy %@
-asset_verification_unverified = Unverified
-asset_verification_suspicious = Suspicious
-asset_verification_warning_title = Know What You're Adding
-asset_verification_warning_message = Anyone can create one - including fake or malicious tokens.
-asset_buy_asset = Buy %@
-asset_add_to_wallet = Add to wallet
-asset_hide_from_wallet = Hide from wallet
-asset_resources = Resources
-asset_verification_verified = Verified
+asset_contract = Kwangila
+asset_state_empty_title = Kasuwancin ku zai bayyana a nan️
+asset_state_empty_description = Karɓa, musanya ko siya %@
+asset_verification_unverified = Ba a tantance ba
+asset_verification_suspicious = Abin tuhuma
+asset_verification_warning_title = Sanin Abinda kuke Karawa
+asset_verification_warning_message = Kowa na iya ƙirƙirar ɗaya - gami da alamun karya ko na mugunta.
+asset_buy_asset = Sayi %@
+asset_add_to_wallet = Ƙara zuwa walat
+asset_hide_from_wallet = Boye daga walat
+asset_resources = Albarkatu
+asset_verification_verified = Tabbatarwa
 asset_all_time_high = Babban Lokaci
 asset_all_time_low = Ƙasa a Kowane Lokaci
 
@@ -317,8 +316,8 @@ charts_hour = 1H
 charts_week = 1W
 charts_month = 1M
 charts_year = 1Y
-charts_all = All
-charts_entry = Entry
+charts_all = Duka
+charts_entry = Shiga
 charts_price_open = A buɗe
 charts_price_close = Rufe
 charts_price_high = Babban
@@ -327,90 +326,91 @@ charts_price_change = Sauyi
 
 # Date
 
-date_today = Today
-date_yesterday = Yesterday
+date_today = Yau
+date_yesterday = Jiya
 
 # Wallet Connect
 
 wallet_connect_title = WalletConnect
-wallet_connect_connection_title = Connection
-wallet_connect_disconnect = Disconnect
-wallet_connect_connect_title = Connect
+wallet_connect_connection_title = Haɗin kai
+wallet_connect_disconnect = Cire haɗin
+wallet_connect_connect_title = Haɗa
 wallet_connect_app = App
-wallet_connect_website = Website
+wallet_connect_website = Yanar Gizo
 wallet_connect_brand_name = WalletConnect
-wallet_connect_no_active_connections = No active connections
-wallet_connect_state_empty_description = Scan or paste code to connect to the DApp
-wallet_connect_domain = Domain
+wallet_connect_no_active_connections = Babu haɗin kai mai aiki
+wallet_connect_state_empty_description = Duba ko liƙa lamba don haɗi zuwa DApp
+wallet_connect_domain = Yankin
 wallet_connect_permissions_title = Izini
 wallet_connect_permissions_view_balance = Duba ma'aunin ku da ayyukan ku
 wallet_connect_permissions_approval_requests = Aika buƙatun amincewa
 
 # Swap
 
-swap_you_pay = You Pay
-swap_you_receive = You Receive
-swap_price_impact = Price Impact
-swap_slippage = Slippage
-swap_price_impact_warning_description = You will lose %@ of your %@ in this trade. Are you sure you want to proceed?
-swap_price_impact_warning_title = High Price Impact
-swap_estimated_time_title = Estimated Time
-swap_min_receive = Minimum Receive
+swap_you_pay = Ka Bayar
+swap_you_receive = Kuna karba
+swap_price_impact = Tasirin Farashin
+swap_slippage = Zamewa
+swap_price_impact_warning_description = Za ku rasa %@ na %@ naku a cikin wannan cinikin. Kun tabbata kuna son ci gaba?
+swap_price_impact_warning_title = Tasirin Farashin Mai Girma
+swap_estimated_time_title = Kiyasta Lokacin
+swap_min_receive = Mafi ƙarancin karɓa
 swap_use_minimum_amount = Yi amfani da Mafi ƙarancin Adadin
 
 # Stake
 
-stake_active = Active
-stake_pending = Pending
-stake_rewards = Rewards
-stake_validator = Validator
-stake_validators = Validators
+stake_active = Mai aiki
+stake_pending = Ana jiran
+stake_rewards = Kyauta
+stake_validator = Mai tabbatarwa
+stake_validators = Masu tabbatarwa
 stake_apr = APR %@
-stake_available_in = Available In
-stake_inactive = Inactive
-stake_lock_time = Lock Time
-stake_activating = Activating
-stake_deactivating = Deactivating
-stake_awaiting_withdrawal = Awaiting Withdrawal
+stake_available_in = Akwai a ciki
+stake_inactive = Mara aiki
+stake_lock_time = Lokacin Kulle
+stake_activating = Kunnawa
+stake_deactivating = Yana kashewa
+stake_awaiting_withdrawal = Ana jiran Janyewa
 stake_active_in = Active In
-stake_minimum_amount = Minimum amount
-stake_viagem = Stake via Gem Wallet
-stake_no_active_staking = No active staking yet.
-stake_state_empty_title = Your stakes will appear here
-stake_state_empty_description = Stake your first %@
-stake_resource = Resource
-stake_resource_energy = Energy
+stake_minimum_amount = Mafi ƙarancin adadin
+stake_viagem = Hannun jari ta hanyar Gem Wallet
+stake_no_active_staking = Har yanzu babu wani saka hannun jari.
+stake_state_empty_title = Hannun jarinku zai bayyana a nan
+stake_state_empty_description = Bada %@ na farko
+stake_resource = Albarkatu
+stake_resource_energy = Makamashi
 stake_resource_bandwidth = Bandwidth
-stake_delegations = Delegations
+stake_delegations = Wakilai
 
 # Assets
 
-assets_no_assets_found = No assets found
-assets_add_custom_token = Add Custom Token
-assets_select_asset = Select Asset
+assets_no_assets_found = Ba a sami kadarori ba
+assets_add_custom_token = Ƙara Alamar Custom
+assets_select_asset = Zaɓi Kadari
+assets_popular = Shahararrun kadarori
 assets_tags_trending = Trending
-assets_tags_gainers = Gainers
-assets_tags_losers = Losers
-assets_tags_new = New
+assets_tags_gainers = Masu samun riba
+assets_tags_losers = Masu hasara
+assets_tags_new = Sabo
 assets_tags_stablecoins = Stablecoins
-assets_state_empty_search_description = You can try to add it manually
-assets_title = Assets
+assets_state_empty_search_description = Kuna iya ƙoƙarin ƙara shi da hannu
+assets_title = Kadari
 
 # Sign Message
 
-sign_message_title = Sign Message
-sign_message_message = Message
-sign_message_view_full_message = View Full Message
+sign_message_title = Saƙon Sa hannu
+sign_message_message = Sako
+sign_message_view_full_message = Duba Cikakken Saƙo
 
 # Secret Phrase
 
-secret_phrase_do_not_share_title = Do not share your Secret Phrase!
-secret_phrase_do_not_share_description = If someone has your secret phrase they will have full control of your wallet!
-secret_phrase_save_phrase_safely = Save your Secret Phrase in a secure place \nthat only you control.
-secret_phrase_confirm_quick_test_title = Complete this quick test to confirm you've saved everything correctly.
-secret_phrase_screenshot_detected_title = Screenshot Detected
-secret_phrase_screenshot_detected_description = Screenshots may be accessible to other apps, they can put your secret phrase at risk if saved this way.
-secret_phrase_content_hidden_description = Content hidden during screen recording
+secret_phrase_do_not_share_title = Kada ku raba Kalmar sirrinku!
+secret_phrase_do_not_share_description = Idan wani yana da kalmar sirrin ku za su sami cikakken iko akan walat ɗin ku!
+secret_phrase_save_phrase_safely = Ajiye kalmar sirrin ku a wuri mai tsaro \nwanda kai kadai ke sarrafa.
+secret_phrase_confirm_quick_test_title = Kammala wannan gwajin gaggawar don tabbatar da cewa kun adana komai daidai.
+secret_phrase_screenshot_detected_title = An Gano Hoton Hoton
+secret_phrase_screenshot_detected_description = Za a iya samun damar ɗaukar hotuna zuwa wasu ƙa'idodi, za su iya sanya kalmar sirrin ku cikin haɗari idan an ajiye su ta wannan hanyar.
+secret_phrase_content_hidden_description = Abubuwan da ke ɓoye yayin rikodin allo
 
 # Social
 
@@ -432,24 +432,24 @@ social_coinmarketcap = CoinMarketCap
 
 # Nodes
 
-nodes_import_node_title = Add node
-nodes_import_node_chain_id = Chain ID
-nodes_import_node_in_sync = In Sync
-nodes_import_node_latest_block = Latest Block
+nodes_import_node_title = Ƙara kumburi
+nodes_import_node_chain_id = ID na sarkar
+nodes_import_node_in_sync = A cikin Daidaitawa
+nodes_import_node_latest_block = Sabbin Block
 nodes_import_node_latency = Latency
 nodes_gem_wallet_node = Gem Wallet Node
 nodes_import_node_warning_message = Maɓallan da aka keɓance na iya zama masu cutarwa kuma suna iya fallasa bayanan ma'amalar ku ko kuma samar da bayanan karya.
 
 # Library
 
-library_select_from_photo_library = Select from Photo Library
+library_select_from_photo_library = Zaɓi daga Laburaren Hoto
 
 # Fee Rates
 
-fee_rates_info = Speed of transaction is determined by network fee paid to the network miners.
-fee_rates_slow = Slow
-fee_rates_fast = Fast
-fee_rates_normal = Normal
+fee_rates_info = Ana ƙayyade saurin ma'amala ta hanyar kuɗin hanyar sadarwa da aka biya ga masu hakar ma'adinai na cibiyar sadarwa.
+fee_rates_slow = Sannu a hankali
+fee_rates_fast = Mai sauri
+fee_rates_normal = Na al'ada
 
 # Fee Rate
 
@@ -459,129 +459,129 @@ fee_rate_gwei = %@ gwei
 
 # Banner
 
-banner_account_activation_title = Account Activation Fee
-banner_account_activation_description = The %@ network requires a one time fee of %@.
-banner_stake_title = Start staking %@
-banner_stake_description = Earn %@ rewards on your stake while you sleep.
-banner_enable_notifications_title = Enable Notifications
-banner_enable_notifications_description = Stay on top of your wallet activity.
-banner_activate_asset_description = To use the %@ asset, you must first enable it on the %@ network by fulfilling the network's specific requirements.
-banner_asset_status_title = Suspicious Asset
-banner_asset_status_description = Token may be unsafe or misleading. Proceed only if you fully trust it.
-banner_onboarding_title = Your wallet is ready
-banner_onboarding_description = Buy or Receive crypto to get started
-banner_perpetuals_title = Trade Perpetuals on Hyperliquid
-banner_perpetuals_description = Deposit, trade, and earn with Hyperliquid perpetuals
+banner_account_activation_title = Kudin Kunna Asusu
+banner_account_activation_description = Cibiyar sadarwar %@ tana buƙatar kuɗin lokaci ɗaya na %@.
+banner_stake_title = Fara tarawa %@
+banner_stake_description = Sami %@ lada akan gungumen ku yayin barci.
+banner_enable_notifications_title = Kunna Fadakarwa
+banner_enable_notifications_description = Tsaya akan aikin walat ɗin ku.
+banner_activate_asset_description = Don amfani da kadarar %@, dole ne ka fara kunna ta akan hanyar sadarwar %@ ta hanyar cika takamaiman buƙatun cibiyar sadarwa.
+banner_asset_status_title = Dukiyar da ake tuhuma
+banner_asset_status_description = Alamar na iya zama mara lafiya ko yaudara. Ci gaba kawai idan kun amince da shi sosai.
+banner_onboarding_title = Walat ɗin ku yana shirye
+banner_onboarding_description = Sayi ko Karɓar crypto don farawa
+banner_perpetuals_title = Ciniki Perpetuals akan Hyperliquid
+banner_perpetuals_description = Ajiye, kasuwanci, da riba tare da har abada Hyperliquid
 
 # Filter
 
-filter_clear = Clear
-filter_title = Filters
-filter_types = Types
-filter_has_balance = Has balance
+filter_clear = Share
+filter_title = Tace
+filter_types = Nau'ukan
+filter_has_balance = Yana da ma'auni
 
 # Price Alerts
 
-price_alerts_enabled_for = Price alert enabled for %@
-price_alerts_disabled_for = Price alert disabled for %@
-price_alerts_get_notified_explain_message = Get notified when there's a significant price change in your favorite crypto assets.
-price_alerts_direction_over = Over
-price_alerts_direction_under = Under
-price_alerts_direction_increases_by = Increases by
-price_alerts_direction_decreases_by = Decreases by
-price_alerts_set_alert_price_over = When price is over
-price_alerts_set_alert_price_under = When price is under
-price_alerts_set_alert_price_increases_by = When price increases by
-price_alerts_set_alert_price_decreases_by = When price decreases by
-price_alerts_set_alert_set_target_price = Set target price
-price_alerts_set_alert_current_price = Current price
-price_alerts_added_for = Set price alert %@
-price_alerts_state_empty_title = Your price alerts will appear here️
-price_alerts_state_empty_description = Enable them by adding coins to track
-price_alerts_auto_footer = Alerts trigger on significant price moves.
-price_alerts_set_alert_title = Set Price Alert
+price_alerts_enabled_for = An kunna faɗakarwar farashi don %@
+price_alerts_disabled_for = An kashe faɗakarwar farashi don %@
+price_alerts_get_notified_explain_message = Samun sanarwa lokacin da akwai gagarumin canjin farashi a cikin kadarorin crypto da kuka fi so.
+price_alerts_direction_over = Ƙarshe
+price_alerts_direction_under = Karkashin
+price_alerts_direction_increases_by = Yana ƙaruwa ta
+price_alerts_direction_decreases_by = Ragewa ta
+price_alerts_set_alert_price_over = Lokacin da farashin ya ƙare
+price_alerts_set_alert_price_under = Lokacin da farashin ke ƙasa
+price_alerts_set_alert_price_increases_by = Lokacin da farashin ya ƙaru da
+price_alerts_set_alert_price_decreases_by = Lokacin da farashin ya ragu da
+price_alerts_set_alert_set_target_price = Saita farashin manufa
+price_alerts_set_alert_current_price = Farashin yanzu
+price_alerts_added_for = Saita faɗakarwar farashi %@
+price_alerts_state_empty_title = Faɗin farashin ku zai bayyana anan️
+price_alerts_state_empty_description = Kunna su ta ƙara tsabar kudi don waƙa
+price_alerts_auto_footer = Faɗakarwa yana haifar da ƙaƙƙarfan motsin farashi.
+price_alerts_set_alert_title = Saita Faɗakarwar Farashi
 
 # Lock
 
-lock_immediately = Immediately
-lock_one_minute = 1 minute
-lock_five_minutes = 5 minutes
-lock_fifteen_minutes = 15 minutes
-lock_one_hour = 1 hour
+lock_immediately = Nan take
+lock_one_minute = Minti 1
+lock_five_minutes = Minti 5
+lock_fifteen_minutes = Minti 15
+lock_one_hour = awa 1
 lock_six_hours = 6 hours
-lock_require_authentication = Require authentication
-lock_unlock = Unlock
-lock_privacy_lock = Privacy Lock
-lock_footer = Protect access to this app on your device
+lock_require_authentication = Bukatar tantancewa
+lock_unlock = Buɗe
+lock_privacy_lock = Kulle Sirri
+lock_footer = Kare damar shiga wannan app akan na'urarka
 
 # Verify
 
-verify_phrase_title = Confirm
+verify_phrase_title = Tabbatar
 
 # Warnings
 
-warnings_multi_signature_blocked = Do not transfer funds to this %@ Multi-Signature wallet unless you are certain you control the private keys. Failure to do so could expose you to scams, and you may permanently lose your assets.
+warnings_multi_signature_blocked = Kar a tura kuɗi zuwa wannan %@ Wallet ɗin Sa hannu da yawa sai dai idan kun tabbata kuna sarrafa maɓallan sirri. Rashin yin hakan na iya fallasa ku ga zamba, kuma kuna iya rasa kadarorin ku na dindindin.
 
 # Sell
 
-sell_title = Sell %@
+sell_title = Saya %@
 
 # Info
 
 info_network_fee_title = Kudin hanyar sadarwa
-info_watch_wallet_title = Watch Wallet
-info_watch_wallet_description = A wallet that you do not have access to, but you can watch its transactions and movements.
-info_network_fee_description = Every transaction on the %@ network requires a fee in %@ paid to miners to process your transaction, not Gem Wallet. Network fees varies based on network usage.
-info_transaction_error_description = The transaction could not be completed due to an error, such as insufficient funds, invalid input, or rejection by the network. Please review the details and try again.
-info_transaction_pending_description = The transaction has been submitted and is awaiting confirmation on the network. Processing times may vary. Please check back for updates.
-info_transaction_success_description = The transaction has been completed and confirmed on the network. You can review the details to verify its status.
-info_lock_time_description = Lock time, also known as the unbonding or unfreezing period, is the duration during which staked assets are inaccessible after you decide to unstake them.
-info_price_impact_description = Price impact is the change in token price caused by your trade size. Higher price impact means you receive fewer tokens due to low liquidity or a large order size.
-info_slippage_description = Slippage refers to the difference between the expected price of a trade and the actual price at which it is executed.
-info_asset_status_unverified_description = Unverified tokens have not been sufficiently verified by trusted third-party services. They may appear in your wallet due to airdrops, transfers, or manual imports.
-info_asset_status_suspicious_description = Suspicious or spam tokens are identified as potential scams or harmful assets. They may appear in your wallet due to airdrops, transfers, or manual imports.
-info_insufficient_network_fee_balance_title = %@ required
+info_watch_wallet_title = Kalli Wallet
+info_watch_wallet_description = Wallet wanda ba ku da damar yin amfani da shi, amma kuna iya kallon ma'amaloli da motsinsa.
+info_network_fee_description = Kowace ciniki akan hanyar sadarwar %@ tana buƙatar kuɗi a cikin %@ da aka biya ga masu hakar ma'adinai don aiwatar da kasuwancin ku, ba Gem Wallet ba. Kudaden hanyar sadarwa sun bambanta dangane da amfani da hanyar sadarwa.
+info_transaction_error_description = Ba za a iya kammala cinikin ba saboda kuskure, kamar rashin isassun kuɗi, shigarwa mara inganci, ko kin amincewa da hanyar sadarwa. Da fatan za a sake nazarin cikakkun bayanai kuma a sake gwadawa.
+info_transaction_pending_description = An ƙaddamar da ma'amala kuma yana jiran tabbaci akan hanyar sadarwar. Lokutan sarrafawa na iya bambanta. Da fatan za a duba baya don sabuntawa.
+info_transaction_success_description = An kammala cinikin kuma an tabbatar da shi akan hanyar sadarwa. Kuna iya duba cikakkun bayanai don tabbatar da matsayinsa.
+info_lock_time_description = Lokacin kulle, wanda kuma aka sani da lokacin kwancewa ko rashin daskarewa, shine tsawon lokacin da kadarorin da ke hannun jari ba su isa ba bayan kun yanke shawarar cire su.
+info_price_impact_description = Tasirin farashi shine canjin farashin alamar da girman cinikin ku ya haifar. Tasirin farashi mafi girma yana nufin ka karɓi ƴan alamu saboda ƙarancin kuɗi ko girman oda.
+info_slippage_description = Slippage yana nufin bambanci tsakanin farashin ciniki da ake tsammani da ainihin farashin da ake aiwatar da shi.
+info_asset_status_unverified_description = Amintattun ayyuka na ɓangare na uku ba su tabbatar da isassun alamun da ba a tantance ba. Suna iya bayyana a cikin walat ɗin ku saboda ɗigon iska, canja wuri, ko shigo da hannu.
+info_asset_status_suspicious_description = Ana gano alamun tuhuma ko spam a matsayin masu yuwuwar zamba ko kadarorin cutarwa. Suna iya bayyana a cikin walat ɗin ku saboda ɗigon iska, canja wuri, ko shigo da hannu.
+info_insufficient_network_fee_balance_title = %@ ake bukata
 info_insufficient_network_fee_balance_description = Wannan ciniki yana buƙatar %@ don biyan kuɗin hanyar sadarwa da aka biya %@ masu hakar ma'adinai, ba Gem WalletTabbatar kana da isassun kayan aiki %@.
-info_insufficient_balance_title = Insufficient Balance
-info_insufficient_balance_description = You don't have enough %@ to complete this transaction. Please top up, receive, or swap in your wallet and try again.
-info_account_minimum_balance_title = Minimum balance
-info_perpetual_funding_payments_title = Funding Payments
-info_perpetual_funding_payments_description = Funding payments are periodic payments between traders to keep the perpetual contract price close to the underlying asset's spot price. Positive funding means long positions pay short positions, while negative funding means short positions pay long positions.
-info_perpetual_funding_rate_title = Funding
-info_perpetual_funding_rate_description = The funding rate determines the cost of holding a perpetual position. It is calculated hourly and helps maintain price equilibrium between the perpetual contract and the underlying asset's spot price.
-info_perpetual_liquidation_price_title = Liquidation Price
-info_perpetual_liquidation_price_description = The liquidation price is the price level at which your position will be automatically closed to prevent further losses. When the market price reaches this level, your position is liquidated and you lose your margin.
-info_perpetual_open_interest_title = Open Interest
-info_perpetual_open_interest_description = Open interest represents the total value of all outstanding perpetual contracts that have not been settled. It provides insight into market activity and liquidity.
-info_no_quote_description = Unable to return a quote for the selected token pair, possibly due to low amount, lack of liquidity, or technical limitations.
-info_stake_reserved_title = Reserved for Network Fee
-info_stake_reserved_description = A small amount stays in your wallet to cover fees for operations like unstaking or claiming rewards.
-info_stake_apr_description = Annual Percentage Rate (APR) is the yearly reward rate for staking your cryptocurrency.
-info_perpetual_auto_close_description = Automatically close your position at set price levels. Take Profit locks in gains, Stop Loss limits losses.
+info_insufficient_balance_title = Rashin Isasshen Ma'auni
+info_insufficient_balance_description = Baku da isassun %@ don kammala wannan ciniki. Da fatan za a yi sama, karɓa, ko musanya a cikin walat ɗin ku kuma a sake gwadawa.
+info_account_minimum_balance_title = Mafi ƙarancin ma'auni
+info_perpetual_funding_payments_title = Biyan Kuɗi
+info_perpetual_funding_payments_description = Biyan kuɗi kuɗi ne na lokaci-lokaci tsakanin ƴan kasuwa don kiyaye farashin kwangila na dindindin kusa da ainihin ƙimar kadara. Kudi mai kyau yana nufin matsayi mai tsawo yana biyan gajerun matsayi, yayin da kudade mara kyau yana nufin gajeren matsayi yana biyan matsayi mai tsawo.
+info_perpetual_funding_rate_title = Tallafawa
+info_perpetual_funding_rate_description = Adadin kuɗi yana ƙayyade farashin riƙe matsayi na har abada. Ana ƙididdige shi kowane sa'o'i kuma yana taimakawa kiyaye daidaiton farashi tsakanin kwangilar dindindin da farashin tabo na kadari.
+info_perpetual_liquidation_price_title = Farashin Liquidation
+info_perpetual_liquidation_price_description = Farashin ruwa shine matakin farashin wanda za'a rufe matsayin ku ta atomatik don hana ƙarin asara. Lokacin da farashin kasuwa ya kai wannan matakin, matsayin ku ya lalace kuma kuna rasa gefen ku.
+info_perpetual_open_interest_title = Buɗe Sha'awa
+info_perpetual_open_interest_description = Buɗaɗɗen sha'awa tana wakiltar jimillar ƙimar duk wasu fitattun kwangiloli na dindindin waɗanda ba a daidaita su ba. Yana ba da haske game da ayyukan kasuwa da yawan ruwa.
+info_no_quote_description = Ba za a iya dawo da ƙididdiga don nau'in alamar da aka zaɓa ba, maiyuwa saboda ƙarancin ƙima, ƙarancin ruwa, ko iyakan fasaha.
+info_stake_reserved_title = An tanada don Kudin hanyar sadarwa
+info_stake_reserved_description = Ƙananan kuɗi yana tsayawa a cikin walat ɗin ku don biyan kuɗi don ayyuka kamar cirewa ko neman lada.
+info_stake_apr_description = Yawan Kashi na shekara-shekara (APR) shine ƙimar lada na shekara don tara kuɗin cryptocurrency.
+info_perpetual_auto_close_description = Rufe matsayinka ta atomatik a saita matakan farashi. Ɗauki makullin riba a cikin riba, Dakatar da Asara yana iyakance asara.
 info_fully_diluted_valuation_title = Kimantawa Mai Cikakken Nauyi
 info_fully_diluted_valuation_description = Darajar kasuwa ta ka'ida idan duk tsabar kudi suna yawo. An ƙididdige shi azaman farashi da aka ninka ta hanyar mafi girman wadata.
 info_circulating_supply_description = Adadin tsabar kuɗi da ake da su a kasuwa a yanzu haka.
 info_total_supply_description = Jimillar tsabar kuɗin da ke akwai, gami da tsabar kuɗi da aka kulle ko aka ajiye.
 info_max_supply_title = Mafi girman wadata
 info_max_supply_description = Matsakaicin adadin tsabar kuɗi da za su wanzu.
-info_perpetual_funding_apr_title = Funding APR
-info_perpetual_funding_apr_description = The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.
-info_minimum_amount_title = Minimum Amount
+info_perpetual_funding_apr_title = Tallafin APR
+info_perpetual_funding_apr_description = Matsakaicin adadin shekara-shekara wanda masu tsayi ke biyan gajerun wando (idan mara kyau, gajerun wando suna biyan dogon lokaci). Babu wasu kudade da ke da alaƙa da kudade, wanda shine canja wuri tsakanin-tsara tsakanin masu amfani don tura farashin zuwa farashin tabo.
+info_minimum_amount_title = Mafi ƙarancin kuɗi
 info_minimum_amount_description = A kan hanyar sadarwar %@, mafi ƙarancin adadin wannan ma'amala shi ne %@.
 
 # Input
 
-input_enter_amount_to = Please enter amount to %@
+input_enter_amount_to = Da fatan za a shigar da adadin zuwa %@
 
 # Nft
 
-nft_properties = Properties
-nft_collections = Collections
-nft_collection = Collection
-nft_save_to_photos = Save to Photos
-nft_set_as_avatar = Set as Avatar
-nft_state_empty_title = Your NFTs will appear here️
-nft_state_empty_description = Receive your first NFT
+nft_properties = Kayayyaki
+nft_collections = Tari
+nft_collection = Tarin
+nft_save_to_photos = Ajiye zuwa Hotuna
+nft_set_as_avatar = Saita azaman Avatar
+nft_state_empty_title = NFT naku zasu bayyana anan️
+nft_state_empty_description = Karɓi NFT na farko
 nft_report_reason_spam = Spam
 nft_report_reason_malicious = Mai mugunta
 nft_report_reason_inappropriate = Abun ciki mara dacewa
@@ -590,39 +590,39 @@ nft_report_report_button_title = Yi korafi
 
 # Permissions
 
-permissions_access_denied = Access Denied
-permissions_image_photo_access_denied_description = This app does not have permission to access your photo library. Please enable access in your device settings.
+permissions_access_denied = An hana shiga
+permissions_image_photo_access_denied_description = Wannan app ɗin bashi da izinin shiga ɗakin karatu na hoton ku. Da fatan za a ba da damar shiga cikin saitunan na'urar ku.
 
 # Markets
 
-markets_title = Markets
-markets_state_empty_title = Your markets data will appear here
-markets_daily_volume = 24h Volume
+markets_title = Kasuwanni
+markets_state_empty_title = Bayanan kasuwanninku zai bayyana a nan
+markets_daily_volume = 24h girma
 
 # Search
 
-search_state_empty_description = Check the spelling or try a new search.
+search_state_empty_description = Duba harafin ko gwada sabon bincike.
 
 # Networks
 
-networks_state_empty_search_title = No networks found
+networks_state_empty_search_title = Babu cibiyoyin sadarwa da aka samu
 
 # Onboarding
 
-onboarding_security_create_wallet_intro_title = You will get a Secret Phrase — it's the only way to access your wallet.
-onboarding_security_create_wallet_confirm_title = I understand and want to continue
-onboarding_security_create_wallet_do_not_share_title = Do Not Share It With Anyone
-onboarding_security_create_wallet_do_not_share_subtitle = Anyone who gets your secret phrase can take full control of your wallet.
-onboarding_security_create_wallet_keep_safe_subtitle = The secret phrase is only way to access your wallet.
-onboarding_security_create_wallet_no_recovery_subtitle = If you lose your secret phrase, you lose access to your wallet.
-onboarding_security_create_wallet_keep_safe_title = Store It Somewhere Safe
-onboarding_security_create_wallet_no_recovery_title = We Can't Help You Recover It
-onboarding_accept_terms_title = Accept Terms
-onboarding_accept_terms_message = Please read and agree to the following terms before you continue.
-onboarding_accept_terms_item1_message = I understand that I am solely responsible for the security and backup of my wallets, not Gem.
-onboarding_accept_terms_item2_message = I understand that Gem is not a bank or exchange, and using it for illegal purposes is strictly prohibited.
-onboarding_accept_terms_item3_message = I understand that if I ever lose access to my wallets, Gem is not liable and cannot help in any way.
-onboarding_accept_terms_continue = Agree and Continue
+onboarding_security_create_wallet_intro_title = Za ku sami kalmar sirri - ita ce kawai hanyar samun damar walat ɗin ku.
+onboarding_security_create_wallet_confirm_title = Na fahimta kuma ina so in ci gaba
+onboarding_security_create_wallet_do_not_share_title = Kada Ku Raba Ga Kowa
+onboarding_security_create_wallet_do_not_share_subtitle = Duk wanda ya sami kalmar sirrin ku na iya ɗaukar cikakken iko da walat ɗin ku.
+onboarding_security_create_wallet_keep_safe_subtitle = Kalmar sirrin hanya ce kawai don samun damar walat ɗin ku.
+onboarding_security_create_wallet_no_recovery_subtitle = Idan ka rasa kalmar sirrinka, ka rasa damar shiga walat ɗinka.
+onboarding_security_create_wallet_keep_safe_title = Ajiye Shi Wani Wuri Mai Aminci
+onboarding_security_create_wallet_no_recovery_title = Ba Za Mu Iya Taimaka muku Warke shi ba
+onboarding_accept_terms_title = Karɓi Sharuɗɗan
+onboarding_accept_terms_message = Da fatan za a karanta kuma ku yarda da waɗannan sharuɗɗan kafin ku ci gaba.
+onboarding_accept_terms_item1_message = Na fahimci cewa ni kaɗai ke da alhakin tsaro da ajiyar walat ɗina, ba Gem ba.
+onboarding_accept_terms_item2_message = Na fahimci cewa Gem ba banki ba ne ko musanya, kuma an haramta amfani da shi don dalilai na doka.
+onboarding_accept_terms_item3_message = Na fahimci cewa idan na rasa damar shiga wallet dina, Gem ba abin dogaro bane kuma ba zai iya taimakawa ta kowace hanya ba.
+onboarding_accept_terms_continue = Yarda da Ci gaba
 
 # Brand
 
@@ -630,49 +630,49 @@ brand_name = Gem Wallet
 
 # Perpetual
 
-perpetual_positions = Positions
-perpetual_size = Size
+perpetual_positions = Matsayi
+perpetual_size = Girman
 perpetual_margin = Margin
-perpetual_position = Position
-perpetual_close_position = Close position
+perpetual_position = Matsayi
+perpetual_close_position = Matsayin kusa
 perpetual_pnl = PnL
-perpetual_long = Long
-perpetual_short = Short
-perpetual_entry_price = Entry Price
-perpetual_modify = Modify
-perpetual_reduce_position = Reduce Position
-perpetual_increase_position = Increase Position
-perpetual_open_direction = Open %@
-perpetual_close_direction = Close %@
-perpetual_leverage = Leverage
-perpetual_direction = Direction
-perpetual_auto_close = Auto Close
-perpetual_auto_close_take_profit = Take profit
-perpetual_market_price = Market Price
+perpetual_long = Doguwa
+perpetual_short = Gajere
+perpetual_entry_price = Farashin Shiga
+perpetual_modify = Gyara
+perpetual_reduce_position = Rage Matsayi
+perpetual_increase_position = Ƙara Matsayi
+perpetual_open_direction = Bude %@
+perpetual_close_direction = Rufe %@
+perpetual_leverage = Amfani
+perpetual_direction = Hanyar
+perpetual_auto_close = Rufe atomatik
+perpetual_auto_close_take_profit = Ci riba
+perpetual_market_price = Farashin Kasuwa
 perpetual_take_profit = TP
 perpetual_stop_loss = SL
 perpetual_liquidation = Liq
-perpetual_increase_direction = Increase %@
-perpetual_reduce_direction = Reduce %@
-perpetual_auto_close_expected_profit = Expected profit
-perpetual_auto_close_expected_loss = Expected loss
-perpetual_modify_position = Modify Position
-perpetual_auto_close_stop_loss = Stop loss
+perpetual_increase_direction = Ƙara %@
+perpetual_reduce_direction = Rage %@
+perpetual_auto_close_expected_profit = Ribar da ake tsammani
+perpetual_auto_close_expected_loss = Asarar da ake tsammani
+perpetual_modify_position = Gyara Matsayi
+perpetual_auto_close_stop_loss = Dakatar da asara
 perpetual_value = darajar
 perpetual_unrealized_pnl = PnL mara Gaskiya
 perpetual_volume = Ƙarar girma
 perpetual_all_time_pnl = PnL na Duk Lokaci
 perpetual_margin_usage = Amfani da Gefen
 perpetual_account_leverage = Amfani da Asusu
-perpetual_margin_cross = Cross
-perpetual_margin_isolated = Isolated
+perpetual_margin_cross = Ketare
+perpetual_margin_isolated = Ware
 
 # Perpetuals
 
-perpetuals_title = Perpetuals
-perpetuals_markets = Markets
-perpetuals_empty_state_no_markets = No markets
-perpetuals_empty_state_no_markets_found = No markets found
+perpetuals_title = Na dindindin
+perpetuals_markets = Kasuwanni
+perpetuals_empty_state_no_markets = Babu kasuwanni
+perpetuals_empty_state_no_markets_found = Babu kasuwanni da aka samu
 
 # Rewards
 
@@ -682,7 +682,7 @@ rewards_my_referral_code = Lambar da na bayar ta hanyar sadarwa
 rewards_invite_friends_title = Gayyaci Abokai
 rewards_invite_friends_description = Sami %@ maki ga kowane aboki da ya shiga.
 rewards_referral_code = Lambar Shawara
-rewards_invited_by = Invited By
+rewards_invited_by = Gayyatar Ta
 rewards_points = Maki
 rewards_referrals = Shawarwari
 rewards_earn_points_title = Sami Maki
@@ -706,8 +706,8 @@ rewards_unverified_description = Lada yana kunna ta atomatik yayin da kake amfan
 # Recent Activity
 
 recent_activity_title = Kwanan nan
-recent_activity_state_empty_title = Your recents will appear here
-recent_activity_state_empty_description = Assets you've recently used will appear here
+recent_activity_state_empty_title = Sabbin labaran ku za su bayyana a nan
+recent_activity_state_empty_description = Kadarorin da kuka yi amfani da su kwanan nan za su bayyana a nan
 
 # Notifications
 
@@ -742,19 +742,19 @@ application_name = Gem
 
 # Camera Permission
 
-camera_permission_request_camera = Camera permission required for QR Code scan.\nPlease grant permission.
+camera_permission_request_camera = Ana buƙatar izinin kyamara don duba lambar QR.\nDa fatan za a ba da izini.
 
 # Notifications Permission
 
-notifications_permission_request_notification = Post Notifications permission required for get notifications about new transactions.\nPlease grant permission.
+notifications_permission_request_notification = Izinin Fadakarwa da ake buƙata don samun sanarwa game da sabbin ma'amaloli.\nDon Allah a ba da izini.
 
 # Confirm
 
-confirm_fee_error = Fee calculation error
+confirm_fee_error = Kuskuren lissafin kuɗin kuɗi
 
 # Rootcheck
 
-rootcheck_security_alert = Security Warning
-rootcheck_body = Your device appears to have root access, which can significantly increase security risks. Using this app on a rooted device may expose your assets to unauthorized access and potential loss. For the safety of your funds, we strongly recommend using a non-rooted device.
-rootcheck_ignore = Ignore
-rootcheck_exit = Exit
+rootcheck_security_alert = Gargadin Tsaro
+rootcheck_body = Na'urarka ta bayyana tana da tushen shiga, wanda zai iya ƙara haɗarin tsaro sosai. Yin amfani da wannan ƙa'idar akan na'ura mai tushe na iya fallasa kadarorin ku zuwa shiga mara izini da yuwuwar asara. Don amincin kuɗin ku, muna ba da shawarar yin amfani da na'urar da ba ta da tushe.
+rootcheck_ignore = Yi watsi da shi
+rootcheck_exit = Fita

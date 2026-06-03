@@ -80,8 +80,6 @@ common_skip = Skip
 common_warning = Warning
 # Used in shared app UI for the learn more label.
 common_learn_more = Learn More
-# Used in shared app UI for the popular label.
-common_popular = Popular
 # Used in shared app UI for the short name label.
 common_short_name = Gem
 # Used in shared app UI as a description.
@@ -724,6 +722,8 @@ assets_no_assets_found = No assets found
 assets_add_custom_token = Add Custom Token
 # Used in asset list and discovery screens for the select asset label.
 assets_select_asset = Select Asset
+# Asset selection section header for the list of popular assets.
+assets_popular = Popular
 # Used in asset list and discovery screens for the tags trending label.
 assets_tags_trending = Trending
 # Used in asset list and discovery screens for the tags gainers label.

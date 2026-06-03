@@ -37,7 +37,6 @@
 "common.skip" = "Skip";
 "common.warning" = "Warning";
 "common.learn_more" = "Learn More";
-"common.popular" = "Popular";
 "common.short_name" = "Gem";
 "common.description" = "Description";
 "common.emoji" = "Emoji";
@@ -319,6 +318,7 @@
 "assets.no_assets_found" = "No assets found";
 "assets.add_custom_token" = "Add Custom Token";
 "assets.select_asset" = "Select Asset";
+"assets.popular" = "Popular";
 "assets.tags.trending" = "Trending";
 "assets.tags.gainers" = "Gainers";
 "assets.tags.losers" = "Losers";

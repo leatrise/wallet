@@ -37,7 +37,6 @@
 "common.skip" = "跳过";
 "common.warning" = "警告";
 "common.learn_more" = "了解更多";
-"common.popular" = "热门";
 "common.short_name" = "Gem";
 "common.description" = "描述";
 "common.emoji" = "表情符号";
@@ -50,7 +49,7 @@
 "common.details" = "详情";
 "common.info" = "信息";
 "common.get_started" = "开始使用";
-"common.earn" = "Earn";
+"common.earn" = "赚取";
 "common.method" = "方法";
 "common.token" = "令牌";
 "common.suspicious_address" = "可疑地址";
@@ -226,8 +225,8 @@
 "transaction.title.received" = "已收到";
 "transaction.title.sent" = "已发送";
 "transaction.swap_again" = "再次兑换";
-"transaction.status.completed" = "Completed";
-"transaction.status.inprogress" = "In Progress";
+"transaction.status.completed" = "已完成";
+"transaction.status.inprogress" = "进行中";
 "transaction.status.refunded" = "已退款";
 "asset.balances" = "余额";
 "asset.balances.available" = "可用余额";
@@ -264,7 +263,7 @@
 "charts.month" = "1月";
 "charts.year" = "1年";
 "charts.all" = "全部";
-"charts.entry" = "Entry";
+"charts.entry" = "参赛作品";
 "charts.price.open" = "打开";
 "charts.price.close" = "关闭";
 "charts.price.high" = "高的";
@@ -308,7 +307,7 @@
 "stake.awaiting_withdrawal" = "等待赎回";
 "stake.active_in" = "激活于";
 "stake.minimum_amount" = "最低金额";
-"stake.viagem" = "Stake via Gem Wallet";
+"stake.viagem" = "通过 Gem 钱包质押";
 "stake.no_active_staking" = "当前没有激活的质押";
 "stake.state.empty.title" = "质押将显示在这里️";
 "stake.state.empty.description" = "质押第一个%@";
@@ -319,6 +318,7 @@
 "assets.no_assets_found" = "未找到资产";
 "assets.add_custom_token" = "添加自定义代币";
 "assets.select_asset" = "选择资产";
+"assets.popular" = "热门资产";
 "assets.tags.trending" = "热门";
 "assets.tags.gainers" = "涨幅榜";
 "assets.tags.losers" = "跌幅榜";
@@ -331,7 +331,7 @@
 "sign_message.view_full_message" = "查看完整消息";
 "secret_phrase.do_not_share.title" = "切勿泄露助记词！";
 "secret_phrase.do_not_share.description" = "任何人只要拥有助记词，就能完全控制这个钱包！";
-"secret_phrase.save_phrase_safely" = "请将助记词保存在只有自己能掌控的安全位置。";
+"secret_phrase.save_phrase_safely" = "请将助记词保存在安全位置，\n且只有您可以掌控。";
 "secret_phrase.confirm.quick_test.title" = "完成这个快速测试，确认是否已正确保存所有内容。";
 "secret_phrase.screenshot_detected.title" = "检测到屏幕截图";
 "secret_phrase.screenshot_detected.description" = "其他应用程序可能可以访问屏幕截图，如果以这种方式保存，可能会泄露您的密码短语。";
@@ -377,8 +377,8 @@
 "banner.asset_status.description" = "代币可能不安全或具有误导性。请仅在完全信任的情况下继续操作。";
 "banner.onboarding.title" = "您的钱包已准备就绪";
 "banner.onboarding.description" = "购买或接收加密货币即可开始";
-"banner.perpetuals.title" = "Trade Perpetuals on Hyperliquid";
-"banner.perpetuals.description" = "Deposit, trade, and earn with Hyperliquid perpetuals";
+"banner.perpetuals.title" = "在超流动性上交易永续合约";
+"banner.perpetuals.description" = "使用 Hyperliquid 永续合约进行存款、交易和赚取收益";
 "filter.clear" = "清除";
 "filter.title" = "筛选";
 "filter.types" = "类型";
@@ -450,9 +450,9 @@
 "info.total_supply.description" = "现存硬币总数，包括已锁定或已预留的硬币。";
 "info.max_supply.title" = "最大供应";
 "info.max_supply.description" = "硬币的最大存世量。";
-"info.perpetual.funding_apr.title" = "Funding APR";
-"info.perpetual.funding_apr.description" = "The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.";
-"info.minimum_amount.title" = "Minimum Amount";
+"info.perpetual.funding_apr.title" = "资助年利率";
+"info.perpetual.funding_apr.description" = "多头支付空头的年化利率（如果为负，则空头支付多头）。融资不收取任何费用，融资是用户之间的点对点转账，旨在将价格推向现货价格。";
+"info.minimum_amount.title" = "最低金额";
 "info.minimum_amount.description" = "在 %@ 网络上，此交易的最低金额为 %@。";
 "input.enter_amount_to" = "输入%@的数量";
 "nft.properties" = "特性";
@@ -523,11 +523,11 @@
 "perpetual.all_time_pnl" = "总损益";
 "perpetual.margin_usage" = "边际利用率";
 "perpetual.account_leverage" = "账户杠杆";
-"perpetual.margin.cross" = "Cross";
-"perpetual.margin.isolated" = "Isolated";
+"perpetual.margin.cross" = "克罗斯";
+"perpetual.margin.isolated" = "隔离";
 "perpetuals.title" = "永久";
-"perpetuals.markets" = "Markets";
-"perpetuals.empty_state.no_markets" = "No markets";
+"perpetuals.markets" = "市场";
+"perpetuals.empty_state.no_markets" = "没有市场";
 "perpetuals.empty_state.no_markets_found" = "未找到任何市场";
 "rewards.title" = "奖励";
 "rewards.share_text" = "加入 Gem Wallet 使用我的推荐链接，即可获得奖励： %@";
@@ -535,7 +535,7 @@
 "rewards.invite_friends.title" = "邀请好友";
 "rewards.invite_friends.description" = "赚 %@ 每邀请一位好友加入，即可获得积分。";
 "rewards.referral_code" = "推荐码";
-"rewards.invited_by" = "Invited By";
+"rewards.invited_by" = "邀请者";
 "rewards.points" = "积分";
 "rewards.referrals" = "转诊";
 "rewards.earn_points.title" = "赚取积分";
@@ -556,8 +556,8 @@
 "rewards.unverified.title" = "奖励尚未激活。";
 "rewards.unverified.description" = "您使用应用程序的次数越多，奖励就会自动激活。";
 "recent_activity.title" = "近期";
-"recent_activity.state.empty.title" = "Your recents will appear here";
-"recent_activity.state.empty.description" = "Assets you've recently used will appear here";
+"recent_activity.state.empty.title" = "您最近的记录将显示在这里";
+"recent_activity.state.empty.description" = "您最近使用过的资源将显示在此处";
 "notifications.inapp.state.empty.title" = "暂无通知";
 "notifications.inapp.state.empty.description" = "您可以在这里查看通知更新。";
 "notifications.inapp.rewards.invite.subtitle" = "邀请好友，一起赢取奖励";

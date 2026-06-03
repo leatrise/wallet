@@ -1,45 +1,44 @@
 # Common
 
 common_cancel = Cancellare
-common_done = Done
+common_done = Fatto
 common_secret_phrase = Frase segreta
-common_next = Next
-common_copy = Copy
-common_share = Share
-common_continue = Continue
-common_provider = Provider
-common_loading = Loading
-common_address = Address
-common_back = Back
-common_try_again = Try Again
-common_paste = Paste
-common_delete = Delete
+common_next = Avanti
+common_copy = Copia
+common_share = Condividi
+common_continue = Continua
+common_provider = Fornitore
+common_loading = Caricamento in corso
+common_address = Indirizzo
+common_back = Indietro
+common_try_again = Riprova
+common_paste = Incolla
+common_delete = Elimina
 common_delete_confirmation = Sei sicuro di voler eliminare %@?
-common_hide = Hide
-common_wallet = Wallet
+common_hide = Nasconditi
+common_wallet = Portafoglio
 common_show = Spettacolo %@
-common_copied = Copied: %@
-common_recommended = Recommended
-common_all = All
-common_not_available = Not Available
-common_phrase = Phrase
-common_manage = Manage
-common_type = Type
-common_no_results_found = No Results Found
-common_yes = Yes
-common_no = No
+common_copied = Copiato: %@
+common_recommended = Consigliato
+common_all = Tutto
+common_not_available = Non disponibile
+common_phrase = Frase
+common_manage = Gestisci
+common_type = Digitare
+common_no_results_found = Nessun risultato trovato
+common_yes = Sì
+common_no = NO
 common_none = Nessuno
 common_url = URL
-common_private_key = Private Key
+common_private_key = Chiave privata
 common_latency_in_ms = %d ms
-common_open_settings = Open settings
-common_pin = Pin
-common_pinned = Pinned
-common_unpin = Unpin
+common_open_settings = Apri le impostazioni
+common_pin = Perno
+common_pinned = Appuntato
+common_unpin = Sblocca
 common_skip = Saltare
 common_warning = Avvertimento
 common_learn_more = Saperne di più
-common_popular = Popolare
 common_short_name = Gem
 common_description = Descrizione
 common_emoji = Emoji
@@ -47,28 +46,28 @@ common_style = Stile
 common_avatar = L'Avatar
 common_photo = Foto
 common_save = Salva
-common_edit = Edit
+common_edit = Modifica
 common_percentage = Percentuale
 common_details = Dettagli
 common_info = Informazioni
 common_get_started = Per iniziare
-common_earn = Earn
+common_earn = Guadagna
 common_method = Metodo
 common_token = Gettone
 common_suspicious_address = Indirizzo sospetto
 common_refresh = Rinfrescato
-common_no_thanks = No thanks
-common_grant_permission = Grant permission
-common_required_field = %@ is required
+common_no_thanks = No grazie
+common_grant_permission = Concedere l'autorizzazione
+common_required_field = %@ è obbligatorio
 
 # Welcome
 
-welcome_title = Welcome to Gem Family
+welcome_title = Benvenuti nella famiglia Gem
 
 # Wallet
 
-wallet_create_new_wallet = Create a New Wallet
-wallet_import_existing_wallet = Import an Existing Wallet
+wallet_create_new_wallet = Crea un nuovo portafoglio
+wallet_import_existing_wallet = Importa un portafoglio esistente
 wallet_send = Inviare
 wallet_receive = Ricevere
 wallet_buy = Acquistare
@@ -77,20 +76,20 @@ wallet_import_title = Importa portafoglio
 wallet_new_title = Nuovo portafoglio
 wallet_name = Nome
 wallet_import_action = Importare
-wallet_multicoin = Multi-Coin
-wallet_import_address_field = Address or Name
+wallet_multicoin = Multimoneta
+wallet_import_address_field = Indirizzo o nome
 wallet_manage_token_list = Gestisci token
-wallet_scan_qr_code = Scan QR Code
-wallet_scan = Scan
-wallet_default_name = Wallet #%d
-wallet_default_name_chain = %@ Wallet #%d
-wallet_copy_address = Copy Address
-wallet_watch_tooltip_title = You are watching this wallet.
-wallet_stake = Stake
-wallet_receive_no_memo_required = No memo required
-wallet_receive_no_destination_tag_required = No destination tag required
-wallet_title = Wallet
-wallet_add_token_title = Add Token
+wallet_scan_qr_code = Scansiona il codice QR
+wallet_scan = Scansione
+wallet_default_name = Portafoglio n.%d
+wallet_default_name_chain = %@ Portafoglio n.%d
+wallet_copy_address = Copia indirizzo
+wallet_watch_tooltip_title = Stai guardando questo portafoglio.
+wallet_stake = Palo
+wallet_receive_no_memo_required = Nessun promemoria richiesto
+wallet_receive_no_destination_tag_required = Nessun tag di destinazione richiesto
+wallet_title = Portafoglio
+wallet_add_token_title = Aggiungi gettone
 wallet_sell = Vendere
 wallet_receive_collection = Ricevi la raccolta
 wallet_more = Di più
@@ -99,13 +98,13 @@ wallet_import_address_warning = Puoi visualizzare i saldi e le transazioni per q
 wallet_deposit = Depositare
 wallet_withdraw = Ritirare
 wallet_available_balance = Disponibile: %@
-wallet_portfolio_title = Portfolio
+wallet_portfolio_title = Portafoglio
 wallet_import_already_imported_message = Questo portafoglio è già stato importato.
 
 # Wallets
 
-wallets_title = Wallets
-wallets_watch = Watch
+wallets_title = Portafogli
+wallets_watch = Guarda
 
 # Receive
 
@@ -115,74 +114,74 @@ receive_warning = Questo è il tuo indirizzo: invia solo %@ sul %@ rete.
 # Buy
 
 buy_title = Acquista %@
-buy_providers_title = Providers
-buy_rate = Rate
-buy_no_results = No quotes available
+buy_providers_title = Fornitori
+buy_rate = Vota
+buy_no_results = Nessun preventivo disponibile
 
 # Transfer
 
-transfer_network_fee = Network Fee
-transfer_memo = Memo
-transfer_confirm = Confirm
-transfer_from = From
-transfer_to = To
-transfer_max = Max
-transfer_network = Network
-transfer_recipient_title = Recipient
-transfer_balance = Balance: %@
-transfer_title = Transfer
-transfer_recipient_address_field = Address or Name
+transfer_network_fee = Commissione di rete
+transfer_memo = Promemoria
+transfer_confirm = Conferma
+transfer_from = Da
+transfer_to = A
+transfer_max = Massimo
+transfer_network = Rete
+transfer_recipient_title = Destinatario
+transfer_balance = Saldo: %@
+transfer_title = Trasferimento
+transfer_recipient_address_field = Indirizzo o nome
 transfer_send_title = Inviare
-transfer_insufficient_balance = Insufficient %@ balance.
-transfer_insufficient_network_fee_balance = Insufficient %@ balance to cover network fees.
-transfer_approve_title = Approve
+transfer_insufficient_balance = Saldo %@ insufficiente.
+transfer_insufficient_network_fee_balance = Saldo %@ insufficiente per coprire le tariffe di rete.
+transfer_approve_title = Approvare
 transfer_stake_title = Palo
-transfer_claim_rewards_title = Claim Rewards
-transfer_unstake_title = Unstake
-transfer_redelegate_title = Redelegate
+transfer_claim_rewards_title = Richiedi premi
+transfer_unstake_title = Non partecipare
+transfer_redelegate_title = Ridelegare
 transfer_withdraw_title = Ritirare
-transfer_rewards_title = Rewards
-transfer_minimum_amount = Minimum Amount is %@
-transfer_activate_asset_title = Activate Asset
+transfer_rewards_title = Premi
+transfer_minimum_amount = L'importo minimo è %@
+transfer_activate_asset_title = Attiva risorsa
 transfer_recipient_my_wallets = I miei portafogli
 transfer_recipient_view_wallets = Visualizza portafogli
 transfer_minimum_account_balance = Dopo questo importo deve rimanere un saldo minimo %@, a meno che non si utilizzi l'intero saldo.
-transfer_smart_contract_title = Smart Contract
-transfer_other_title = Other
-transfer_maximum_amount = Maximum Amount is %@
+transfer_smart_contract_title = Contratto intelligente
+transfer_other_title = Altro
+transfer_maximum_amount = L'importo massimo è %@
 transfer_reserved_fees = Abbiamo lasciato %@ nel tuo saldo per coprire le future commissioni di rete.
 transfer_freeze_title = Congelare
 transfer_unfreeze_title = Scongelare
 transfer_sign_transaction_title = Firma la transazione
 transfer_review_request = Richiesta di revisione
-transfer_amount = Amount
-transfer_amount_title = Amount
+transfer_amount = Importo
+transfer_amount_title = Importo
 
 # Settings
 
-settings_terms_of_services = Terms of Services
-settings_privacy_policy = Privacy Policy
+settings_terms_of_services = Termini di servizio
+settings_privacy_policy = Informativa sulla privacy
 settings_title = Impostazioni
-settings_developer = Developer
-settings_version = Version
-settings_community = Community
-settings_aboutus = About Us
-settings_networks_title = Networks
-settings_networks_source = Source
-settings_networks_explorer = Explorer
-settings_currency = Currency
-settings_rate_app = Rate App
-settings_website = Visit Website
-settings_security = Security
-settings_enable_value = Enable %@
-settings_enable_passcode = Enable Passcode
-settings_security_authentication = Authentication
-settings_notifications_title = Notifications
-settings_language = Language
+settings_developer = Sviluppatore
+settings_version = Versione
+settings_community = Comunità
+settings_aboutus = Chi siamo
+settings_networks_title = Reti
+settings_networks_source = Fonte
+settings_networks_explorer = Esploratore
+settings_currency = Valuta
+settings_rate_app = Valuta l'app
+settings_website = Visita il sito web
+settings_security = Sicurezza
+settings_enable_value = Abilita %@
+settings_enable_passcode = Abilita codice di accesso
+settings_security_authentication = Autenticazione
+settings_notifications_title = Notifiche
+settings_language = Lingua
 settings_help_center = Centro assistenza
 settings_support = Supporto
 settings_price_alerts_title = Avvisi sui prezzi
-settings_hide_balance = Hide Balance
+settings_hide_balance = Nascondi saldo
 settings_disable_value = Disabilita %@
 settings_preferences_title = Preferenze
 settings_preferences_perpetual_default_leverage = Leva finanziaria predefinita
@@ -194,31 +193,31 @@ settings_preferences_perpetual_default_stop_loss = Stop Loss predefinito
 errors_transfer = Errore di trasferimento: %@
 errors_validation = Errore di convalida: %@
 errors_create_wallet = Errore di creazione del portafoglio: %@
-errors_invalid_address_name = Invalid address or name
-errors_invalid_amount = Invalid amount
-errors_token_invalid_id = Invalid Token ID
-errors_import_invalid_secret_phrase = Invalid Secret Phrase
-errors_import_invalid_secret_phrase_word = Invalid Secret Phrase word: %@
-errors_invalid_url = Invalid URL
-errors_error_occured = An error occurred!
-errors_invalid_network_id = Invalid Network ID
-errors_error = Error
-errors_connections_user_cancelled = User cancelled
-errors_not_supported = Not Supported
-errors_permissions_not_granted = Permissions Not Granted
-errors_decoding = Decoding Error
-errors_unknown = Unknown
-errors_not_supported_qr = This device does not support QR code scanning. You can only select QR code image from library.
-errors_camera_permissions_not_granted = Camera permission not granted. Please enable camera access in settings to scan QR code.
-errors_decoding_qr = Failed to decode the QR code. Please try again with a different QR code.
-errors_transfer_error = Transfer Error
-errors_unable_estimate_network_fee = We are currently unable to calculate the network fee.
-errors_invalid_asset_address = Invalid %@ address
+errors_invalid_address_name = Indirizzo o nome non valido
+errors_invalid_amount = Importo non valido
+errors_token_invalid_id = ID token non valido
+errors_import_invalid_secret_phrase = Frase segreta non valida
+errors_import_invalid_secret_phrase_word = Parola frase segreta non valida: %@
+errors_invalid_url = URL non valido
+errors_error_occured = Si è verificato un errore!
+errors_invalid_network_id = ID di rete non valido
+errors_error = Errore
+errors_connections_user_cancelled = Utente cancellato
+errors_not_supported = Non supportato
+errors_permissions_not_granted = Autorizzazioni non concesse
+errors_decoding = Errore di decodifica
+errors_unknown = Sconosciuto
+errors_not_supported_qr = Questo dispositivo non supporta la scansione del codice QR. Puoi selezionare solo l'immagine del codice QR dalla libreria.
+errors_camera_permissions_not_granted = Autorizzazione fotocamera non concessa. Abilita l'accesso alla fotocamera nelle impostazioni per scansionare il codice QR.
+errors_decoding_qr = Impossibile decodificare il codice QR. Riprova con un codice QR diverso.
+errors_transfer_error = Errore di trasferimento
+errors_unable_estimate_network_fee = Al momento non siamo in grado di calcolare la tariffa di rete.
+errors_invalid_asset_address = Indirizzo %@ non valido
 errors_dust_threshold = La transazione non è riuscita perché l'importo è troppo basso per soddisfare il requisito minimo della rete %@ (soglia di dust). Questo limite garantisce che il valore della transazione copra le commissioni e i costi di elaborazione.
 errors_swap_no_quote_available = Nessuna quotazione disponibile.
-errors_swap_not_supported_chain = Not supported chain.
+errors_swap_not_supported_chain = Catena non supportata.
 errors_swap_not_supported_asset = Attività non supportata.
-errors_swap_not_supported_pair = Not supported pair.
+errors_swap_not_supported_pair = Coppia non supportata.
 errors_connections_invalid_send_parameters = Parametri non validi forniti per l'invio di una transazione.
 errors_connections_invalid_sign_parameters = Parametri non validi forniti per la firma.
 errors_connections_no_supported_wallets = Non sono disponibili portafogli supportati.
@@ -237,71 +236,71 @@ errors_dust_threshold_short = La rete considera questa cifra come polvere: la co
 errors_swap_minimum_amount = L'importo minimo di scambio è %@Inserisci un importo maggiore.
 errors_perpetual_trigger_price_lower = Il prezzo di attivazione deve essere inferiore al prezzo di mercato
 errors_perpetual_trigger_price_higher = Il prezzo di attivazione deve essere superiore al prezzo di mercato
-errors_token_unable_fetch_token_information = Unable to fetch token information: %@
-errors_unknown_try_again = An unknown error occurred. Please try again.
+errors_token_unable_fetch_token_information = Impossibile recuperare le informazioni sul token: %@
+errors_unknown_try_again = Si è verificato un errore sconosciuto. Per favore riprova.
 errors_network_error = Errore di rete: %@
 errors_network_offline = La connessione Internet risulta offline.
 
 # Activity
 
-activity_title = Activity
+activity_title = Attività
 activity_state_empty_title = La tua attività apparirà qui
 activity_state_empty_description = Effettua la tua prima transazione
 activity_state_empty_search_description = Cancella i filtri per aggiornare le tue attività
-activity_state_empty_search_title = No activities found
+activity_state_empty_search_title = Nessuna attività trovata
 
 # Update App
 
-update_app_title = New update available!
-update_app_description = Version %@ of the app is now available. Update and enjoy the latest features and improvements.
-update_app_action = Update
-update_app_permission_title = Allow installation
+update_app_title = Nuovo aggiornamento disponibile!
+update_app_description = La versione %@ dell'app è ora disponibile. Aggiorna e goditi le funzionalità e i miglioramenti più recenti.
+update_app_action = Aggiorna
+update_app_permission_title = Consenti installazione
 update_app_permission_description = Vai alle impostazioni e consenti l'installazione da fonti esterne
 update_app_permission_open_settings = Vai alle impostazioni
-update_app_downloading = Downloading...
+update_app_downloading = Download in corso...
 
 # Transaction
 
-transaction_recipient = Recipient
-transaction_sender = Sender
-transaction_date = Date
-transaction_view_on = View on %@
-transaction_status = Status
-transaction_status_confirmed = Successful
-transaction_status_pending = Pending
-transaction_status_failed = Failed
-transaction_status_reverted = Reverted
-transaction_title_received = Received
-transaction_title_sent = Sent
+transaction_recipient = Destinatario
+transaction_sender = Mittente
+transaction_date = Data
+transaction_view_on = Visualizza su %@
+transaction_status = Stato
+transaction_status_confirmed = Di successo
+transaction_status_pending = In sospeso
+transaction_status_failed = Fallito
+transaction_status_reverted = Ripristinato
+transaction_title_received = Ricevuto
+transaction_title_sent = Inviato
 transaction_swap_again = Scambia di nuovo
-transaction_status_completed = Completed
-transaction_status_inprogress = In Progress
+transaction_status_completed = Completato
+transaction_status_inprogress = In corso
 transaction_status_refunded = Rimborso effettuato
 
 # Asset
 
-asset_balances = Balances
-asset_balances_available = Available
-asset_price = Price
-asset_market_cap = Market Cap
-asset_trading_volume = Trading Volume (24h)
-asset_market_cap_rank = Market Cap Rank
-asset_total_supply = Total Supply
-asset_circulating_supply = Circulating Supply
+asset_balances = Saldi
+asset_balances_available = Disponibile
+asset_price = Prezzo
+asset_market_cap = Capitalizzazione di mercato
+asset_trading_volume = Volume degli scambi (24 ore)
+asset_market_cap_rank = Classifica della capitalizzazione di mercato
+asset_total_supply = Fornitura totale
+asset_circulating_supply = Fornitura circolante
 asset_balances_reserved = Prenotato
-asset_view_token_on = View token on %@
-asset_view_address_on = View address on %@
-asset_name = Name
-asset_symbol = Symbol
-asset_decimals = Decimals
+asset_view_token_on = Visualizza token su %@
+asset_view_address_on = Visualizza l'indirizzo su %@
+asset_name = Nome
+asset_symbol = Simbolo
+asset_decimals = Decimali
 asset_token_id = ID token
 asset_contract = Contrarre
 asset_state_empty_title = Le tue transazioni appariranno qui️
 asset_state_empty_description = Ricevi, scambia o acquista %@
 asset_verification_unverified = Non verificato
 asset_verification_suspicious = Sospettoso
-asset_verification_warning_title = Know What You're Adding
-asset_verification_warning_message = Anyone can create one - including fake or malicious tokens.
+asset_verification_warning_title = Scopri cosa stai aggiungendo
+asset_verification_warning_message = Chiunque può crearne uno, inclusi token falsi o dannosi.
 asset_buy_asset = Acquista %@
 asset_add_to_wallet = Aggiungi al portafoglio
 asset_hide_from_wallet = Nascondi dal portafoglio
@@ -317,8 +316,8 @@ charts_hour = 1H
 charts_week = 1W
 charts_month = 1M
 charts_year = 1Y
-charts_all = All
-charts_entry = Entry
+charts_all = Tutto
+charts_entry = Entrata
 charts_price_open = Aprire
 charts_price_close = Vicino
 charts_price_high = Alto
@@ -327,55 +326,55 @@ charts_price_change = Modifica
 
 # Date
 
-date_today = Today
-date_yesterday = Yesterday
+date_today = Oggi
+date_yesterday = Ieri
 
 # Wallet Connect
 
 wallet_connect_title = WalletConnect
-wallet_connect_connection_title = Connection
-wallet_connect_disconnect = Disconnect
-wallet_connect_connect_title = Connect
+wallet_connect_connection_title = Connessione
+wallet_connect_disconnect = Disconnetti
+wallet_connect_connect_title = Connettiti
 wallet_connect_app = App
 wallet_connect_website = Sito web
 wallet_connect_brand_name = WalletConnect
-wallet_connect_no_active_connections = No active connections
+wallet_connect_no_active_connections = Nessuna connessione attiva
 wallet_connect_state_empty_description = Scansiona o incolla il codice per connetterti alla DApp
-wallet_connect_domain = Domain
+wallet_connect_domain = Dominio
 wallet_connect_permissions_title = Autorizzazioni
 wallet_connect_permissions_view_balance = Visualizza il tuo saldo e la tua attività
 wallet_connect_permissions_approval_requests = Invia richieste di approvazione
 
 # Swap
 
-swap_you_pay = You Pay
-swap_you_receive = You Receive
+swap_you_pay = Paghi tu
+swap_you_receive = Ricevi
 swap_price_impact = Impatto sul prezzo
-swap_slippage = Slippage
+swap_slippage = Scivolamento
 swap_price_impact_warning_description = Perderai %@ dei tuoi %@ in questa operazione. Vuoi procedere?
 swap_price_impact_warning_title = Impatto dei prezzi elevati
-swap_estimated_time_title = Estimated Time
+swap_estimated_time_title = Tempo stimato
 swap_min_receive = Minimo da ricevere
 swap_use_minimum_amount = Utilizzare l'importo minimo
 
 # Stake
 
-stake_active = Active
-stake_pending = Pending
-stake_rewards = Rewards
-stake_validator = Validator
-stake_validators = Validators
+stake_active = Attivo
+stake_pending = In sospeso
+stake_rewards = Premi
+stake_validator = Validatore
+stake_validators = Validatori
 stake_apr = APR %@
-stake_available_in = Available In
-stake_inactive = Inactive
-stake_lock_time = Lock Time
-stake_activating = Activating
-stake_deactivating = Deactivating
-stake_awaiting_withdrawal = Awaiting Withdrawal
-stake_active_in = Active In
+stake_available_in = Disponibile nel
+stake_inactive = Inattivo
+stake_lock_time = Blocca tempo
+stake_activating = Attivazione
+stake_deactivating = Disattivazione
+stake_awaiting_withdrawal = In attesa di ritiro
+stake_active_in = Attivo dentro
 stake_minimum_amount = Importo minimo
-stake_viagem = Stake via Gem Wallet
-stake_no_active_staking = No active staking yet.
+stake_viagem = Puntata tramite Gem Wallet
+stake_no_active_staking = Nessuno staking attivo ancora.
 stake_state_empty_title = Le tue puntate appariranno qui
 stake_state_empty_description = Punta i tuoi primi %@
 stake_resource = Risorsa
@@ -385,12 +384,13 @@ stake_delegations = Delegazioni
 
 # Assets
 
-assets_no_assets_found = No assets found
-assets_add_custom_token = Add Custom Token
+assets_no_assets_found = Nessuna risorsa trovata
+assets_add_custom_token = Aggiungi token personalizzato
 assets_select_asset = Seleziona risorsa
+assets_popular = Asset popolari
 assets_tags_trending = Di tendenza
-assets_tags_gainers = Gainers
-assets_tags_losers = Losers
+assets_tags_gainers = Vincitori
+assets_tags_losers = Perdenti
 assets_tags_new = Nuovo
 assets_tags_stablecoins = Stablecoin
 assets_state_empty_search_description = Puoi provare ad aggiungerlo manualmente
@@ -398,16 +398,16 @@ assets_title = Attività
 
 # Sign Message
 
-sign_message_title = Sign Message
-sign_message_message = Message
-sign_message_view_full_message = View Full Message
+sign_message_title = Firma il messaggio
+sign_message_message = Messaggio
+sign_message_view_full_message = Visualizza il messaggio completo
 
 # Secret Phrase
 
-secret_phrase_do_not_share_title = Do not share your Secret Phrase!
-secret_phrase_do_not_share_description = If someone has your secret phrase they will have full control of your wallet!
-secret_phrase_save_phrase_safely = Save your Secret Phrase in a secure place \nthat only you control.
-secret_phrase_confirm_quick_test_title = Complete this quick test to confirm you've saved everything correctly.
+secret_phrase_do_not_share_title = Non condividere la tua frase segreta!
+secret_phrase_do_not_share_description = Se qualcuno conosce la tua frase segreta avrà il pieno controllo del tuo portafoglio!
+secret_phrase_save_phrase_safely = Salva la tua frase segreta in un luogo sicuro \n che solo tu controlli.
+secret_phrase_confirm_quick_test_title = Completa questo rapido test per confermare di aver salvato tutto correttamente.
 secret_phrase_screenshot_detected_title = Screenshot rilevato
 secret_phrase_screenshot_detected_description = Gli screenshot potrebbero essere accessibili ad altre app e, se salvati in questo modo, potrebbero mettere a rischio la tua frase segreta.
 secret_phrase_content_hidden_description = Contenuto nascosto durante la registrazione dello schermo
@@ -432,24 +432,24 @@ social_coinmarketcap = CoinMarketCap
 
 # Nodes
 
-nodes_import_node_title = Add node
-nodes_import_node_chain_id = Chain ID
-nodes_import_node_in_sync = In Sync
-nodes_import_node_latest_block = Latest Block
-nodes_import_node_latency = Latency
+nodes_import_node_title = Aggiungi nodo
+nodes_import_node_chain_id = Identificativo della catena
+nodes_import_node_in_sync = In sincronia
+nodes_import_node_latest_block = Ultimo blocco
+nodes_import_node_latency = Latenza
 nodes_gem_wallet_node = Gem Wallet Node
 nodes_import_node_warning_message = I nodi personalizzati possono essere dannosi e potrebbero esporre i dati delle transazioni o fornire informazioni false.
 
 # Library
 
-library_select_from_photo_library = Select from Photo Library
+library_select_from_photo_library = Seleziona dalla Libreria foto
 
 # Fee Rates
 
-fee_rates_info = Speed of transaction is determined by network fee paid to the network miners.
-fee_rates_slow = Slow
-fee_rates_fast = Fast
-fee_rates_normal = Normal
+fee_rates_info = La velocità della transazione è determinata dalla tariffa di rete pagata ai minatori della rete.
+fee_rates_slow = Lento
+fee_rates_fast = Veloce
+fee_rates_normal = Normale
 
 # Fee Rate
 
@@ -459,24 +459,24 @@ fee_rate_gwei = %@ gwei
 
 # Banner
 
-banner_account_activation_title = Account Activation Fee
+banner_account_activation_title = Commissione di attivazione del conto
 banner_account_activation_description = La rete %@ richiede una tariffa una tantum di %@.
-banner_stake_title = Start staking %@
-banner_stake_description = Earn %@ rewards on your stake while you sleep.
-banner_enable_notifications_title = Enable Notifications
-banner_enable_notifications_description = Stay on top of your wallet activity.
+banner_stake_title = Inizia a puntare %@
+banner_stake_description = Guadagna %@ premi sulla tua puntata mentre dormi.
+banner_enable_notifications_title = Abilita notifiche
+banner_enable_notifications_description = Rimani aggiornato sull'attività del tuo portafoglio.
 banner_activate_asset_description = Per utilizzare la risorsa %@, è necessario prima abilitarla sulla rete %@ soddisfacendo i requisiti specifici della rete.
-banner_asset_status_title = Suspicious Asset
-banner_asset_status_description = Token may be unsafe or misleading. Proceed only if you fully trust it.
+banner_asset_status_title = Risorsa sospetta
+banner_asset_status_description = Il token potrebbe essere pericoloso o fuorviante. Procedi solo se ti fidi completamente.
 banner_onboarding_title = Il tuo portafoglio è pronto
 banner_onboarding_description = Acquista o ricevi criptovalute per iniziare
-banner_perpetuals_title = Trade Perpetuals on Hyperliquid
-banner_perpetuals_description = Deposit, trade, and earn with Hyperliquid perpetuals
+banner_perpetuals_title = Fai trading sui perpetui su Hyperliquid
+banner_perpetuals_description = Deposita, scambia e guadagna con i perpetui Hyperliquid
 
 # Filter
 
-filter_clear = Clear
-filter_title = Filters
+filter_clear = Chiaro
+filter_title = Filtri
 filter_types = Tipi
 filter_has_balance = Ha equilibrio
 
@@ -485,8 +485,8 @@ filter_has_balance = Ha equilibrio
 price_alerts_enabled_for = Avviso di prezzo abilitato per %@
 price_alerts_disabled_for = Avviso di prezzo disabilitato per %@
 price_alerts_get_notified_explain_message = Ricevi una notifica quando si verifica una variazione significativa del prezzo delle tue criptovalute preferite.
-price_alerts_direction_over = Over
-price_alerts_direction_under = Under
+price_alerts_direction_over = Passo
+price_alerts_direction_under = Sotto
 price_alerts_direction_increases_by = Aumenta di
 price_alerts_direction_decreases_by = Diminuisce di
 price_alerts_set_alert_price_over = Quando il prezzo è finito
@@ -509,9 +509,9 @@ lock_five_minutes = 5 minuti
 lock_fifteen_minutes = 15 minuti
 lock_one_hour = 1 ora
 lock_six_hours = 6 ore
-lock_require_authentication = Require authentication
-lock_unlock = Unlock
-lock_privacy_lock = Privacy Lock
+lock_require_authentication = Richiedi l'autenticazione
+lock_unlock = Sblocca
+lock_privacy_lock = Blocco privacy
 lock_footer = Proteggi l'accesso a questa app sul tuo dispositivo
 
 # Verify
@@ -528,14 +528,14 @@ sell_title = Vendi %@
 
 # Info
 
-info_network_fee_title = Network Fee
-info_watch_wallet_title = Watch Wallet
+info_network_fee_title = Commissione di rete
+info_watch_wallet_title = Guarda Portafoglio
 info_watch_wallet_description = Un portafoglio a cui non hai accesso, ma di cui puoi monitorare le transazioni e i movimenti.
-info_network_fee_description = Every transaction on the %@ network requires a fee in %@ paid to miners to process your transaction, not Gem Wallet. Network fees varies based on network usage.
+info_network_fee_description = Ogni transazione sulla rete %@ richiede una commissione in %@ pagata ai minatori per elaborare la transazione, non a Gem Wallet. Le tariffe di rete variano in base all'utilizzo della rete.
 info_transaction_error_description = La transazione non è stata completata a causa di un errore, ad esempio fondi insufficienti, input non validi o rifiuto da parte della rete. Si prega di controllare i dettagli e riprovare.
 info_transaction_pending_description = La transazione è stata inoltrata ed è in attesa di conferma sulla rete. I tempi di elaborazione possono variare. Si prega di controllare regolarmente per aggiornamenti.
 info_transaction_success_description = La transazione è stata completata e confermata sulla rete. Puoi controllare i dettagli per verificarne lo stato.
-info_lock_time_description = Lock time, also known as the unbonding or unfreezing period, is the duration during which staked assets are inaccessible after you decide to unstake them.
+info_lock_time_description = Il tempo di blocco, noto anche come periodo di svincolo o sblocco, è la durata durante la quale le risorse vincolate sono inaccessibili dopo che hai deciso di rimuoverle.
 info_price_impact_description = L'impatto sul prezzo è la variazione del prezzo del token causata dalla dimensione del tuo trade. Un impatto sul prezzo più elevato significa che ricevi meno token a causa della bassa liquidità o di una grande dimensione dell'ordine.
 info_slippage_description = Lo slippage si riferisce alla differenza tra il prezzo previsto di una transazione e il prezzo effettivo a cui viene eseguita.
 info_asset_status_unverified_description = I token non verificati non sono stati sufficientemente verificati da servizi di terze parti affidabili. Potrebbero comparire nel tuo portafoglio a causa di airdrop, trasferimenti o importazioni manuali.
@@ -545,14 +545,14 @@ info_insufficient_network_fee_balance_description = Questa transazione richiede 
 info_insufficient_balance_title = Saldo insufficiente
 info_insufficient_balance_description = Non hai abbastanza %@ per completare questa transazione. Ricarica, ricevi o scambia nel tuo portafoglio e riprova.
 info_account_minimum_balance_title = Saldo minimo
-info_perpetual_funding_payments_title = Funding Payments
-info_perpetual_funding_payments_description = Funding payments are periodic payments between traders to keep the perpetual contract price close to the underlying asset's spot price. Positive funding means long positions pay short positions, while negative funding means short positions pay long positions.
-info_perpetual_funding_rate_title = Funding
-info_perpetual_funding_rate_description = The funding rate determines the cost of holding a perpetual position. It is calculated hourly and helps maintain price equilibrium between the perpetual contract and the underlying asset's spot price.
+info_perpetual_funding_payments_title = Pagamenti di finanziamento
+info_perpetual_funding_payments_description = I pagamenti di finanziamento sono pagamenti periodici tra trader per mantenere il prezzo del contratto perpetuo vicino al prezzo spot dell'attività sottostante. Un finanziamento positivo significa che le posizioni lunghe pagano le posizioni corte, mentre un finanziamento negativo significa che le posizioni corte pagano le posizioni lunghe.
+info_perpetual_funding_rate_title = Finanziamento
+info_perpetual_funding_rate_description = Il tasso di finanziamento determina il costo di mantenimento di una posizione perpetua. Viene calcolato su base oraria e aiuta a mantenere l'equilibrio dei prezzi tra il contratto perpetuo e il prezzo spot dell'attività sottostante.
 info_perpetual_liquidation_price_title = Prezzo di liquidazione
-info_perpetual_liquidation_price_description = The liquidation price is the price level at which your position will be automatically closed to prevent further losses. When the market price reaches this level, your position is liquidated and you lose your margin.
-info_perpetual_open_interest_title = Open Interest
-info_perpetual_open_interest_description = Open interest represents the total value of all outstanding perpetual contracts that have not been settled. It provides insight into market activity and liquidity.
+info_perpetual_liquidation_price_description = Il prezzo di liquidazione è il livello di prezzo al quale la tua posizione verrà chiusa automaticamente per evitare ulteriori perdite. Quando il prezzo di mercato raggiunge questo livello, la tua posizione viene liquidata e perdi il tuo margine.
+info_perpetual_open_interest_title = Interesse aperto
+info_perpetual_open_interest_description = L'interesse aperto rappresenta il valore totale di tutti i contratti perpetui in essere che non sono stati regolati. Fornisce informazioni sull'attività del mercato e sulla liquidità.
 info_no_quote_description = Impossibile restituire una quotazione per la coppia di token selezionata, probabilmente a causa dell'importo basso, della mancanza di liquidità o di limitazioni tecniche.
 info_stake_reserved_title = Riservato per la commissione di rete
 info_stake_reserved_description = Una piccola somma rimane nel tuo portafoglio per coprire le commissioni per operazioni come l'annullamento dello staking o la richiesta di premi.
@@ -564,14 +564,14 @@ info_circulating_supply_description = Il numero di monete attualmente disponibil
 info_total_supply_description = Il numero totale di monete esistenti, comprese quelle bloccate o riservate.
 info_max_supply_title = Massima fornitura
 info_max_supply_description = Il numero massimo di monete che esisteranno mai.
-info_perpetual_funding_apr_title = Funding APR
-info_perpetual_funding_apr_description = The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.
-info_minimum_amount_title = Minimum Amount
+info_perpetual_funding_apr_title = Finanziamento APR
+info_perpetual_funding_apr_description = Il tasso annualizzato al quale le posizioni long pagano le posizioni short (se negativo, le posizioni short pagano le posizioni long). Non sono previste commissioni associate al finanziamento, che è un trasferimento peer-to-peer tra utenti per spingere i prezzi verso il prezzo spot.
+info_minimum_amount_title = Importo minimo
 info_minimum_amount_description = Sulla rete %@, l'importo minimo per questa transazione è %@.
 
 # Input
 
-input_enter_amount_to = Please enter amount to %@
+input_enter_amount_to = Inserisci l'importo in %@
 
 # Nft
 
@@ -585,7 +585,7 @@ nft_state_empty_description = Ricevi il tuo primo NFT
 nft_report_reason_spam = Spam
 nft_report_reason_malicious = Malizioso
 nft_report_reason_inappropriate = Contenuto inappropriato
-nft_report_reason_copyright = Copyright
+nft_report_reason_copyright = Diritto d'autore
 nft_report_report_button_title = Segnala
 
 # Permissions
@@ -595,7 +595,7 @@ permissions_image_photo_access_denied_description = Questa app non ha l'autorizz
 
 # Markets
 
-markets_title = Markets
+markets_title = Mercati
 markets_state_empty_title = I dati dei tuoi mercati appariranno qui
 markets_daily_volume = Volume 24 ore
 
@@ -621,8 +621,8 @@ onboarding_accept_terms_title = Accetta i termini
 onboarding_accept_terms_message = Prima di continuare, ti preghiamo di leggere e accettare i seguenti termini.
 onboarding_accept_terms_item1_message = Sono consapevole che sono l'unico responsabile della sicurezza e del backup dei miei portafogli, non Gem.
 onboarding_accept_terms_item2_message = Sono consapevole che Gem non è una banca o una borsa e che il suo utilizzo per scopi illegali è severamente proibito.
-onboarding_accept_terms_item3_message = I understand that if I ever lose access to my wallets, Gem is not liable and cannot help in any way.
-onboarding_accept_terms_continue = Agree and Continue
+onboarding_accept_terms_item3_message = Capisco che se mai dovessi perdere l'accesso ai miei portafogli, Gem non sarà responsabile e non potrà aiutarmi in alcun modo.
+onboarding_accept_terms_continue = Accetta e continua
 
 # Brand
 
@@ -636,8 +636,8 @@ perpetual_margin = Margine
 perpetual_position = Posizione
 perpetual_close_position = Posizione ravvicinata
 perpetual_pnl = PnL
-perpetual_long = Long
-perpetual_short = Short
+perpetual_long = Lungo
+perpetual_short = Breve
 perpetual_entry_price = Prezzo d'ingresso
 perpetual_modify = Modificare
 perpetual_reduce_position = Ridurre la posizione
@@ -657,21 +657,21 @@ perpetual_reduce_direction = Riduci %@
 perpetual_auto_close_expected_profit = Profitto previsto
 perpetual_auto_close_expected_loss = Perdita prevista
 perpetual_modify_position = Modifica posizione
-perpetual_auto_close_stop_loss = Stop loss
+perpetual_auto_close_stop_loss = Arrestare la perdita
 perpetual_value = Valore
 perpetual_unrealized_pnl = PnL non realizzato
 perpetual_volume = Volume
 perpetual_all_time_pnl = PnL di tutti i tempi
 perpetual_margin_usage = Utilizzo del margine
 perpetual_account_leverage = Leva finanziaria del conto
-perpetual_margin_cross = Cross
-perpetual_margin_isolated = Isolated
+perpetual_margin_cross = Croce
+perpetual_margin_isolated = Isolato
 
 # Perpetuals
 
 perpetuals_title = Perpetui
-perpetuals_markets = Markets
-perpetuals_empty_state_no_markets = No markets
+perpetuals_markets = Mercati
+perpetuals_empty_state_no_markets = Nessun mercato
 perpetuals_empty_state_no_markets_found = Nessun mercato trovato
 
 # Rewards
@@ -682,7 +682,7 @@ rewards_my_referral_code = Il mio codice di riferimento
 rewards_invite_friends_title = Invita amici
 rewards_invite_friends_description = Guadagnare %@ punti per ogni amico che si iscrive.
 rewards_referral_code = Codice di riferimento
-rewards_invited_by = Invited By
+rewards_invited_by = Invitato da
 rewards_points = Punti
 rewards_referrals = Riferimenti
 rewards_earn_points_title = Guadagna punti
@@ -706,8 +706,8 @@ rewards_unverified_description = I premi si attivano automaticamente man mano ch
 # Recent Activity
 
 recent_activity_title = Recenti
-recent_activity_state_empty_title = Your recents will appear here
-recent_activity_state_empty_description = Assets you've recently used will appear here
+recent_activity_state_empty_title = I tuoi recenti verranno visualizzati qui
+recent_activity_state_empty_description = Le risorse che hai utilizzato di recente verranno visualizzate qui
 
 # Notifications
 
@@ -742,19 +742,19 @@ application_name = Gem
 
 # Camera Permission
 
-camera_permission_request_camera = Camera permission required for QR Code scan.\nPlease grant permission.
+camera_permission_request_camera = È richiesta l'autorizzazione della fotocamera per la scansione del codice QR.\nConcedi l'autorizzazione.
 
 # Notifications Permission
 
-notifications_permission_request_notification = Post Notifications permission required for get notifications about new transactions.\nPlease grant permission.
+notifications_permission_request_notification = È richiesta l'autorizzazione Posta notifiche per ricevere notifiche sulle nuove transazioni.\nConcedi l'autorizzazione.
 
 # Confirm
 
-confirm_fee_error = Fee calculation error
+confirm_fee_error = Errore nel calcolo della tariffa
 
 # Rootcheck
 
 rootcheck_security_alert = Avviso di sicurezza
 rootcheck_body = Il tuo dispositivo sembra avere accesso root, il che può aumentare significativamente i rischi per la sicurezza. L'utilizzo di questa app su un dispositivo rooted potrebbe esporre i tuoi asset ad accessi non autorizzati e potenziali perdite. Per la sicurezza dei tuoi fondi, ti consigliamo vivamente di utilizzare un dispositivo non rooted.
-rootcheck_ignore = Ignore
-rootcheck_exit = Exit
+rootcheck_ignore = Ignora
+rootcheck_exit = Esci

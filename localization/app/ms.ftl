@@ -1,74 +1,73 @@
 # Common
 
 common_cancel = Batal
-common_done = Done
+common_done = Selesai
 common_secret_phrase = Frasa Rahsia
-common_next = Next
-common_copy = Copy
-common_share = Share
-common_continue = Continue
-common_provider = Provider
-common_loading = Loading
-common_address = Address
-common_back = Back
-common_try_again = Try Again
-common_paste = Paste
-common_delete = Delete
+common_next = Seterusnya
+common_copy = Salin
+common_share = Kongsi
+common_continue = Teruskan
+common_provider = Pembekal
+common_loading = Memuatkan
+common_address = Alamat
+common_back = Belakang
+common_try_again = Cuba Lagi
+common_paste = Tampal
+common_delete = Padam
 common_delete_confirmation = Adakah anda pasti mahu memadamkan %@?
-common_hide = Hide
-common_wallet = Wallet
+common_hide = Sembunyi
+common_wallet = Dompet
 common_show = Tunjukkan %@
-common_copied = Copied: %@
-common_recommended = Recommended
-common_all = All
-common_not_available = Not Available
-common_phrase = Phrase
-common_manage = Manage
-common_type = Type
-common_no_results_found = No Results Found
-common_yes = Yes
-common_no = No
+common_copied = Disalin: %@
+common_recommended = Disyorkan
+common_all = Semua
+common_not_available = Tidak Tersedia
+common_phrase = Frasa
+common_manage = Urus
+common_type = Taip
+common_no_results_found = Tiada Hasil Ditemui
+common_yes = Ya
+common_no = Tidak
 common_none = Tiada
 common_url = URL
-common_private_key = Private Key
+common_private_key = Kunci Peribadi
 common_latency_in_ms = %d ms
-common_open_settings = Open settings
+common_open_settings = Buka tetapan
 common_pin = Pin
-common_pinned = Pinned
-common_unpin = Unpin
-common_skip = Skip
+common_pinned = Disemat
+common_unpin = Nyahsemat
+common_skip = Langkau
 common_warning = Amaran
-common_learn_more = Learn More
-common_popular = Popular
+common_learn_more = Ketahui Lebih Lanjut
 common_short_name = Gem
-common_description = Description
+common_description = Penerangan
 common_emoji = Emoji
-common_style = Style
+common_style = Gaya
 common_avatar = Avatar
-common_photo = Photo
-common_save = Save
-common_edit = Edit
+common_photo = Foto
+common_save = Jimat
+common_edit = Sunting
 common_percentage = Peratusan
 common_details = Butiran
 common_info = info
 common_get_started = Mulakan
-common_earn = Earn
+common_earn = Dapatkan
 common_method = Kaedah
 common_token = Token
 common_suspicious_address = Alamat yang mencurigakan
 common_refresh = Segarkan semula
-common_no_thanks = No thanks
-common_grant_permission = Grant permission
-common_required_field = %@ is required
+common_no_thanks = Tidak terima kasih
+common_grant_permission = Berikan kebenaran
+common_required_field = %@ diperlukan
 
 # Welcome
 
-welcome_title = Welcome to Gem Family
+welcome_title = Selamat datang ke Keluarga Permata
 
 # Wallet
 
-wallet_create_new_wallet = Create a New Wallet
-wallet_import_existing_wallet = Import an Existing Wallet
+wallet_create_new_wallet = Buat Dompet Baharu
+wallet_import_existing_wallet = Import Dompet Sedia Ada
 wallet_send = Hantar
 wallet_receive = Terima
 wallet_buy = Beli
@@ -77,23 +76,23 @@ wallet_import_title = Dompet Import
 wallet_new_title = Dompet Baharu
 wallet_name = Nama
 wallet_import_action = Import
-wallet_multicoin = Multi-Coin
-wallet_import_address_field = Address or Name
+wallet_multicoin = Berbilang Syiling
+wallet_import_address_field = Alamat atau Nama
 wallet_manage_token_list = Uruskan Token
-wallet_scan_qr_code = Scan QR Code
-wallet_scan = Scan
-wallet_default_name = Wallet #%d
-wallet_default_name_chain = %@ Wallet #%d
-wallet_copy_address = Copy Address
-wallet_watch_tooltip_title = You are watching this wallet.
-wallet_stake = Stake
-wallet_receive_no_memo_required = No memo required
-wallet_receive_no_destination_tag_required = No destination tag required
-wallet_title = Wallet
-wallet_add_token_title = Add Token
-wallet_sell = Sell
-wallet_receive_collection = Receive Collection
-wallet_more = More
+wallet_scan_qr_code = Imbas Kod QR
+wallet_scan = Imbas
+wallet_default_name = Dompet #%d
+wallet_default_name_chain = %@ Dompet #%d
+wallet_copy_address = Salin Alamat
+wallet_watch_tooltip_title = Anda sedang memerhati dompet ini.
+wallet_stake = Pancang
+wallet_receive_no_memo_required = Tiada memo diperlukan
+wallet_receive_no_destination_tag_required = Tiada teg destinasi diperlukan
+wallet_title = Dompet
+wallet_add_token_title = Tambah Token
+wallet_sell = Jual
+wallet_receive_collection = Terima Koleksi
+wallet_more = Lagi
 wallet_import_contract_address_field = Kontrak atau ID Token
 wallet_import_address_warning = Anda boleh melihat baki dan urus niaga untuk alamat ini, tetapi **tidak boleh menghantar atau menjual dana**.
 wallet_deposit = Deposit
@@ -104,8 +103,8 @@ wallet_import_already_imported_message = Dompet ini telah pun diimport.
 
 # Wallets
 
-wallets_title = Wallets
-wallets_watch = Watch
+wallets_title = Dompet
+wallets_watch = Tonton
 
 # Receive
 
@@ -115,74 +114,74 @@ receive_warning = Ini alamat anda — hantar sahaja %@ pada %@ rangkaian.
 # Buy
 
 buy_title = Beli %@
-buy_providers_title = Providers
-buy_rate = Rate
-buy_no_results = No quotes available
+buy_providers_title = Pembekal
+buy_rate = Kadar
+buy_no_results = Tiada sebut harga tersedia
 
 # Transfer
 
-transfer_network_fee = Network Fee
+transfer_network_fee = Yuran Rangkaian
 transfer_memo = Memo
-transfer_confirm = Confirm
-transfer_from = From
-transfer_to = To
-transfer_max = Max
-transfer_network = Network
-transfer_recipient_title = Recipient
-transfer_balance = Balance: %@
-transfer_title = Transfer
-transfer_recipient_address_field = Address or Name
+transfer_confirm = Sahkan
+transfer_from = Daripada
+transfer_to = Kepada
+transfer_max = Maks
+transfer_network = Rangkaian
+transfer_recipient_title = Penerima
+transfer_balance = Baki: %@
+transfer_title = Pemindahan
+transfer_recipient_address_field = Alamat atau Nama
 transfer_send_title = Hantar
-transfer_insufficient_balance = Insufficient %@ balance.
-transfer_insufficient_network_fee_balance = Insufficient %@ balance to cover network fees.
-transfer_approve_title = Approve
+transfer_insufficient_balance = Baki %@ tidak mencukupi.
+transfer_insufficient_network_fee_balance = Baki %@ tidak mencukupi untuk menampung yuran rangkaian.
+transfer_approve_title = Luluskan
 transfer_stake_title = pancang
-transfer_claim_rewards_title = Claim Rewards
+transfer_claim_rewards_title = Tuntut Ganjaran
 transfer_unstake_title = Unstake
-transfer_redelegate_title = Redelegate
+transfer_redelegate_title = Wakilkan semula
 transfer_withdraw_title = Menarik diri
-transfer_rewards_title = Rewards
-transfer_minimum_amount = Minimum Amount is %@
-transfer_activate_asset_title = Activate Asset
+transfer_rewards_title = Ganjaran
+transfer_minimum_amount = Jumlah minimum ialah %@
+transfer_activate_asset_title = Aktifkan Aset
 transfer_recipient_my_wallets = Dompet Saya
 transfer_recipient_view_wallets = Lihat Dompet
 transfer_minimum_account_balance = Baki minimum %@ mesti kekal selepas ini, melainkan anda menggunakan baki penuh anda.
-transfer_smart_contract_title = Smart Contract
-transfer_other_title = Other
-transfer_maximum_amount = Maximum Amount is %@
+transfer_smart_contract_title = Kontrak Pintar
+transfer_other_title = Lain-lain
+transfer_maximum_amount = Jumlah Maksimum ialah %@
 transfer_reserved_fees = Kami telah meninggalkan %@ dalam baki anda untuk menampung yuran rangkaian masa hadapan.
 transfer_freeze_title = bekukan
 transfer_unfreeze_title = Nyahbekukan
 transfer_sign_transaction_title = Tandatangan Transaksi
 transfer_review_request = Permintaan Semakan
-transfer_amount = Amount
-transfer_amount_title = Amount
+transfer_amount = Jumlah
+transfer_amount_title = Jumlah
 
 # Settings
 
-settings_terms_of_services = Terms of Services
-settings_privacy_policy = Privacy Policy
+settings_terms_of_services = Syarat Perkhidmatan
+settings_privacy_policy = Dasar Privasi
 settings_title = Tetapan
-settings_developer = Developer
-settings_version = Version
-settings_community = Community
-settings_aboutus = About Us
-settings_networks_title = Networks
-settings_networks_source = Source
-settings_networks_explorer = Explorer
-settings_currency = Currency
-settings_rate_app = Rate App
-settings_website = Visit Website
-settings_security = Security
-settings_enable_value = Enable %@
-settings_enable_passcode = Enable Passcode
-settings_security_authentication = Authentication
-settings_notifications_title = Notifications
-settings_language = Language
-settings_help_center = Help Center
-settings_support = Support
-settings_price_alerts_title = Price Alerts
-settings_hide_balance = Hide Balance
+settings_developer = Pemaju
+settings_version = Versi
+settings_community = Komuniti
+settings_aboutus = Tentang Kami
+settings_networks_title = Rangkaian
+settings_networks_source = Sumber
+settings_networks_explorer = Penjelajah
+settings_currency = Mata wang
+settings_rate_app = Apl Nilai
+settings_website = Lawati Laman Web
+settings_security = Keselamatan
+settings_enable_value = Dayakan %@
+settings_enable_passcode = Dayakan Kod Laluan
+settings_security_authentication = Pengesahan
+settings_notifications_title = Pemberitahuan
+settings_language = Bahasa
+settings_help_center = Pusat Bantuan
+settings_support = Sokongan
+settings_price_alerts_title = Makluman Harga
+settings_hide_balance = Sembunyikan Baki
 settings_disable_value = Lumpuhkan %@
 settings_preferences_title = Keutamaan
 settings_preferences_perpetual_default_leverage = Leveraj Lalai
@@ -194,33 +193,33 @@ settings_preferences_perpetual_default_stop_loss = Stop Loss lalai
 errors_transfer = Ralat Pemindahan: %@
 errors_validation = Ralat Pengesahan: %@
 errors_create_wallet = Ralat Cipta Wallet: %@
-errors_invalid_address_name = Invalid address or name
-errors_invalid_amount = Invalid amount
-errors_token_invalid_id = Invalid Token ID
-errors_import_invalid_secret_phrase = Invalid Secret Phrase
-errors_import_invalid_secret_phrase_word = Invalid Secret Phrase word: %@
-errors_invalid_url = Invalid URL
-errors_error_occured = An error occurred!
-errors_invalid_network_id = Invalid Network ID
-errors_error = Error
-errors_connections_user_cancelled = User cancelled
-errors_not_supported = Not Supported
-errors_permissions_not_granted = Permissions Not Granted
-errors_decoding = Decoding Error
-errors_unknown = Unknown
-errors_not_supported_qr = This device does not support QR code scanning. You can only select QR code image from library.
-errors_camera_permissions_not_granted = Camera permission not granted. Please enable camera access in settings to scan QR code.
-errors_decoding_qr = Failed to decode the QR code. Please try again with a different QR code.
-errors_transfer_error = Transfer Error
-errors_unable_estimate_network_fee = We are currently unable to calculate the network fee.
-errors_invalid_asset_address = Invalid %@ address
-errors_dust_threshold = The transaction failed because the amount is too small to meet the %@ network's minimum requirement (dust threshold). This limit ensures the transaction value covers the fees and processing costs.
+errors_invalid_address_name = Alamat atau nama tidak sah
+errors_invalid_amount = Jumlah tidak sah
+errors_token_invalid_id = ID Token tidak sah
+errors_import_invalid_secret_phrase = Frasa Rahsia Tidak Sah
+errors_import_invalid_secret_phrase_word = Perkataan Frasa Rahsia tidak sah: %@
+errors_invalid_url = URL tidak sah
+errors_error_occured = Ralat berlaku!
+errors_invalid_network_id = ID Rangkaian tidak sah
+errors_error = Ralat
+errors_connections_user_cancelled = Pengguna dibatalkan
+errors_not_supported = Tidak Disokong
+errors_permissions_not_granted = Kebenaran Tidak Diberikan
+errors_decoding = Ralat Penyahkodan
+errors_unknown = Tidak diketahui
+errors_not_supported_qr = Peranti ini tidak menyokong pengimbasan kod QR. Anda hanya boleh memilih imej kod QR daripada pustaka.
+errors_camera_permissions_not_granted = Kebenaran kamera tidak diberikan. Sila dayakan akses kamera dalam tetapan untuk mengimbas kod QR.
+errors_decoding_qr = Gagal menyahkod kod QR. Sila cuba lagi dengan kod QR lain.
+errors_transfer_error = Ralat Pemindahan
+errors_unable_estimate_network_fee = Kami tidak dapat mengira yuran rangkaian pada masa ini.
+errors_invalid_asset_address = Alamat %@ tidak sah
+errors_dust_threshold = Urus niaga gagal kerana jumlahnya terlalu kecil untuk memenuhi keperluan minimum rangkaian %@ (ambang habuk). Had ini memastikan nilai transaksi meliputi yuran dan kos pemprosesan.
 errors_swap_no_quote_available = Tiada sebut harga tersedia.
-errors_swap_not_supported_chain = Not supported chain.
-errors_swap_not_supported_asset = Not supported asset.
-errors_swap_not_supported_pair = Not supported pair.
-errors_connections_invalid_send_parameters = Invalid parameters provided for sending a transaction.
-errors_connections_invalid_sign_parameters = Invalid parameters provided for signing.
+errors_swap_not_supported_chain = Tidak disokong rantai.
+errors_swap_not_supported_asset = Aset tidak disokong.
+errors_swap_not_supported_pair = Tidak disokong pasangan.
+errors_connections_invalid_send_parameters = Parameter tidak sah disediakan untuk menghantar transaksi.
+errors_connections_invalid_sign_parameters = Parameter tidak sah disediakan untuk menandatangani.
 errors_connections_no_supported_wallets = Tiada dompet yang disokong tersedia.
 errors_connections_unsupported_chain = Rantaian yang disediakan tidak disokong.
 errors_connections_unsupported_method = Kaedah yang diminta tidak disokong.
@@ -237,71 +236,71 @@ errors_dust_threshold_short = Rangkaian menganggap jumlah habuk ini - bayarannya
 errors_swap_minimum_amount = Jumlah dagangan minimum ialah %@Sila masukkan jumlah yang lebih tinggi.
 errors_perpetual_trigger_price_lower = Harga pencetus perlu lebih rendah daripada harga pasaran
 errors_perpetual_trigger_price_higher = Harga pencetus perlu lebih tinggi daripada harga pasaran
-errors_token_unable_fetch_token_information = Unable to fetch token information: %@
-errors_unknown_try_again = An unknown error occurred. Please try again.
+errors_token_unable_fetch_token_information = Tidak dapat mengambil maklumat token: %@
+errors_unknown_try_again = Ralat tidak diketahui berlaku. Sila cuba lagi.
 errors_network_error = Ralat rangkaian: %@
 errors_network_offline = Sambungan Internet nampaknya di luar talian.
 
 # Activity
 
-activity_title = Activity
+activity_title = Aktiviti
 activity_state_empty_title = Aktiviti anda akan dipaparkan di sini
 activity_state_empty_description = Buat transaksi pertama anda
 activity_state_empty_search_description = Kosongkan penapis untuk menyegarkan aktiviti anda
-activity_state_empty_search_title = No activities found
+activity_state_empty_search_title = Tiada aktiviti ditemui
 
 # Update App
 
-update_app_title = New update available!
-update_app_description = Version %@ of the app is now available. Update and enjoy the latest features and improvements.
-update_app_action = Update
-update_app_permission_title = Allow installation
+update_app_title = Kemas kini baharu tersedia!
+update_app_description = Versi %@ apl kini tersedia. Kemas kini dan nikmati ciri dan peningkatan terkini.
+update_app_action = Kemas kini
+update_app_permission_title = Benarkan pemasangan
 update_app_permission_description = Pergi ke tetapan dan benarkan pemasangan daripada sumber luaran
 update_app_permission_open_settings = Pergi ke tetapan
-update_app_downloading = Downloading...
+update_app_downloading = Memuat turun...
 
 # Transaction
 
-transaction_recipient = Recipient
-transaction_sender = Sender
-transaction_date = Date
-transaction_view_on = View on %@
+transaction_recipient = Penerima
+transaction_sender = Penghantar
+transaction_date = Tarikh
+transaction_view_on = Lihat pada %@
 transaction_status = Status
-transaction_status_confirmed = Successful
-transaction_status_pending = Pending
-transaction_status_failed = Failed
-transaction_status_reverted = Reverted
-transaction_title_received = Received
-transaction_title_sent = Sent
+transaction_status_confirmed = Berjaya
+transaction_status_pending = Belum selesai
+transaction_status_failed = Gagal
+transaction_status_reverted = Dibalikkan
+transaction_title_received = Diterima
+transaction_title_sent = Dihantar
 transaction_swap_again = Tukar Lagi
-transaction_status_completed = Completed
-transaction_status_inprogress = In Progress
+transaction_status_completed = Selesai
+transaction_status_inprogress = Sedang Berlangsung
 transaction_status_refunded = Dibayar balik
 
 # Asset
 
-asset_balances = Balances
-asset_balances_available = Available
-asset_price = Price
-asset_market_cap = Market Cap
-asset_trading_volume = Trading Volume (24h)
-asset_market_cap_rank = Market Cap Rank
-asset_total_supply = Total Supply
-asset_circulating_supply = Circulating Supply
+asset_balances = Baki
+asset_balances_available = Tersedia
+asset_price = Harga
+asset_market_cap = Modal Pasaran
+asset_trading_volume = Jumlah dagangan (24j)
+asset_market_cap_rank = Kedudukan Cap Pasaran
+asset_total_supply = Jumlah Bekalan
+asset_circulating_supply = Bekalan Beredar
 asset_balances_reserved = Terpelihara
-asset_view_token_on = View token on %@
-asset_view_address_on = View address on %@
-asset_name = Name
-asset_symbol = Symbol
-asset_decimals = Decimals
+asset_view_token_on = Lihat token pada %@
+asset_view_address_on = Lihat alamat di %@
+asset_name = Nama
+asset_symbol = Simbol
+asset_decimals = Perpuluhan
 asset_token_id = ID Token
-asset_contract = Contract
+asset_contract = Kontrak
 asset_state_empty_title = Transaksi anda akan muncul di sini️
 asset_state_empty_description = Terima, tukar atau beli %@
 asset_verification_unverified = Tidak disahkan
 asset_verification_suspicious = mencurigakan
-asset_verification_warning_title = Know What You're Adding
-asset_verification_warning_message = Anyone can create one - including fake or malicious tokens.
+asset_verification_warning_title = Ketahui Perkara yang Anda Tambah
+asset_verification_warning_message = Sesiapa sahaja boleh mencipta satu - termasuk token palsu atau berniat jahat.
 asset_buy_asset = Beli %@
 asset_add_to_wallet = Tambah pada dompet
 asset_hide_from_wallet = Sembunyi dari dompet
@@ -317,8 +316,8 @@ charts_hour = 1H
 charts_week = 1W
 charts_month = 1M
 charts_year = 1Y
-charts_all = All
-charts_entry = Entry
+charts_all = Semua
+charts_entry = Kemasukan
 charts_price_open = Buka
 charts_price_close = Tutup
 charts_price_high = Tinggi
@@ -327,19 +326,19 @@ charts_price_change = Perubahan
 
 # Date
 
-date_today = Today
-date_yesterday = Yesterday
+date_today = Hari ini
+date_yesterday = Semalam
 
 # Wallet Connect
 
 wallet_connect_title = WalletConnect
-wallet_connect_connection_title = Connection
-wallet_connect_disconnect = Disconnect
-wallet_connect_connect_title = Connect
-wallet_connect_app = App
-wallet_connect_website = Website
+wallet_connect_connection_title = Sambungan
+wallet_connect_disconnect = Putuskan sambungan
+wallet_connect_connect_title = Sambung
+wallet_connect_app = Apl
+wallet_connect_website = Laman web
 wallet_connect_brand_name = WalletConnect
-wallet_connect_no_active_connections = No active connections
+wallet_connect_no_active_connections = Tiada sambungan aktif
 wallet_connect_state_empty_description = Imbas atau tampal kod untuk menyambung ke DApp
 wallet_connect_domain = Domain
 wallet_connect_permissions_title = Kebenaran
@@ -348,34 +347,34 @@ wallet_connect_permissions_approval_requests = Hantar permintaan kelulusan
 
 # Swap
 
-swap_you_pay = You Pay
-swap_you_receive = You Receive
-swap_price_impact = Price Impact
-swap_slippage = Slippage
+swap_you_pay = Anda Bayar
+swap_you_receive = Anda Terima
+swap_price_impact = Kesan Harga
+swap_slippage = Tergelincir
 swap_price_impact_warning_description = Anda akan kehilangan %@ daripada %@ anda dalam perdagangan ini. Adakah anda pasti mahu meneruskan?
-swap_price_impact_warning_title = High Price Impact
-swap_estimated_time_title = Estimated Time
+swap_price_impact_warning_title = Kesan Harga Tinggi
+swap_estimated_time_title = Anggaran Masa
 swap_min_receive = Penerimaan Minimum
 swap_use_minimum_amount = Gunakan Jumlah Minimum
 
 # Stake
 
-stake_active = Active
-stake_pending = Pending
-stake_rewards = Rewards
-stake_validator = Validator
-stake_validators = Validators
+stake_active = Aktif
+stake_pending = Belum selesai
+stake_rewards = Ganjaran
+stake_validator = Pengesah
+stake_validators = Pengesah
 stake_apr = APR %@
-stake_available_in = Available In
-stake_inactive = Inactive
-stake_lock_time = Lock Time
-stake_activating = Activating
-stake_deactivating = Deactivating
-stake_awaiting_withdrawal = Awaiting Withdrawal
-stake_active_in = Active In
+stake_available_in = Tersedia Dalam
+stake_inactive = Tidak aktif
+stake_lock_time = Masa Kunci
+stake_activating = Mengaktifkan
+stake_deactivating = Menyahaktifkan
+stake_awaiting_withdrawal = Menunggu Pengeluaran
+stake_active_in = Aktif Dalam
 stake_minimum_amount = Jumlah minimum
-stake_viagem = Stake via Gem Wallet
-stake_no_active_staking = No active staking yet.
+stake_viagem = Stake melalui Gem Wallet
+stake_no_active_staking = Tiada staking aktif lagi.
 stake_state_empty_title = Taruhan anda akan muncul di sini
 stake_state_empty_description = Pertaruhkan %@ pertama anda
 stake_resource = sumber
@@ -385,29 +384,30 @@ stake_delegations = Delegasi
 
 # Assets
 
-assets_no_assets_found = No assets found
-assets_add_custom_token = Add Custom Token
-assets_select_asset = Select Asset
+assets_no_assets_found = Tiada aset ditemui
+assets_add_custom_token = Tambah Token Tersuai
+assets_select_asset = Pilih Aset
+assets_popular = Aset popular
 assets_tags_trending = Trending
-assets_tags_gainers = Gainers
-assets_tags_losers = Losers
-assets_tags_new = New
+assets_tags_gainers = Beroleh keuntungan
+assets_tags_losers = Kalah
+assets_tags_new = Baru
 assets_tags_stablecoins = Stablecoin
 assets_state_empty_search_description = Anda boleh cuba menambahnya secara manual
 assets_title = Aset
 
 # Sign Message
 
-sign_message_title = Sign Message
-sign_message_message = Message
-sign_message_view_full_message = View Full Message
+sign_message_title = Tandatangan Mesej
+sign_message_message = Mesej
+sign_message_view_full_message = Lihat Mesej Penuh
 
 # Secret Phrase
 
-secret_phrase_do_not_share_title = Do not share your Secret Phrase!
-secret_phrase_do_not_share_description = If someone has your secret phrase they will have full control of your wallet!
-secret_phrase_save_phrase_safely = Save your Secret Phrase in a secure place \nthat only you control.
-secret_phrase_confirm_quick_test_title = Complete this quick test to confirm you've saved everything correctly.
+secret_phrase_do_not_share_title = Jangan kongsi Frasa Rahsia anda!
+secret_phrase_do_not_share_description = Jika seseorang mempunyai frasa rahsia anda, mereka akan mempunyai kawalan penuh ke atas dompet anda!
+secret_phrase_save_phrase_safely = Simpan Frasa Rahsia anda di tempat selamat \nyang hanya anda kawal.
+secret_phrase_confirm_quick_test_title = Lengkapkan ujian pantas ini untuk mengesahkan anda telah menyimpan semuanya dengan betul.
 secret_phrase_screenshot_detected_title = Tangkapan Skrin Dikesan
 secret_phrase_screenshot_detected_description = Tangkapan skrin mungkin boleh diakses oleh apl lain, ia boleh meletakkan frasa rahsia anda pada risiko jika disimpan dengan cara ini.
 secret_phrase_content_hidden_description = Kandungan tersembunyi semasa rakaman skrin
@@ -432,24 +432,24 @@ social_coinmarketcap = CoinMarketCap
 
 # Nodes
 
-nodes_import_node_title = Add node
-nodes_import_node_chain_id = Chain ID
-nodes_import_node_in_sync = In Sync
-nodes_import_node_latest_block = Latest Block
-nodes_import_node_latency = Latency
+nodes_import_node_title = Tambah nod
+nodes_import_node_chain_id = ID rantai
+nodes_import_node_in_sync = Dalam Segerak
+nodes_import_node_latest_block = Blok Terkini
+nodes_import_node_latency = Latensi
 nodes_gem_wallet_node = Gem Wallet Node
 nodes_import_node_warning_message = Nod tersuai boleh berniat jahat dan mungkin mendedahkan data transaksi anda atau memberikan maklumat palsu.
 
 # Library
 
-library_select_from_photo_library = Select from Photo Library
+library_select_from_photo_library = Pilih daripada Pustaka Foto
 
 # Fee Rates
 
-fee_rates_info = Speed of transaction is determined by network fee paid to the network miners.
-fee_rates_slow = Slow
-fee_rates_fast = Fast
-fee_rates_normal = Normal
+fee_rates_info = Kelajuan transaksi ditentukan oleh bayaran rangkaian yang dibayar kepada pelombong rangkaian.
+fee_rates_slow = Lambat
+fee_rates_fast = Cepat
+fee_rates_normal = Biasalah
 
 # Fee Rate
 
@@ -459,34 +459,34 @@ fee_rate_gwei = %@ gwei
 
 # Banner
 
-banner_account_activation_title = Account Activation Fee
-banner_account_activation_description = The %@ network requires a one time fee of %@.
-banner_stake_title = Start staking %@
-banner_stake_description = Earn %@ rewards on your stake while you sleep.
-banner_enable_notifications_title = Enable Notifications
-banner_enable_notifications_description = Stay on top of your wallet activity.
-banner_activate_asset_description = To use the %@ asset, you must first enable it on the %@ network by fulfilling the network's specific requirements.
-banner_asset_status_title = Suspicious Asset
-banner_asset_status_description = Token may be unsafe or misleading. Proceed only if you fully trust it.
+banner_account_activation_title = Yuran Pengaktifan Akaun
+banner_account_activation_description = Rangkaian %@ memerlukan bayaran sekali sebanyak %@.
+banner_stake_title = Mula mempertaruhkan %@
+banner_stake_description = Peroleh %@ ganjaran pada pertaruhan anda semasa anda tidur.
+banner_enable_notifications_title = Dayakan Pemberitahuan
+banner_enable_notifications_description = Ikuti aktiviti dompet anda.
+banner_activate_asset_description = Untuk menggunakan aset %@, anda mesti mendayakannya pada rangkaian %@ terlebih dahulu dengan memenuhi keperluan khusus rangkaian.
+banner_asset_status_title = Aset Meragukan
+banner_asset_status_description = Token mungkin tidak selamat atau mengelirukan. Teruskan hanya jika anda mempercayainya sepenuhnya.
 banner_onboarding_title = Dompet anda sudah sedia
 banner_onboarding_description = Beli atau Terima crypto untuk bermula
-banner_perpetuals_title = Trade Perpetuals on Hyperliquid
-banner_perpetuals_description = Deposit, trade, and earn with Hyperliquid perpetuals
+banner_perpetuals_title = Berdagang Perpetuals pada Hyperliquid
+banner_perpetuals_description = Deposit, berdagang dan dapatkan dengan Hyperliquid perpetuals
 
 # Filter
 
-filter_clear = Clear
-filter_title = Filters
-filter_types = Types
+filter_clear = Jelas
+filter_title = Penapis
+filter_types = Jenis
 filter_has_balance = Mempunyai keseimbangan
 
 # Price Alerts
 
-price_alerts_enabled_for = Price alert enabled for %@
-price_alerts_disabled_for = Price alert disabled for %@
-price_alerts_get_notified_explain_message = Get notified when there's a significant price change in your favorite crypto assets.
-price_alerts_direction_over = Over
-price_alerts_direction_under = Under
+price_alerts_enabled_for = Makluman harga didayakan untuk %@
+price_alerts_disabled_for = Makluman harga dilumpuhkan untuk %@
+price_alerts_get_notified_explain_message = Dapatkan makluman apabila terdapat perubahan harga yang ketara dalam aset kripto kegemaran anda.
+price_alerts_direction_over = Berakhir
+price_alerts_direction_under = Di bawah
 price_alerts_direction_increases_by = Meningkat sebanyak
 price_alerts_direction_decreases_by = Menurun sebanyak
 price_alerts_set_alert_price_over = Apabila harga tamat
@@ -503,24 +503,24 @@ price_alerts_set_alert_title = Tetapkan Makluman Harga
 
 # Lock
 
-lock_immediately = Immediately
-lock_one_minute = 1 minute
-lock_five_minutes = 5 minutes
-lock_fifteen_minutes = 15 minutes
-lock_one_hour = 1 hour
-lock_six_hours = 6 hours
-lock_require_authentication = Require authentication
-lock_unlock = Unlock
-lock_privacy_lock = Privacy Lock
+lock_immediately = Serta merta
+lock_one_minute = 1 minit
+lock_five_minutes = 5 minit
+lock_fifteen_minutes = 15 minit
+lock_one_hour = 1 jam
+lock_six_hours = 6 jam
+lock_require_authentication = Memerlukan pengesahan
+lock_unlock = Buka kunci
+lock_privacy_lock = Kunci Privasi
 lock_footer = Lindungi akses kepada apl ini pada peranti anda
 
 # Verify
 
-verify_phrase_title = Confirm
+verify_phrase_title = Sahkan
 
 # Warnings
 
-warnings_multi_signature_blocked = Do not transfer funds to this %@ Multi-Signature wallet unless you are certain you control the private keys. Failure to do so could expose you to scams, and you may permanently lose your assets.
+warnings_multi_signature_blocked = Jangan pindahkan dana ke %@ dompet Berbilang Tandatangan ini melainkan anda pasti anda mengawal kunci peribadi. Kegagalan berbuat demikian boleh mendedahkan anda kepada penipuan dan anda mungkin kehilangan aset anda secara kekal.
 
 # Sell
 
@@ -528,15 +528,15 @@ sell_title = Jual %@
 
 # Info
 
-info_network_fee_title = Network Fee
-info_watch_wallet_title = Watch Wallet
-info_watch_wallet_description = A wallet that you do not have access to, but you can watch its transactions and movements.
-info_network_fee_description = Every transaction on the %@ network requires a fee in %@ paid to miners to process your transaction, not Gem Wallet. Network fees varies based on network usage.
-info_transaction_error_description = The transaction could not be completed due to an error, such as insufficient funds, invalid input, or rejection by the network. Please review the details and try again.
-info_transaction_pending_description = The transaction has been submitted and is awaiting confirmation on the network. Processing times may vary. Please check back for updates.
-info_transaction_success_description = The transaction has been completed and confirmed on the network. You can review the details to verify its status.
-info_lock_time_description = Lock time, also known as the unbonding or unfreezing period, is the duration during which staked assets are inaccessible after you decide to unstake them.
-info_price_impact_description = Price impact is the change in token price caused by your trade size. Higher price impact means you receive fewer tokens due to low liquidity or a large order size.
+info_network_fee_title = Yuran Rangkaian
+info_watch_wallet_title = Tonton Wallet
+info_watch_wallet_description = Dompet yang anda tidak mempunyai akses, tetapi anda boleh menonton transaksi dan pergerakannya.
+info_network_fee_description = Setiap transaksi pada rangkaian %@ memerlukan bayaran dalam %@ dibayar kepada pelombong untuk memproses transaksi anda, bukan Dompet Permata. Yuran rangkaian berbeza-beza berdasarkan penggunaan rangkaian.
+info_transaction_error_description = Urus niaga tidak dapat diselesaikan kerana ralat, seperti dana tidak mencukupi, input tidak sah atau penolakan oleh rangkaian. Sila semak butiran dan cuba lagi.
+info_transaction_pending_description = Urus niaga telah diserahkan dan sedang menunggu pengesahan pada rangkaian. Masa pemprosesan mungkin berbeza-beza. Sila semak semula untuk kemas kini.
+info_transaction_success_description = Urus niaga telah selesai dan disahkan pada rangkaian. Anda boleh menyemak butiran untuk mengesahkan statusnya.
+info_lock_time_description = Masa kunci, juga dikenali sebagai tempoh nyah ikatan atau nyahbeku, ialah tempoh di mana aset dipertaruhkan tidak boleh diakses selepas anda memutuskan untuk menyahtaruhnya.
+info_price_impact_description = Kesan harga ialah perubahan dalam harga token yang disebabkan oleh saiz dagangan anda. Kesan harga yang lebih tinggi bermakna anda menerima lebih sedikit token disebabkan kecairan yang rendah atau saiz pesanan yang besar.
 info_slippage_description = Slippage merujuk kepada perbezaan antara harga jangkaan perdagangan dan harga sebenar di mana ia dilaksanakan.
 info_asset_status_unverified_description = Token yang tidak disahkan belum disahkan dengan secukupnya oleh perkhidmatan pihak ketiga yang dipercayai. Ia mungkin muncul dalam dompet anda disebabkan oleh airdrop, pemindahan atau import manual.
 info_asset_status_suspicious_description = Token yang mencurigakan atau spam dikenal pasti sebagai potensi penipuan atau aset berbahaya. Ia mungkin muncul dalam dompet anda disebabkan oleh airdrop, pemindahan atau import manual.
@@ -545,14 +545,14 @@ info_insufficient_network_fee_balance_description = Transaksi ini memerlukan %@ 
 info_insufficient_balance_title = Baki Tidak Mencukupi
 info_insufficient_balance_description = Anda tidak mempunyai cukup %@ untuk menyelesaikan transaksi ini. Sila tambah nilai, terima atau tukar dalam dompet anda dan cuba lagi.
 info_account_minimum_balance_title = Baki minimum
-info_perpetual_funding_payments_title = Funding Payments
-info_perpetual_funding_payments_description = Funding payments are periodic payments between traders to keep the perpetual contract price close to the underlying asset's spot price. Positive funding means long positions pay short positions, while negative funding means short positions pay long positions.
-info_perpetual_funding_rate_title = Funding
-info_perpetual_funding_rate_description = The funding rate determines the cost of holding a perpetual position. It is calculated hourly and helps maintain price equilibrium between the perpetual contract and the underlying asset's spot price.
+info_perpetual_funding_payments_title = Pembayaran Pembiayaan
+info_perpetual_funding_payments_description = Pembayaran pembiayaan ialah pembayaran berkala antara pedagang untuk memastikan harga kontrak kekal hampir dengan harga spot aset pendasar. Pembiayaan positif bermakna kedudukan panjang membayar kedudukan pendek, manakala pembiayaan negatif bermakna kedudukan pendek membayar kedudukan panjang.
+info_perpetual_funding_rate_title = Pembiayaan
+info_perpetual_funding_rate_description = Kadar pembiayaan menentukan kos memegang jawatan kekal. Ia dikira setiap jam dan membantu mengekalkan keseimbangan harga antara kontrak kekal dan harga spot aset pendasar.
 info_perpetual_liquidation_price_title = Harga Pembubaran
-info_perpetual_liquidation_price_description = The liquidation price is the price level at which your position will be automatically closed to prevent further losses. When the market price reaches this level, your position is liquidated and you lose your margin.
-info_perpetual_open_interest_title = Open Interest
-info_perpetual_open_interest_description = Open interest represents the total value of all outstanding perpetual contracts that have not been settled. It provides insight into market activity and liquidity.
+info_perpetual_liquidation_price_description = Harga pembubaran ialah paras harga di mana kedudukan anda akan ditutup secara automatik untuk mengelakkan kerugian selanjutnya. Apabila harga pasaran mencapai tahap ini, kedudukan anda dibubarkan dan anda kehilangan margin anda.
+info_perpetual_open_interest_title = Minat Terbuka
+info_perpetual_open_interest_description = Faedah terbuka mewakili jumlah nilai semua kontrak kekal tertunggak yang belum dijelaskan. Ia memberikan pandangan tentang aktiviti pasaran dan kecairan.
 info_no_quote_description = Tidak dapat mengembalikan sebut harga untuk pasangan token yang dipilih, mungkin disebabkan oleh jumlah yang rendah, kekurangan kecairan atau pengehadan teknikal.
 info_stake_reserved_title = Dikhaskan untuk Yuran Rangkaian
 info_stake_reserved_description = Sejumlah kecil kekal dalam dompet anda untuk menampung yuran untuk operasi seperti menanggalkan atau menuntut ganjaran.
@@ -564,22 +564,22 @@ info_circulating_supply_description = Bilangan syiling yang kini tersedia dan di
 info_total_supply_description = Jumlah syiling yang wujud, termasuk syiling yang dikunci atau ditempah.
 info_max_supply_title = Bekalan Maks
 info_max_supply_description = Bilangan maksimum syiling yang akan wujud.
-info_perpetual_funding_apr_title = Funding APR
-info_perpetual_funding_apr_description = The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.
-info_minimum_amount_title = Minimum Amount
+info_perpetual_funding_apr_title = Pembiayaan APR
+info_perpetual_funding_apr_description = Kadar tahunan di mana long membayar short (jika negatif, short membayar long). Tiada yuran yang berkaitan dengan pembiayaan, yang merupakan pemindahan rakan ke rakan antara pengguna untuk menolak harga ke arah harga spot.
+info_minimum_amount_title = Jumlah Minimum
 info_minimum_amount_description = Pada rangkaian %@, jumlah minimum untuk transaksi ini ialah %@.
 
 # Input
 
-input_enter_amount_to = Please enter amount to %@
+input_enter_amount_to = Sila masukkan amaun kepada %@
 
 # Nft
 
-nft_properties = Properties
-nft_collections = Collections
-nft_collection = Collection
-nft_save_to_photos = Save to Photos
-nft_set_as_avatar = Set as Avatar
+nft_properties = Hartanah
+nft_collections = Koleksi
+nft_collection = Koleksi
+nft_save_to_photos = Simpan ke Foto
+nft_set_as_avatar = Tetapkan sebagai Avatar
 nft_state_empty_title = NFT anda akan muncul di sini️
 nft_state_empty_description = Terima NFT pertama anda
 nft_report_reason_spam = Spam
@@ -590,12 +590,12 @@ nft_report_report_button_title = Laporan
 
 # Permissions
 
-permissions_access_denied = Access Denied
-permissions_image_photo_access_denied_description = This app does not have permission to access your photo library. Please enable access in your device settings.
+permissions_access_denied = Akses Ditolak
+permissions_image_photo_access_denied_description = Apl ini tidak mempunyai kebenaran untuk mengakses pustaka foto anda. Sila dayakan akses dalam tetapan peranti anda.
 
 # Markets
 
-markets_title = Markets
+markets_title = Pasaran
 markets_state_empty_title = Data pasaran anda akan dipaparkan di sini
 markets_daily_volume = Kelantangan 24j
 
@@ -610,18 +610,18 @@ networks_state_empty_search_title = Tiada rangkaian ditemui
 # Onboarding
 
 onboarding_security_create_wallet_intro_title = Anda akan mendapat Frasa Rahsia — ia adalah satu-satunya cara untuk mengakses dompet anda.
-onboarding_security_create_wallet_confirm_title = I understand and want to continue
-onboarding_security_create_wallet_do_not_share_title = Do Not Share It With Anyone
-onboarding_security_create_wallet_do_not_share_subtitle = Anyone who gets your secret phrase can take full control of your wallet.
-onboarding_security_create_wallet_keep_safe_subtitle = The secret phrase is only way to access your wallet.
-onboarding_security_create_wallet_no_recovery_subtitle = If you lose your secret phrase, you lose access to your wallet.
+onboarding_security_create_wallet_confirm_title = Saya faham dan mahu teruskan
+onboarding_security_create_wallet_do_not_share_title = Jangan Kongsi Dengan Sesiapapun
+onboarding_security_create_wallet_do_not_share_subtitle = Sesiapa sahaja yang mendapat frasa rahsia anda boleh mengawal sepenuhnya dompet anda.
+onboarding_security_create_wallet_keep_safe_subtitle = Frasa rahsia adalah satu-satunya cara untuk mengakses dompet anda.
+onboarding_security_create_wallet_no_recovery_subtitle = Jika anda kehilangan frasa rahsia anda, anda kehilangan akses kepada dompet anda.
 onboarding_security_create_wallet_keep_safe_title = Simpan Di Tempat yang Selamat
 onboarding_security_create_wallet_no_recovery_title = Kami Tidak Dapat Membantu Anda Memulihkannya
 onboarding_accept_terms_title = Terima Syarat
 onboarding_accept_terms_message = Sila baca dan bersetuju dengan syarat berikut sebelum anda meneruskan.
 onboarding_accept_terms_item1_message = Saya faham bahawa saya bertanggungjawab sepenuhnya untuk keselamatan dan sandaran dompet saya, bukan Permata.
 onboarding_accept_terms_item2_message = Saya faham bahawa Gem bukan bank atau bursa, dan menggunakannya untuk tujuan yang menyalahi undang-undang adalah dilarang sama sekali.
-onboarding_accept_terms_item3_message = I understand that if I ever lose access to my wallets, Gem is not liable and cannot help in any way.
+onboarding_accept_terms_item3_message = Saya faham bahawa jika saya kehilangan akses kepada dompet saya, Gem tidak bertanggungjawab dan tidak boleh membantu dalam apa jua cara.
 onboarding_accept_terms_continue = Setuju dan Teruskan
 
 # Brand
@@ -636,8 +636,8 @@ perpetual_margin = Margin
 perpetual_position = kedudukan
 perpetual_close_position = Tutup kedudukan
 perpetual_pnl = PnL
-perpetual_long = Long
-perpetual_short = Short
+perpetual_long = Panjang
+perpetual_short = Pendek
 perpetual_entry_price = Harga Kemasukan
 perpetual_modify = Ubah suai
 perpetual_reduce_position = Kurangkan Kedudukan
@@ -664,14 +664,14 @@ perpetual_volume = Kelantangan
 perpetual_all_time_pnl = PnL Sepanjang Masa
 perpetual_margin_usage = Penggunaan Margin
 perpetual_account_leverage = Leveraj Akaun
-perpetual_margin_cross = Cross
-perpetual_margin_isolated = Isolated
+perpetual_margin_cross = Salib
+perpetual_margin_isolated = Terpencil
 
 # Perpetuals
 
 perpetuals_title = Kekal
-perpetuals_markets = Markets
-perpetuals_empty_state_no_markets = No markets
+perpetuals_markets = Pasaran
+perpetuals_empty_state_no_markets = Tiada pasaran
 perpetuals_empty_state_no_markets_found = Tiada pasaran ditemui
 
 # Rewards
@@ -682,7 +682,7 @@ rewards_my_referral_code = Kod rujukan saya
 rewards_invite_friends_title = Jemput Rakan-rakan
 rewards_invite_friends_description = Dapatkan %@ mata untuk setiap rakan yang menyertai.
 rewards_referral_code = Kod Rujukan
-rewards_invited_by = Invited By
+rewards_invited_by = Dijemput Oleh
 rewards_points = Mata
 rewards_referrals = Rujukan
 rewards_earn_points_title = Dapatkan Mata Ganjaran
@@ -706,8 +706,8 @@ rewards_unverified_description = Ganjaran diaktifkan secara automatik apabila an
 # Recent Activity
 
 recent_activity_title = Terkini
-recent_activity_state_empty_title = Your recents will appear here
-recent_activity_state_empty_description = Assets you've recently used will appear here
+recent_activity_state_empty_title = Tempahan anda akan dipaparkan di sini
+recent_activity_state_empty_description = Aset yang anda gunakan baru-baru ini akan dipaparkan di sini
 
 # Notifications
 
@@ -742,19 +742,19 @@ application_name = Gem
 
 # Camera Permission
 
-camera_permission_request_camera = Camera permission required for QR Code scan.\nPlease grant permission.
+camera_permission_request_camera = Kebenaran kamera diperlukan untuk imbasan Kod QR.\nSila berikan kebenaran.
 
 # Notifications Permission
 
-notifications_permission_request_notification = Post Notifications permission required for get notifications about new transactions.\nPlease grant permission.
+notifications_permission_request_notification = Kebenaran Siar Pemberitahuan diperlukan untuk mendapatkan pemberitahuan tentang transaksi baharu.\nSila berikan kebenaran.
 
 # Confirm
 
-confirm_fee_error = Fee calculation error
+confirm_fee_error = Ralat pengiraan yuran
 
 # Rootcheck
 
-rootcheck_security_alert = Security Warning
-rootcheck_body = Your device appears to have root access, which can significantly increase security risks. Using this app on a rooted device may expose your assets to unauthorized access and potential loss. For the safety of your funds, we strongly recommend using a non-rooted device.
-rootcheck_ignore = Ignore
-rootcheck_exit = Exit
+rootcheck_security_alert = Amaran Keselamatan
+rootcheck_body = Peranti anda nampaknya mempunyai akses root, yang boleh meningkatkan risiko keselamatan dengan ketara. Menggunakan apl ini pada peranti berakar boleh mendedahkan aset anda kepada akses tanpa kebenaran dan potensi kerugian. Untuk keselamatan dana anda, kami amat mengesyorkan anda menggunakan peranti yang tidak berakar.
+rootcheck_ignore = Abaikan
+rootcheck_exit = Keluar
