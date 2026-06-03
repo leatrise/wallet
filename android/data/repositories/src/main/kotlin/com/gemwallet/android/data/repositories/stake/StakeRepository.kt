@@ -10,7 +10,7 @@ import com.gemwallet.android.data.service.store.database.entities.toRecord
 import com.gemwallet.android.data.services.gemapi.GemApiStaticClient
 import com.wallet.core.primitives.AssetId
 import com.wallet.core.primitives.Delegation
-import com.wallet.core.primitives.DelegationBase
+import com.wallet.core.primitives.DelegationState
 import com.wallet.core.primitives.DelegationValidator
 import com.wallet.core.primitives.StakeProviderType
 import com.wallet.core.primitives.WalletId
@@ -92,8 +92,18 @@ class StakeRepository(
         val incomingIds = incoming.map { it.id }.toSet()
         val deleteIds = stakeDao.getDelegationIds(walletId, assetId)
             .filterNot { incomingIds.contains(it) }
-        val validatorIds = stakeDao.getValidatorIds(assetId, StakeProviderType.Stake).toSet()
-        val upsertable = incoming.filter { validatorIds.contains(it.validatorId) }
+        val validators = stakeDao.getValidators(assetId, StakeProviderType.Stake)
+            .first()
+            .toDTO()
+            .associateBy { it.id }
+        val upsertable = incoming.mapNotNull { delegation ->
+            val validator = validators[delegation.validatorId] ?: return@mapNotNull null
+            if (delegation.state == DelegationState.Active && !validator.isActive) {
+                delegation.copy(state = DelegationState.Inactive)
+            } else {
+                delegation
+            }
+        }
         stakeDao.updateAndDeleteDelegations(walletId, upsertable, deleteIds)
     }
 }

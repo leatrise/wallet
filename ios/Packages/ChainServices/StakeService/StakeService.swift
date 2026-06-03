@@ -87,16 +87,22 @@ extension StakeService {
         let delegationsIds = delegations.map(\.id).asSet()
         let deleteDelegationsIds = existingDelegationsIds.subtracting(delegationsIds).asArray()
 
-        // validators
-        let validatorsIds = try store.getValidators(assetId: chain.assetId, providerType: .stake).map(\.id).asSet()
+        let validators = try store.getValidators(assetId: chain.assetId, providerType: .stake).toMap { $0.id }
         let delegationsValidatorIds = delegations.map(\.validatorId).asSet()
-        let missingValidatorIds = delegationsValidatorIds.subtracting(validatorsIds)
+        let missingValidatorIds = delegationsValidatorIds.subtracting(validators.keys)
 
-        // TODO: Might need to fetch in the future.
         if !missingValidatorIds.isEmpty {
             debugLog("missingValidatorIds \(missingValidatorIds)")
         }
-        let updateDelegations = delegations.filter { validatorsIds.contains($0.validatorId) }
+        let updateDelegations = delegations.compactMap { delegation -> DelegationBase? in
+            guard let validator = validators[delegation.validatorId] else {
+                return nil
+            }
+            guard delegation.state == .active, !validator.isActive else {
+                return delegation
+            }
+            return delegation.with(state: .inactive)
+        }
 
         try store.updateAndDelete(walletId: walletId, delegations: updateDelegations, deleteIds: deleteDelegationsIds)
     }
