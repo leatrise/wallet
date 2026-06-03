@@ -59,7 +59,7 @@ where
     fn supported_assets(&self) -> Vec<SwapperChainAsset> {
         ChainName::supported(self.network)
             .iter()
-            .map(|name| SwapperChainAsset::Assets(name.chain(), name.token_assets().into_iter().map(|asset| asset.id).collect()))
+            .map(|name| SwapperChainAsset::Assets(name.chain(), name.token_asset_ids()))
             .collect()
     }
 

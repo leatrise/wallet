@@ -62,19 +62,12 @@ impl THORChainAsset {
     }
 
     pub fn from(chain: ChainName, token_id: &str) -> Option<THORChainAsset> {
-        chain
-            .token_assets()
-            .into_iter()
-            .find(|asset| asset.id.token_id.as_ref().is_some_and(|id| Self::is_same_token_id(&chain, token_id, id)))
-            .map(|asset| chain.asset(asset))
-    }
-
-    fn is_same_token_id(chain: &ChainName, lhs: &str, rhs: &str) -> bool {
-        if chain.is_evm_chain() {
-            chain.checksum_address(lhs) == chain.checksum_address(rhs)
-        } else {
-            lhs.eq_ignore_ascii_case(rhs)
-        }
+        chain.token_asset(token_id).map(|asset| THORChainAsset {
+            symbol: asset.symbol,
+            chain,
+            token_id: asset.id.token_id,
+            decimals: asset.decimals as u32,
+        })
     }
 
     // https://dev.thorchain.org/concepts/memos.html#swap
@@ -84,17 +77,6 @@ impl THORChainAsset {
             _ => destination_address.as_str(),
         };
         format!("=:{asset_name}:{address}:{minimum}/{interval}/{quantity}:{fee_address}:{bps}")
-    }
-}
-
-impl ChainName {
-    pub fn asset(&self, asset: Asset) -> THORChainAsset {
-        THORChainAsset {
-            symbol: asset.symbol,
-            chain: *self,
-            token_id: asset.id.token_id,
-            decimals: asset.decimals as u32,
-        }
     }
 }
 
