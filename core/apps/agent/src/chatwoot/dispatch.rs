@@ -11,6 +11,7 @@ use crate::chatwoot::ChatwootSender;
 use crate::chatwoot::client::{ChatwootAttachment, ChatwootMessage};
 use crate::images::{ImageAttachment, MAX_IMAGE_BYTES, MAX_IMAGES_PER_PROMPT, image_media_type_from_url};
 use crate::replies::{ReplyOutcome, classify_reply};
+use crate::supervisor::{ReplySupervisor, SupervisedReply};
 use crate::{AppState, DISPATCH_ADDRESSED, DISPATCH_CONVERSATION_ID, DISPATCH_SOURCE, DispatchSource};
 
 #[derive(Debug, Deserialize)]
@@ -187,7 +188,13 @@ async fn dispatch_to_agent(
     let header = format!(
         "[Chatwoot — inbox: {inbox_label}, conversation_id: {conversation_id}, contact_id: {contact_id_str}, sender: {sender_label}, trust: untrusted, max_tool_turns: {max_turns}]"
     );
-    let prompt = format!("{header}\n\n{}", build_history(&messages));
+    let history = build_history(&messages);
+    let output_contract = if is_team_note {
+        "Output: private note text inside <reply>...</reply>, or exactly (no confident reply)."
+    } else {
+        "Output: customer-facing message inside <reply>...</reply>, or exactly (no confident reply). Never write customer text outside <reply> tags."
+    };
+    let prompt = format!("{header}\n\n{history}\n{output_contract}\n");
     let images = match messages.iter().max_by_key(|m| m.created_at.unwrap_or(0)) {
         Some(latest) => collect_image_attachments(client, &latest.attachments).await,
         None => Vec::new(),
@@ -213,22 +220,9 @@ async fn dispatch_to_agent(
             return Ok(());
         }
     };
-    let mut replies = match classify_reply(&raw) {
-        ReplyOutcome::Tagged(chunks) => chunks,
-        ReplyOutcome::Untagged(_) => {
-            warn!(conversation_id, raw_chars = raw.len(), "model didn't use <reply> tags on chatwoot; staying silent");
-            return Ok(());
-        }
-        ReplyOutcome::Silent => {
-            debug!(conversation_id, raw_chars = raw.len(), "no postable content; staying silent");
-            return Ok(());
-        }
-    };
-    if !is_team_note && let Some(reviewer) = state.reply_reviewer.as_deref() {
-        let review_context = build_history(&messages);
-        for reply in &mut replies {
-            *reply = reviewer.review(&review_context, reply).await;
-        }
+    let replies = postable_replies(state, &raw, conversation_id, &history, is_team_note).await;
+    if replies.is_empty() {
+        return Ok(());
     }
     for (i, chunk) in replies.iter().enumerate() {
         if i > 0 {
@@ -246,6 +240,101 @@ async fn dispatch_to_agent(
     }
     info!(conversation_id, replies = replies.len(), "chatwoot reply posted");
     Ok(())
+}
+
+async fn postable_replies(state: &AppState, raw: &str, conversation_id: u64, history: &str, is_team_note: bool) -> Vec<String> {
+    match classify_reply(raw) {
+        ReplyOutcome::Tagged(chunks) => review_tagged_replies(state, chunks, conversation_id, history, is_team_note).await,
+        ReplyOutcome::Untagged(text) => repair_untagged_reply(state, conversation_id, history, is_team_note, &text).await,
+        ReplyOutcome::Silent => {
+            debug!(conversation_id, raw_chars = raw.len(), "no postable content; staying silent");
+            Vec::new()
+        }
+    }
+}
+
+async fn review_tagged_replies(state: &AppState, mut replies: Vec<String>, conversation_id: u64, history: &str, is_team_note: bool) -> Vec<String> {
+    if is_team_note {
+        return replies;
+    }
+    let Some(supervisor) = state.reply_supervisor.as_deref() else {
+        return replies;
+    };
+
+    let mut reviewed = Vec::with_capacity(replies.len());
+    for reply in replies.drain(..) {
+        match supervisor.review_reply(conversation_id, history, &reply).await {
+            SupervisedReply::Send(reply) => reviewed.extend(reviewed_reply_chunks(&reply, conversation_id)),
+            SupervisedReply::Silence => {
+                debug!(conversation_id, "reply supervisor chose silence for tagged chatwoot reply");
+            }
+        }
+    }
+    reviewed
+}
+
+async fn repair_untagged_reply(state: &AppState, conversation_id: u64, history: &str, is_team_note: bool, draft: &str) -> Vec<String> {
+    if is_team_note {
+        warn!(
+            conversation_id,
+            raw_chars = draft.len(),
+            "model didn't use <reply> tags on chatwoot team note; staying silent"
+        );
+        return Vec::new();
+    }
+
+    repair_untagged_reply_with_supervisor(state.reply_supervisor.as_deref(), conversation_id, history, draft).await
+}
+
+async fn repair_untagged_reply_with_supervisor(supervisor: Option<&ReplySupervisor>, conversation_id: u64, history: &str, draft: &str) -> Vec<String> {
+    let Some(supervisor) = supervisor else {
+        warn!(
+            conversation_id,
+            raw_chars = draft.len(),
+            "model missed <reply> tags and no supervisor is configured; staying silent"
+        );
+        return Vec::new();
+    };
+
+    warn!(conversation_id, raw_chars = draft.len(), "model missed <reply> tags; asking supervisor to review draft");
+    match supervisor.repair_reply(conversation_id, history, draft).await {
+        SupervisedReply::Send(reply) => reviewed_reply_chunks(&reply, conversation_id),
+        SupervisedReply::Silence => {
+            debug!(conversation_id, raw_chars = draft.len(), "reply supervisor chose silence; staying silent");
+            Vec::new()
+        }
+    }
+}
+
+fn reviewed_reply_chunks(reviewed: &str, conversation_id: u64) -> Vec<String> {
+    let tagged = format!("<reply>{reviewed}</reply>");
+    match classify_reply(&tagged) {
+        ReplyOutcome::Tagged(chunks) => {
+            info!(
+                conversation_id,
+                replies = chunks.len(),
+                reviewed_chars = reviewed.chars().count(),
+                "supervisor produced postable chatwoot reply"
+            );
+            chunks
+        }
+        ReplyOutcome::Silent => {
+            debug!(
+                conversation_id,
+                reviewed_chars = reviewed.chars().count(),
+                "supervisor produced no postable content; staying silent"
+            );
+            Vec::new()
+        }
+        ReplyOutcome::Untagged(_) => {
+            warn!(
+                conversation_id,
+                reviewed_chars = reviewed.chars().count(),
+                "supervisor reply was not postable; staying silent"
+            );
+            Vec::new()
+        }
+    }
 }
 
 async fn handle_conversation_created(state: AppState, event: WebhookEvent) -> Result<()> {
@@ -329,7 +418,7 @@ fn build_history(messages: &[ChatwootMessage]) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{WebhookEvent, WebhookEventKind};
+    use super::{WebhookEvent, WebhookEventKind, repair_untagged_reply_with_supervisor, reviewed_reply_chunks};
     use serde_json::Value;
 
     fn parse(json: &str) -> WebhookEvent {
@@ -391,5 +480,23 @@ mod tests {
         assert_eq!(e.conversation_id(), Some(4647));
         assert_eq!(e.contact_id(), Some(289298));
         assert_eq!(e.status.as_deref(), Some("open"));
+    }
+
+    #[test]
+    fn supervisor_send_becomes_postable_reply() {
+        let replies = reviewed_reply_chunks("Can you share your app version and Android version?", 4803);
+        assert_eq!(replies, vec!["Can you share your app version and Android version?"]);
+    }
+
+    #[test]
+    fn supervisor_silence_is_not_postable() {
+        let replies = reviewed_reply_chunks("(no confident reply)", 4803);
+        assert!(replies.is_empty());
+    }
+
+    #[tokio::test]
+    async fn untagged_without_supervisor_stays_silent() {
+        let replies = repair_untagged_reply_with_supervisor(None, 4803, "history", "Can you share your app version?").await;
+        assert!(replies.is_empty());
     }
 }

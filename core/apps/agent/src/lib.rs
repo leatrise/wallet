@@ -7,10 +7,10 @@ pub mod images;
 pub mod mcp;
 pub mod preamble;
 pub mod replies;
-pub mod review_reply;
 pub mod scheduler;
 pub mod slack;
 pub mod store;
+pub mod supervisor;
 pub mod tools;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, serde::Deserialize, strum::Display)]
@@ -45,9 +45,9 @@ use std::sync::Arc;
 use crate::agent::GemmyAgent;
 use crate::chatwoot::ChatwootClient;
 use crate::config::Settings;
-use crate::review_reply::ReplyReviewer;
 use crate::slack::SlackClient;
 use crate::store::MemoryStore;
+use crate::supervisor::ReplySupervisor;
 
 pub type Error = Box<dyn std::error::Error + Send + Sync>;
 pub type Result<T> = std::result::Result<T, Error>;
@@ -59,7 +59,7 @@ pub struct AppState {
     pub agent: Arc<GemmyAgent>,
     pub bot_user_id: Arc<String>,
     pub chatwoot: Option<Arc<ChatwootClient>>,
-    pub reply_reviewer: Option<Arc<ReplyReviewer>>,
+    pub reply_supervisor: Option<Arc<ReplySupervisor>>,
     pub conversation_jobs: Arc<coordination::ConversationJobs>,
 }
 
@@ -91,10 +91,10 @@ pub async fn build_runtime(agent_name: &str) -> Result<AppState> {
         .await
         .map_err(|e| format!("connecting MCP servers: {e}"))?;
     let agent = Arc::new(GemmyAgent::build(&settings, memory, chatwoot.clone(), slack.clone(), mcp_tools).map_err(|e| format!("building rig agent: {e}"))?);
-    let reply_reviewer = match ReplyReviewer::build(&settings) {
-        Ok(reviewer) => reviewer.map(Arc::new),
+    let reply_supervisor = match ReplySupervisor::build(&settings) {
+        Ok(supervisor) => supervisor.map(Arc::new),
         Err(e) => {
-            gem_tracing::tracing::warn!(agent = %settings.agent_name, error = %e, "reply reviewer disabled");
+            gem_tracing::tracing::warn!(agent = %settings.agent_name, error = %e, "reply supervisor disabled");
             None
         }
     };
@@ -106,7 +106,7 @@ pub async fn build_runtime(agent_name: &str) -> Result<AppState> {
         agent,
         bot_user_id,
         chatwoot,
-        reply_reviewer,
+        reply_supervisor,
         conversation_jobs: Arc::new(coordination::ConversationJobs::default()),
     })
 }
