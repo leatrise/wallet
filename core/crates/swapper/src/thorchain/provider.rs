@@ -239,11 +239,12 @@ mod tests {
                 .iter()
                 .any(|asset| { matches!(asset, SwapperChainAsset::Assets(chain, assets) if *chain == Chain::Arbitrum && assets.contains(&ARBITRUM_USDC_ASSET_ID)) })
         );
+        assert!(mayachain.supported_assets().iter().any(|asset| asset.get_chain() == Chain::Cardano));
         assert!(
             mayachain
                 .supported_assets()
                 .iter()
-            .any(|asset| { matches!(asset, SwapperChainAsset::Assets(chain, assets) if *chain == Chain::Thorchain && !assets.contains(&THORCHAIN_TCY_ASSET_ID)) })
+                .any(|asset| { matches!(asset, SwapperChainAsset::Assets(chain, assets) if *chain == Chain::Thorchain && !assets.contains(&THORCHAIN_TCY_ASSET_ID)) })
         );
     }
 
@@ -284,6 +285,46 @@ mod tests {
 
         assert_eq!(data.to, "t1Ku2KLyndDPsR32jwnrTMd3yvi9tfFP8ML");
         assert_eq!(data.value, "10000000");
+        assert_eq!(data.memo, Some("=:b:bc1qdestination:0/1/0:g1:50".to_string()));
+    }
+
+    #[tokio::test]
+    async fn test_get_quote_data_uses_mayachain_cardano_memo() {
+        let provider = Arc::new(ProviderMock::new(String::new()));
+        let swapper = ThorChain::new_mayachain(provider);
+        let route_data = RouteData {
+            router_address: None,
+            inbound_address: "addr1v9mr3ts7yr83jphtmfc3256x0ncsj7tayvschr200jt94fg4a96ur".to_string(),
+        };
+        let request = QuoteRequest {
+            from_asset: SwapperQuoteAsset::from(Chain::Cardano.as_asset_id()),
+            to_asset: SwapperQuoteAsset::from(Chain::Bitcoin.as_asset_id()),
+            wallet_address: "addr1qsender".to_string(),
+            destination_address: "bc1qdestination".to_string(),
+            value: "2000000".to_string(),
+            options: Options::default(),
+        };
+        let quote = Quote {
+            from_value: "2000000".to_string(),
+            min_from_value: None,
+            to_value: "1".to_string(),
+            data: ProviderData {
+                provider: swapper.provider().clone(),
+                routes: vec![Route {
+                    input: Chain::Cardano.as_asset_id(),
+                    output: Chain::Bitcoin.as_asset_id(),
+                    route_data: serde_json::to_string(&route_data).unwrap(),
+                }],
+                slippage_bps: 50,
+            },
+            request,
+            eta_in_seconds: None,
+        };
+
+        let data = swapper.get_quote_data(&quote, FetchQuoteData::None).await.unwrap();
+
+        assert_eq!(data.to, "addr1v9mr3ts7yr83jphtmfc3256x0ncsj7tayvschr200jt94fg4a96ur");
+        assert_eq!(data.value, "2000000");
         assert_eq!(data.memo, Some("=:b:bc1qdestination:0/1/0:g1:50".to_string()));
     }
 }

@@ -35,7 +35,7 @@ impl GemSwapper {
     fn filter_supported_assets(supported_assets: Vec<SwapperChainAsset>, asset_id: AssetId) -> bool {
         supported_assets.into_iter().any(|x| match x {
             SwapperChainAsset::All(chain) => chain == asset_id.chain,
-            SwapperChainAsset::Assets(chain, assets) => chain == asset_id.chain || assets.contains(&asset_id),
+            SwapperChainAsset::Assets(chain, assets) => chain == asset_id.chain && asset_id.is_native() || assets.contains(&asset_id),
         })
     }
 
@@ -317,15 +317,23 @@ mod tests {
         let asset_id = AssetId::from_chain(Chain::Ethereum);
         let asset_id_usdt: AssetId = ETHEREUM_USDT_ASSET_ID.clone();
         let supported_assets_all = vec![SwapperChainAsset::All(Chain::Ethereum)];
-        assert!(GemSwapper::filter_supported_assets(supported_assets_all, asset_id.clone()));
+        assert_eq!(GemSwapper::filter_supported_assets(supported_assets_all, asset_id.clone()), true);
+        assert_eq!(
+            GemSwapper::filter_supported_assets(vec![SwapperChainAsset::Assets(Chain::Cardano, vec![])], AssetId::from_chain(Chain::Cardano)),
+            true
+        );
+        assert_eq!(
+            GemSwapper::filter_supported_assets(vec![SwapperChainAsset::Assets(Chain::Cardano, vec![])], AssetId::from_token(Chain::Cardano, "policy.asset")),
+            false
+        );
 
         let supported_assets = vec![
             SwapperChainAsset::All(Chain::Ethereum),
             SwapperChainAsset::Assets(Chain::Ethereum, vec![AssetId::from_token(Chain::Ethereum, &asset_id_usdt.clone().token_id.unwrap())]),
         ];
 
-        assert!(GemSwapper::filter_supported_assets(supported_assets.clone(), asset_id_usdt.clone()));
-        assert!(GemSwapper::filter_supported_assets(supported_assets, asset_id));
+        assert_eq!(GemSwapper::filter_supported_assets(supported_assets.clone(), asset_id_usdt.clone()), true);
+        assert_eq!(GemSwapper::filter_supported_assets(supported_assets, asset_id), true);
     }
 
     #[tokio::test]

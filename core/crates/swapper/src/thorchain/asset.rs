@@ -141,6 +141,9 @@ mod tests {
         let zcash = THORChainAsset::from_asset_id(THORChainNetwork::Mayachain, Chain::Zcash.as_ref()).unwrap();
         assert_eq!(zcash.quote_asset_name(), "ZEC.ZEC");
 
+        let cardano = THORChainAsset::from_asset_id(THORChainNetwork::Mayachain, Chain::Cardano.as_ref()).unwrap();
+        assert_eq!(cardano.quote_asset_name(), "ADA.ADA");
+
         let arbitrum = THORChainAsset::from_asset_id(THORChainNetwork::Mayachain, Chain::Arbitrum.as_ref()).unwrap();
         assert_eq!(arbitrum.quote_asset_name(), "ARB.ETH");
     }
@@ -228,6 +231,18 @@ mod tests {
                 bps
             ),
             "=:z:t1Ku2KLyndDPsR32jwnrTMd3yvi9tfFP8ML:0/1/0:g1:50"
+        );
+        assert_eq!(
+            THORChainAsset::from_asset_id(THORChainNetwork::Mayachain, Chain::Cardano.as_ref()).unwrap().swap_memo(
+                "aa",
+                "addr1q92cmkgzv9h4e5q7mnrzsuxtgayvg4qr7y3gyx97ukmz3dfx7r9fu73vqn25377ke6r0xk97zw07dqr9y5myxlgadl2s0dgke5".to_string(),
+                0,
+                1,
+                0,
+                fee_address.clone(),
+                bps
+            ),
+            "=:aa:addr1q92cmkgzv9h4e5q7mnrzsuxtgayvg4qr7y3gyx97ukmz3dfx7r9fu73vqn25377ke6r0xk97zw07dqr9y5myxlgadl2s0dgke5:0/1/0:g1:50"
         );
     }
 
