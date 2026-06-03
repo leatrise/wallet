@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">We are currently unable to calculate the network fee.</string>
   <string name="errors_invalid_asset_address">Invalid %1$s address</string>
   <string name="errors_dust_threshold">ธุรกรรมล้มเหลวเนื่องจากจำนวนเงินน้อยเกินไปที่จะตรงตามข้อกำหนดขั้นต่ำของเครือข่าย %1$s (เกณฑ์ค่าฝุ่น) ขีดจำกัดนี้ช่วยให้มั่นใจว่ามูลค่าธุรกรรมครอบคลุมค่าธรรมเนียมและต้นทุนการประมวลผล เพิ่มจำนวนเงินหรือลดค่าธรรมเนียมเพื่อดำเนินการต่อ</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">ไม่มีราคาเสนอให้ใช้งาน</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">สินทรัพย์ที่ไม่สนับสนุน</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>

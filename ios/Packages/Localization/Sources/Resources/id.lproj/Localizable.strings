@@ -184,7 +184,7 @@
 "errors.unable_estimate_network_fee" = "Saat ini kami tidak bisa menghitung biaya jaringan";
 "errors.invalid_asset_address" = "Alamat %@ tidak valid";
 "errors.dust_threshold" = "Transaksi gagal karena jumlahnya terlalu kecil untuk memenuhi persyaratan minimum jaringan %@ (ambang batas debu). Batas ini memastikan nilai transaksi mencakup biaya dan ongkos pemrosesan.";
-"errors.swap.no_quote_available" = "No quote available.";
+"errors.swap.no_quote_available" = "Tidak ada kuotasi yang tersedia.";
 "errors.swap.not_supported_chain" = "Not supported chain.";
 "errors.swap.not_supported_asset" = "Aset yang tidak didukung.";
 "errors.swap.not_supported_pair" = "Not supported pair.";

@@ -184,7 +184,7 @@
 "errors.unable_estimate_network_fee" = "We are currently unable to calculate the network fee.";
 "errors.invalid_asset_address" = "Invalid %@ address";
 "errors.dust_threshold" = "La transazione non è riuscita perché l'importo è troppo basso per soddisfare il requisito minimo della rete %@ (soglia di dust). Questo limite garantisce che il valore della transazione copra le commissioni e i costi di elaborazione.";
-"errors.swap.no_quote_available" = "No quote available.";
+"errors.swap.no_quote_available" = "Nessuna quotazione disponibile.";
 "errors.swap.not_supported_chain" = "Not supported chain.";
 "errors.swap.not_supported_asset" = "Attività non supportata.";
 "errors.swap.not_supported_pair" = "Not supported pair.";

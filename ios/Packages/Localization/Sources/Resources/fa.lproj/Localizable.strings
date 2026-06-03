@@ -184,7 +184,7 @@
 "errors.unable_estimate_network_fee" = "درحال حاضر قادر به محاسبه کارمزد شبکه نیستیم.";
 "errors.invalid_asset_address" = "آدرس %@ نامعتبر است.";
 "errors.dust_threshold" = "تراکنش به دلیل کم بودن مبلغ برای برآورده کردن حداقل لازم شبکه %@ (آستانه گرد و غبار) انجام نشد. این محدودیت تضمین می‌کند که ارزش تراکنش، کارمزدها و هزینه‌های پردازش را پوشش می‌دهد.";
-"errors.swap.no_quote_available" = "No quote available.";
+"errors.swap.no_quote_available" = "هیچ قیمتی در دسترس نیست.";
 "errors.swap.not_supported_chain" = "Not supported chain.";
 "errors.swap.not_supported_asset" = "دارایی پشتیبانی نمی شود.";
 "errors.swap.not_supported_pair" = "Not supported pair.";

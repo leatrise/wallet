@@ -32,6 +32,7 @@ common_type = Type
 common_no_results_found = No Results Found
 common_yes = Yes
 common_no = No
+# Used for empty optional values in selection rows and detail fields.
 common_none = None
 common_url = URL
 common_private_key = Private Key
@@ -192,9 +193,11 @@ settings_price_alerts_title = Price Alerts
 settings_hide_balance = Hide Balance
 settings_disable_value = Disable %@
 settings_preferences_title = Preferences
+# Settings > Preferences > Perpetuals: default leverage used when opening a perpetual position.
 settings_preferences_perpetual_default_leverage = Default Leverage
-# Default order settings for perpetual positions.
+# Settings > Preferences > Perpetuals: default take-profit percentage for new perpetual positions.
 settings_preferences_perpetual_default_take_profit = Default Take Profit
+# Settings > Preferences > Perpetuals: default stop-loss percentage for new perpetual positions.
 settings_preferences_perpetual_default_stop_loss = Default Stop Loss
 
 # Errors
@@ -223,6 +226,7 @@ errors_transfer_error = Transfer Error
 errors_unable_estimate_network_fee = We are currently unable to calculate the network fee.
 errors_invalid_asset_address = Invalid %@ address
 errors_dust_threshold = The transaction failed because the amount is too small to meet the %@ network's minimum requirement (dust threshold). This limit ensures the transaction value covers the fees and processing costs.
+# Swap screen error shown when providers cannot return a quote for the selected pair or amount.
 errors_swap_no_quote_available = No quote available.
 errors_swap_not_supported_chain = Not supported chain.
 errors_swap_not_supported_asset = Not supported asset.
@@ -243,8 +247,9 @@ errors_connections_malicious_origin = This connection comes from an untrusted so
 errors_no_data_available = No data available
 errors_dust_threshold_short = The network considers this amount dust - the fee is higher than the amount itself.
 errors_swap_minimum_amount = Minimum trade amount is %@. Please enter a higher amount.
-# Perpetual order validation when comparing trigger price against current market price.
+# Perpetual order validation: take-profit or stop-loss trigger must be below market price.
 errors_perpetual_trigger_price_lower = Trigger price should be lower than market price
+# Perpetual order validation: take-profit or stop-loss trigger must be above market price.
 errors_perpetual_trigger_price_higher = Trigger price should be higher than market price
 errors_token_unable_fetch_token_information = Unable to fetch token information: %@
 errors_unknown_try_again = An unknown error occurred. Please try again.
@@ -554,13 +559,21 @@ info_insufficient_network_fee_balance_description = This transaction requires %@
 info_insufficient_balance_title = Insufficient Balance
 info_insufficient_balance_description = You don't have enough %@ to complete this transaction. Please top up, receive, or swap in your wallet and try again.
 info_account_minimum_balance_title = Minimum balance
+# Perpetual info sheet title for funding payments on position details.
 info_perpetual_funding_payments_title = Funding Payments
+# Perpetual info sheet body explaining funding payments on position details.
 info_perpetual_funding_payments_description = Funding payments are periodic payments between traders to keep the perpetual contract price close to the underlying asset's spot price. Positive funding means long positions pay short positions, while negative funding means short positions pay long positions.
+# Perpetual info sheet title for the current funding rate.
 info_perpetual_funding_rate_title = Funding
+# Perpetual info sheet body explaining how the funding rate affects open positions.
 info_perpetual_funding_rate_description = The funding rate determines the cost of holding a perpetual position. It is calculated hourly and helps maintain price equilibrium between the perpetual contract and the underlying asset's spot price.
+# Perpetual info sheet title for the liquidation price field.
 info_perpetual_liquidation_price_title = Liquidation Price
+# Perpetual info sheet body explaining when a position is liquidated.
 info_perpetual_liquidation_price_description = The liquidation price is the price level at which your position will be automatically closed to prevent further losses. When the market price reaches this level, your position is liquidated and you lose your margin.
+# Perpetual market info title for open interest.
 info_perpetual_open_interest_title = Open Interest
+# Perpetual market info body explaining open interest.
 info_perpetual_open_interest_description = Open interest represents the total value of all outstanding perpetual contracts that have not been settled. It provides insight into market activity and liquidity.
 info_no_quote_description = Unable to return a quote for the selected token pair, possibly due to low amount, lack of liquidity, or technical limitations.
 info_stake_reserved_title = Reserved for Network Fee
@@ -573,10 +586,12 @@ info_circulating_supply_description = The number of coins currently available an
 info_total_supply_description = The total number of coins that exist, including locked or reserved coins.
 info_max_supply_title = Max Supply
 info_max_supply_description = The maximum number of coins that will ever exist.
+# Perpetual market info title for annualized funding.
 info_perpetual_funding_apr_title = Funding APR
+# Perpetual market info body explaining annualized funding.
 info_perpetual_funding_apr_description = The annualized rate at which longs pay shorts (if negative, shorts pay longs). There are no fees associated with funding, which is a peer-to-peer transfer between users to push prices towards the spot price.
 info_minimum_amount_title = Minimum Amount
-# First %@ is the network name, second %@ is the minimum amount.
+# Transfer info sheet body. First %@ is the network name, second %@ is the minimum amount.
 info_minimum_amount_description = On the %@ network, the minimum amount for this transaction is %@.
 
 # Input
@@ -659,8 +674,11 @@ perpetual_direction = Direction
 perpetual_auto_close = Auto Close
 perpetual_auto_close_take_profit = Take profit
 perpetual_market_price = Market Price
+# Perpetual chart and position summary abbreviation for take profit.
 perpetual_take_profit = TP
+# Perpetual chart and position summary abbreviation for stop loss.
 perpetual_stop_loss = SL
+# Perpetual chart marker abbreviation for liquidation price.
 perpetual_liquidation = Liq
 perpetual_increase_direction = Increase %@
 perpetual_reduce_direction = Reduce %@

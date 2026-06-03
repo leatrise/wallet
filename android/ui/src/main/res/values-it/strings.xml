@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">We are currently unable to calculate the network fee.</string>
   <string name="errors_invalid_asset_address">Invalid %1$s address</string>
   <string name="errors_dust_threshold">La transazione non è riuscita perché l\'importo è troppo basso per soddisfare il requisito minimo della rete %1$s (soglia di dust). Questo limite garantisce che il valore della transazione copra le commissioni e i costi di elaborazione.</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">Nessuna quotazione disponibile.</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">Attività non supportata.</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>

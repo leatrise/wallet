@@ -184,7 +184,7 @@
 "errors.unable_estimate_network_fee" = "We are currently unable to calculate the network fee.";
 "errors.invalid_asset_address" = "Invalid %@ address";
 "errors.dust_threshold" = "Giao dịch không thành công vì số tiền quá nhỏ để đáp ứng yêu cầu tối thiểu của mạng %@ (ngưỡng bụi). Giới hạn này đảm bảo giá trị giao dịch bao gồm phí và chi phí xử lý.";
-"errors.swap.no_quote_available" = "No quote available.";
+"errors.swap.no_quote_available" = "Không có báo giá khả dụng.";
 "errors.swap.not_supported_chain" = "Not supported chain.";
 "errors.swap.not_supported_asset" = "Tài sản không được hỗ trợ.";
 "errors.swap.not_supported_pair" = "Not supported pair.";

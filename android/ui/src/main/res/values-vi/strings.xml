@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">We are currently unable to calculate the network fee.</string>
   <string name="errors_invalid_asset_address">Invalid %1$s address</string>
   <string name="errors_dust_threshold">Giao dịch không thành công vì số tiền quá nhỏ để đáp ứng yêu cầu tối thiểu của mạng %1$s (ngưỡng bụi). Giới hạn này đảm bảo giá trị giao dịch bao gồm phí và chi phí xử lý.</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">Không có báo giá khả dụng.</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">Tài sản không được hỗ trợ.</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>

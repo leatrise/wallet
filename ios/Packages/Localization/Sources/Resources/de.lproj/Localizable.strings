@@ -184,7 +184,7 @@
 "errors.unable_estimate_network_fee" = "Wir sind derzeit nicht in der Lage, die Netzgwerkebühr zu berechnen.";
 "errors.invalid_asset_address" = "Ungültige %@ Adresse";
 "errors.dust_threshold" = "Die Transaktion ist fehlgeschlagen, da der Betrag zu gering ist, um die Mindestanforderung des %@ -Netzwerks (Dust-Schwellenwert) zu erfüllen. Dieses Limit stellt sicher, dass der Transaktionswert die Gebühren und Bearbeitungskosten deckt.";
-"errors.swap.no_quote_available" = "No quote available.";
+"errors.swap.no_quote_available" = "Kein Angebot verfügbar.";
 "errors.swap.not_supported_chain" = "Not supported chain.";
 "errors.swap.not_supported_asset" = "Nicht unterstütztes Asset.";
 "errors.swap.not_supported_pair" = "Not supported pair.";

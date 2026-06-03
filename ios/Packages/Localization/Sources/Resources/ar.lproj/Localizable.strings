@@ -184,7 +184,7 @@
 "errors.unable_estimate_network_fee" = "We are currently unable to calculate the network fee.";
 "errors.invalid_asset_address" = "Invalid %@ address";
 "errors.dust_threshold" = "فشلت المعاملة لأن المبلغ صغير جدًا بحيث لا يلبي الحد الأدنى لمتطلبات شبكة %@ (حد الغبار). يضمن هذا الحد أن قيمة المعاملة تغطي الرسوم وتكاليف المعالجة. زد المبلغ أو قلل الرسوم للمتابعة.";
-"errors.swap.no_quote_available" = "No quote available.";
+"errors.swap.no_quote_available" = "لا يوجد عرض سعر متاح.";
 "errors.swap.not_supported_chain" = "Not supported chain.";
 "errors.swap.not_supported_asset" = "أصل غير مدعوم.";
 "errors.swap.not_supported_pair" = "Not supported pair.";

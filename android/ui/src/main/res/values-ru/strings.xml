@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">В настоящее время мы не можем рассчитать комиссию сети.</string>
   <string name="errors_invalid_asset_address">Неверный адрес %1$s</string>
   <string name="errors_dust_threshold">Транзакция не удалась, так как сумма слишком мала для соответствия минимальным требованиям сети %1$s (порог пыли). Этот предел гарантирует, что сумма транзакции покрывает комиссии и затраты на обработку.</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">Котировка недоступна.</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">Неподдерживаемый актив.</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>

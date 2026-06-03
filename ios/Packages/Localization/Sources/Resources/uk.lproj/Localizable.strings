@@ -184,7 +184,7 @@
 "errors.unable_estimate_network_fee" = "Наразі ми не можемо розрахувати мережеву плату.";
 "errors.invalid_asset_address" = "Недійсна адреса %@";
 "errors.dust_threshold" = "Транзакцію не вдалося виконати, оскільки сума занадто мала, щоб відповідати мінімальним вимогам мережі %@ (поріг пилу). Це обмеження гарантує, що сума транзакції покриває комісії та витрати на обробку.";
-"errors.swap.no_quote_available" = "No quote available.";
+"errors.swap.no_quote_available" = "Котирування недоступне.";
 "errors.swap.not_supported_chain" = "Not supported chain.";
 "errors.swap.not_supported_asset" = "Не підтримуваний актив.";
 "errors.swap.not_supported_pair" = "Not supported pair.";

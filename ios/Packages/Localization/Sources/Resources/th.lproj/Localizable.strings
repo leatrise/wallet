@@ -184,7 +184,7 @@
 "errors.unable_estimate_network_fee" = "We are currently unable to calculate the network fee.";
 "errors.invalid_asset_address" = "Invalid %@ address";
 "errors.dust_threshold" = "ธุรกรรมล้มเหลวเนื่องจากจำนวนเงินน้อยเกินไปที่จะตรงตามข้อกำหนดขั้นต่ำของเครือข่าย %@ (เกณฑ์ค่าฝุ่น) ขีดจำกัดนี้ช่วยให้มั่นใจว่ามูลค่าธุรกรรมครอบคลุมค่าธรรมเนียมและต้นทุนการประมวลผล เพิ่มจำนวนเงินหรือลดค่าธรรมเนียมเพื่อดำเนินการต่อ";
-"errors.swap.no_quote_available" = "No quote available.";
+"errors.swap.no_quote_available" = "ไม่มีราคาเสนอให้ใช้งาน";
 "errors.swap.not_supported_chain" = "Not supported chain.";
 "errors.swap.not_supported_asset" = "สินทรัพย์ที่ไม่สนับสนุน";
 "errors.swap.not_supported_pair" = "Not supported pair.";

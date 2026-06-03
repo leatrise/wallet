@@ -184,7 +184,7 @@
 "errors.unable_estimate_network_fee" = "We are currently unable to calculate the network fee.";
 "errors.invalid_asset_address" = "Invalid %@ address";
 "errors.dust_threshold" = "लेन-देन विफल रहा क्योंकि राशि %@ नेटवर्क की न्यूनतम आवश्यकता (डस्ट थ्रेशोल्ड) को पूरा करने के लिए बहुत कम है। यह सीमा सुनिश्चित करती है कि लेन-देन का मूल्य शुल्क और प्रसंस्करण लागत को कवर करता है।";
-"errors.swap.no_quote_available" = "No quote available.";
+"errors.swap.no_quote_available" = "कोई कोट उपलब्ध नहीं है।";
 "errors.swap.not_supported_chain" = "Not supported chain.";
 "errors.swap.not_supported_asset" = "समर्थित परिसंपत्ति नहीं.";
 "errors.swap.not_supported_pair" = "Not supported pair.";

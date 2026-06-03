@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">We are currently unable to calculate the network fee.</string>
   <string name="errors_invalid_asset_address">Invalid %1$s address</string>
   <string name="errors_dust_threshold">העסקה נכשלה מכיוון שהסכום קטן מדי לעמוד בדרישת המינימום של רשת %1$s (ערך אבק). מגבלה זו מבטיחה שערך העסקה יכסה את העמלות ואת עלויות העיבוד.</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">אין הצעת מחיר זמינה.</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">נכס לא נתמך.</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>

@@ -184,7 +184,7 @@
 "errors.unable_estimate_network_fee" = "Şu anda ağ ücretini hesaplayamıyoruz.";
 "errors.invalid_asset_address" = "Geçersiz %@ adresi";
 "errors.dust_threshold" = "İşlem, tutarın %@ ağının minimum gereksinimini (toz eşiği) karşılamak için çok küçük olması nedeniyle başarısız oldu. Bu sınır, işlem değerinin ücretleri ve işlem maliyetlerini karşılamasını sağlar.";
-"errors.swap.no_quote_available" = "No quote available.";
+"errors.swap.no_quote_available" = "Kullanılabilir teklif yok.";
 "errors.swap.not_supported_chain" = "Not supported chain.";
 "errors.swap.not_supported_asset" = "Desteklenmeyen varlık.";
 "errors.swap.not_supported_pair" = "Not supported pair.";

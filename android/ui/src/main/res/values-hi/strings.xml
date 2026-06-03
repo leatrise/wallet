@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">We are currently unable to calculate the network fee.</string>
   <string name="errors_invalid_asset_address">Invalid %1$s address</string>
   <string name="errors_dust_threshold">लेन-देन विफल रहा क्योंकि राशि %1$s नेटवर्क की न्यूनतम आवश्यकता (डस्ट थ्रेशोल्ड) को पूरा करने के लिए बहुत कम है। यह सीमा सुनिश्चित करती है कि लेन-देन का मूल्य शुल्क और प्रसंस्करण लागत को कवर करता है।</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">कोई कोट उपलब्ध नहीं है।</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">समर्थित परिसंपत्ति नहीं.</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>

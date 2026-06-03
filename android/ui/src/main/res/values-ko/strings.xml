@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">We are currently unable to calculate the network fee.</string>
   <string name="errors_invalid_asset_address">Invalid %1$s address</string>
   <string name="errors_dust_threshold">거래가 %1$s 네트워크의 최소 요구 사항(먼지 임계값)을 충족하기에 너무 적어 실패했습니다. 이 한도는 거래 금액이 수수료 및 처리 비용을 충당할 수 있도록 보장합니다.</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">사용 가능한 견적이 없습니다.</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">지원되지 않는 자산입니다.</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>

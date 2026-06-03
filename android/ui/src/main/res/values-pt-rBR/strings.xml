@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">No momento, não podemos calcular a taxa de rede.</string>
   <string name="errors_invalid_asset_address">Endereço %1$s inválido</string>
   <string name="errors_dust_threshold">A transação falhou porque o valor é muito pequeno para atender ao requisito mínimo da rede %1$s (limite de poeira). Este limite garante que o valor da transação cubra as taxas e os custos de processamento.</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">Nenhuma cotação disponível.</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">Ativo não suportado.</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>

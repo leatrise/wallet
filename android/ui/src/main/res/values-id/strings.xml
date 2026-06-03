@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">Saat ini kami tidak bisa menghitung biaya jaringan</string>
   <string name="errors_invalid_asset_address">Alamat %1$s tidak valid</string>
   <string name="errors_dust_threshold">Transaksi gagal karena jumlahnya terlalu kecil untuk memenuhi persyaratan minimum jaringan %1$s (ambang batas debu). Batas ini memastikan nilai transaksi mencakup biaya dan ongkos pemrosesan.</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">Tidak ada kuotasi yang tersedia.</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">Aset yang tidak didukung.</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>

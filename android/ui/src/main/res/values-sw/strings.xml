@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">We are currently unable to calculate the network fee.</string>
   <string name="errors_invalid_asset_address">Invalid %1$s address</string>
   <string name="errors_dust_threshold">The transaction failed because the amount is too small to meet the %1$s network\'s minimum requirement (dust threshold). This limit ensures the transaction value covers the fees and processing costs.</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">Hakuna nukuu inayopatikana.</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">Not supported asset.</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>

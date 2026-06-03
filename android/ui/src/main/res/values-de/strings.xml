@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">Wir sind derzeit nicht in der Lage, die Netzgwerkebühr zu berechnen.</string>
   <string name="errors_invalid_asset_address">Ungültige %1$s Adresse</string>
   <string name="errors_dust_threshold">Die Transaktion ist fehlgeschlagen, da der Betrag zu gering ist, um die Mindestanforderung des %1$s -Netzwerks (Dust-Schwellenwert) zu erfüllen. Dieses Limit stellt sicher, dass der Transaktionswert die Gebühren und Bearbeitungskosten deckt.</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">Kein Angebot verfügbar.</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">Nicht unterstütztes Asset.</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>

@@ -191,7 +191,7 @@
   <string name="errors_unable_estimate_network_fee">Наразі ми не можемо розрахувати мережеву плату.</string>
   <string name="errors_invalid_asset_address">Недійсна адреса %1$s</string>
   <string name="errors_dust_threshold">Транзакцію не вдалося виконати, оскільки сума занадто мала, щоб відповідати мінімальним вимогам мережі %1$s (поріг пилу). Це обмеження гарантує, що сума транзакції покриває комісії та витрати на обробку.</string>
-  <string name="errors_swap_no_quote_available">No quote available.</string>
+  <string name="errors_swap_no_quote_available">Котирування недоступне.</string>
   <string name="errors_swap_not_supported_chain">Not supported chain.</string>
   <string name="errors_swap_not_supported_asset">Не підтримуваний актив.</string>
   <string name="errors_swap_not_supported_pair">Not supported pair.</string>
