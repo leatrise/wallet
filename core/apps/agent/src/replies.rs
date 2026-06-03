@@ -68,9 +68,9 @@ fn extract_replies(s: &str) -> Vec<String> {
     let mut out = Vec::new();
     let mut rest = s;
     while let BlockSearch::Found { body, after, .. } = find_block(rest, "<reply>", "</reply>") {
-        let trimmed = body.trim();
-        if !trimmed.is_empty() {
-            out.push(trimmed.to_string());
+        let text = body.trim();
+        if !text.is_empty() {
+            out.push(text.to_string());
         }
         rest = after;
     }
@@ -92,11 +92,11 @@ pub fn classify_reply(raw: &str) -> ReplyOutcome {
         return if kept.is_empty() { ReplyOutcome::Silent } else { ReplyOutcome::Tagged(kept) };
     }
 
-    let trimmed = stripped.trim();
-    if trimmed.is_empty() || is_silence(trimmed) {
+    let text = stripped.trim();
+    if text.is_empty() || is_silence(text) {
         ReplyOutcome::Silent
     } else {
-        ReplyOutcome::Untagged(trimmed.to_string())
+        ReplyOutcome::Untagged(text.to_string())
     }
 }
 

@@ -91,20 +91,20 @@ fn review_prompt(mode: &str, context: &str, reply: &str) -> String {
 }
 
 fn parse_output(output: &str) -> Decision {
-    let trimmed = output.trim();
-    if trimmed.eq_ignore_ascii_case(PASS) {
+    let body = output.trim();
+    if body.eq_ignore_ascii_case(PASS) {
         return Decision::Pass;
     }
-    if trimmed.eq_ignore_ascii_case(SILENCE) {
+    if body.eq_ignore_ascii_case(SILENCE) {
         return Decision::Silence;
     }
 
-    let rewrite = if let Some(body) = trimmed.strip_prefix(REWRITE) {
-        body
-    } else if let Some(body) = trimmed.strip_prefix("rewrite:") {
-        body
+    let rewrite = if let Some(rest) = body.strip_prefix(REWRITE) {
+        rest
+    } else if let Some(rest) = body.strip_prefix("rewrite:") {
+        rest
     } else {
-        debug!(output_chars = trimmed.chars().count(), "reply supervisor output was invalid");
+        debug!(output_chars = body.chars().count(), "reply supervisor output was invalid");
         return Decision::Invalid;
     };
 

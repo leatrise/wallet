@@ -78,7 +78,7 @@ pub async fn handle_event(state: AppState, payload: Value) -> Result<()> {
             return Ok(());
         }
     };
-    if msg.bot_id.is_some() || msg.subtype.is_some() {
+    if should_drop_message(&msg) {
         debug!(
             ts = %msg.ts,
             bot_id = ?msg.bot_id,
@@ -125,13 +125,8 @@ pub async fn handle_event(state: AppState, payload: Value) -> Result<()> {
     }
 
     let stripped = strip_mention(&msg.text);
-    let latest = if stripped.trim().is_empty() {
-        if !addressed {
-            return Ok(());
-        }
-        "(mention-only summons — no body text; answer the actual question from the thread above)".to_string()
-    } else {
-        stripped.trim().to_string()
+    let Some(latest) = latest_message(&stripped, addressed, !msg.files.is_empty()) else {
+        return Ok(());
     };
     let image_attachments = collect_image_attachments(&state, &msg.files).await;
     let user_id = msg.user.as_deref().unwrap_or("");
@@ -139,8 +134,10 @@ pub async fn handle_event(state: AppState, payload: Value) -> Result<()> {
     let addressed_label = if addressed { "addressed" } else { "listening" };
     let trust = trust_for(&state.settings, msg.user.as_deref());
     let header = format!(
-        "[Slack — channel: {location}, channel_id: {}, message_ts: {}, user_id: {user_id}, addressed: {addressed_label}, trust: {trust}, max_tool_turns: {max_turns}]",
-        msg.channel, msg.ts
+        "[Slack — channel: {location}, channel_id: {}, message_ts: {}, thread_ts: {}, user_id: {user_id}, addressed: {addressed_label}, trust: {trust}, max_tool_turns: {max_turns}]",
+        msg.channel,
+        msg.ts,
+        msg.thread_ts.as_deref().unwrap_or(&msg.ts)
     );
 
     let key = format!("slack:{}:{}", msg.channel, msg.thread_ts.as_deref().unwrap_or(&msg.ts));
@@ -150,12 +147,44 @@ pub async fn handle_event(state: AppState, payload: Value) -> Result<()> {
         .await
 }
 
+fn should_drop_message(msg: &MessageEvent) -> bool {
+    if msg.bot_id.is_some() {
+        return true;
+    }
+    match msg.subtype.as_deref() {
+        None => false,
+        Some("file_share") => false,
+        Some(_) => true,
+    }
+}
+
+fn latest_message(text: &str, addressed: bool, has_files: bool) -> Option<String> {
+    let body = text.trim();
+    if !body.is_empty() {
+        return Some(body.to_string());
+    }
+    if has_files {
+        return Some("(file shared — inspect the file context above and respond only if useful)".to_string());
+    }
+    if addressed {
+        return Some("(mention-only summons — no body text; answer the actual question from the thread above)".to_string());
+    }
+    None
+}
+
 async fn handle_message(state: &AppState, msg: &MessageEvent, header: &str, latest: &str, image_attachments: Vec<ImageAttachment>, addressed: bool) -> Result<()> {
     let body = build_history(state, msg, latest).await.unwrap_or_else(|e| {
         error!(error = %e, "history fetch failed; using latest only");
         latest.to_string()
     });
-    let prompt = format!("{header}\n\n{body}");
+    let output_contract = if msg.is_dm() {
+        "Output: Slack DM text inside <reply>...</reply>, or exactly (no confident reply)."
+    } else if addressed {
+        "Output: Slack channel reply inside <reply>...</reply>, or exactly (no confident reply)."
+    } else {
+        "Output while listening: either a useful Slack channel reply inside <reply>...</reply>, a one-emoji acknowledgement inside <reply>...</reply>, or exactly (no confident reply). Never write Slack-visible text outside <reply> tags."
+    };
+    let prompt = format!("{header}\n\n{body}\n{output_contract}\n");
     let reply_thread: Option<&str> = msg.thread_ts.as_deref().or_else(|| (!msg.is_dm()).then_some(msg.ts.as_str()));
     info!(
         channel = %msg.channel,
@@ -187,15 +216,35 @@ async fn handle_message(state: &AppState, msg: &MessageEvent, header: &str, late
     let replies = match classify_reply(&raw) {
         ReplyOutcome::Tagged(chunks) => chunks,
         ReplyOutcome::Untagged(text) if msg.is_dm() => {
-            debug!(raw_chars = raw.len(), "DM without <reply> tags; posting raw text");
+            debug!(
+                channel = %msg.channel,
+                user = %msg.user.as_deref().unwrap_or(""),
+                thread = ?reply_thread,
+                raw_chars = raw.len(),
+                "DM without <reply> tags; posting raw text"
+            );
             vec![text]
         }
         ReplyOutcome::Untagged(_) => {
-            warn!(addressed, raw_chars = raw.len(), "model didn't use <reply> tags; staying silent");
+            warn!(
+                channel = %msg.channel,
+                user = %msg.user.as_deref().unwrap_or(""),
+                addressed,
+                thread = ?reply_thread,
+                raw_chars = raw.len(),
+                "model didn't use <reply> tags; staying silent"
+            );
             return Ok(());
         }
         ReplyOutcome::Silent => {
-            debug!(addressed, raw_chars = raw.len(), "no postable content; staying silent");
+            debug!(
+                channel = %msg.channel,
+                user = %msg.user.as_deref().unwrap_or(""),
+                addressed,
+                thread = ?reply_thread,
+                raw_chars = raw.len(),
+                "no postable content; staying silent"
+            );
             return Ok(());
         }
     };
@@ -203,7 +252,14 @@ async fn handle_message(state: &AppState, msg: &MessageEvent, header: &str, late
         let text = to_slack_mrkdwn(chunk);
         state.slack.post_message(&msg.channel, reply_thread, &text).await?;
     }
-    info!(addressed, replies = replies.len(), "reply posted");
+    info!(
+        channel = %msg.channel,
+        user = %msg.user.as_deref().unwrap_or(""),
+        addressed,
+        thread = ?reply_thread,
+        replies = replies.len(),
+        "reply posted"
+    );
     Ok(())
 }
 
@@ -284,4 +340,46 @@ fn strip_mention(text: &str) -> String {
         s = rest[end + 1..].trim_start();
     }
     s.to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{MessageEvent, latest_message, should_drop_message};
+
+    fn message(subtype: Option<&str>, bot_id: Option<&str>) -> MessageEvent {
+        MessageEvent {
+            user: Some("U1".into()),
+            bot_id: bot_id.map(String::from),
+            text: String::new(),
+            channel: "C1".into(),
+            channel_type: Some("channel".into()),
+            ts: "1.0".into(),
+            thread_ts: None,
+            parent_user_id: None,
+            subtype: subtype.map(String::from),
+            files: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn keeps_user_file_share_events() {
+        assert!(!should_drop_message(&message(Some("file_share"), None)));
+    }
+
+    #[test]
+    fn drops_bot_and_non_file_subtype_events() {
+        assert!(should_drop_message(&message(None, Some("B1"))));
+        assert!(should_drop_message(&message(Some("message_changed"), None)));
+    }
+
+    #[test]
+    fn file_share_without_text_still_dispatches_latest_context() {
+        let latest = latest_message("", false, true).expect("file share should dispatch");
+        assert!(latest.contains("file shared"));
+    }
+
+    #[test]
+    fn empty_unaddressed_message_without_files_stays_silent() {
+        assert!(latest_message("", false, false).is_none());
+    }
 }
