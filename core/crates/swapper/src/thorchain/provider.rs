@@ -9,7 +9,7 @@ use primitives::{Chain, known_assets::*, swap::ApprovalData};
 use num_bigint::BigInt;
 
 use super::{
-    DUST_THRESHOLD_MULTIPLIER, QUOTE_INTERVAL, QUOTE_MINIMUM, QUOTE_QUANTITY, ThorChain,
+    DUST_THRESHOLD_MULTIPLIER, QUOTE_INTERVAL, QUOTE_MINIMUM, QUOTE_QUANTITY, THORChainNetwork, ThorChain,
     asset::{THORChainAsset, value_to},
     chain::THORChainName,
     model::{AsgardVault, RouteData},
@@ -18,34 +18,25 @@ use super::{
 use crate::{
     FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, RpcClient, RpcProvider, SwapResult, Swapper, SwapperChainAsset, SwapperError, SwapperQuoteData,
     approval::check_approval_erc20,
+    config::get_swap_proxy_url,
     cross_chain::VaultAddresses,
     fees::{default_referral_fees, quote_value_after_reserve_by_chain},
     thorchain::client::ThorChainSwapClient,
 };
 
-pub struct ThorchainCrossChain;
-
-impl ThorchainCrossChain {
-    fn router_address(chain: &Chain) -> Option<&'static str> {
-        match chain {
-            Chain::Ethereum => Some("0xD37BbE5744D730a1d98d8DC97c42F0Ca46aD7146"),
-            Chain::SmartChain => Some("0xb30eC53F98ff5947EDe720D32aC2da7e52A5f56b"),
-            Chain::AvalancheC => Some("0x8F66c4AE756BEbC49Ec8B81966DD8bba9f127549"),
-            Chain::Base => Some("0x68208D99746b805a1Ae41421950A47b711E35681"),
-            _ => None,
-        }
-    }
-
-    pub fn static_router_addresses() -> Vec<&'static str> {
-        Chain::all().iter().filter_map(|chain| Self::router_address(chain)).collect()
-    }
-}
-
 impl ThorChain<RpcClient> {
     pub fn new(rpc_provider: Arc<dyn RpcProvider>) -> Self {
         let endpoint = rpc_provider.get_endpoint(Chain::Thorchain).expect("Failed to get Thorchain endpoint");
-        let swap_client = ThorChainSwapClient::new(RpcClient::new(endpoint, rpc_provider.clone()));
-        Self::with_client(swap_client, rpc_provider)
+        Self::with_endpoint(endpoint, rpc_provider, THORChainNetwork::Thorchain)
+    }
+
+    pub fn new_mayachain(rpc_provider: Arc<dyn RpcProvider>) -> Self {
+        Self::with_endpoint(get_swap_proxy_url("maya"), rpc_provider, THORChainNetwork::Mayachain)
+    }
+
+    fn with_endpoint(endpoint: String, rpc_provider: Arc<dyn RpcProvider>, network: THORChainNetwork) -> Self {
+        let swap_client = ThorChainSwapClient::new(RpcClient::new(endpoint, rpc_provider.clone()), network);
+        Self::with_client(swap_client, rpc_provider, network)
     }
 }
 
@@ -66,10 +57,8 @@ where
     }
 
     fn supported_assets(&self) -> Vec<SwapperChainAsset> {
-        Chain::all()
-            .into_iter()
-            .filter_map(|chain| THORChainName::from_chain(&chain).map(|name| name.chain()))
-            .collect::<Vec<Chain>>()
+        self.network
+            .supported_chains()
             .into_iter()
             .map(|chain| match chain {
                 Chain::Ethereum => SwapperChainAsset::Assets(
@@ -89,7 +78,7 @@ where
     async fn get_vault_addresses(&self, _from_timestamp: Option<u64>) -> Result<VaultAddresses, SwapperError> {
         let vaults = self.client.get_asgard_vaults().await?;
         let asgard_addresses: HashSet<String> = AsgardVault::all_addresses(&vaults).into_iter().collect();
-        let router_addresses: HashSet<String> = ThorchainCrossChain::static_router_addresses().into_iter().map(String::from).collect();
+        let router_addresses: HashSet<String> = self.network.router_addresses().iter().map(|address| address.to_string()).collect();
 
         let deposit: Vec<String> = asgard_addresses.union(&router_addresses).cloned().collect();
         let send: Vec<String> = asgard_addresses.into_iter().collect();
@@ -120,7 +109,6 @@ where
         }
 
         let fee = default_referral_fees().thorchain;
-
         let quote = self
             .client
             .get_quote(
@@ -208,7 +196,7 @@ where
     async fn get_swap_result(&self, _chain: Chain, hash: &str) -> Result<SwapResult, SwapperError> {
         let hash = hash.strip_prefix("0x").unwrap_or(hash).to_uppercase();
         let response = self.client.get_transaction_status(&hash).await?;
-        Ok(swap_mapper::map_swap_result(&response))
+        Ok(swap_mapper::map_swap_result(&response, self.network))
     }
 }
 
@@ -288,7 +276,7 @@ mod tests {
 #[cfg(all(test, feature = "swap_integration_tests"))]
 mod swap_integration_tests {
     use super::*;
-    use crate::{SwapperQuoteAsset, alien::reqwest_provider::NativeProvider, testkit::mock_quote};
+    use crate::{SwapperProvider, SwapperQuoteAsset, alien::reqwest_provider::NativeProvider, testkit::mock_quote};
     use primitives::swap::SwapStatus;
     use std::sync::Arc;
 
@@ -362,6 +350,30 @@ mod swap_integration_tests {
         assert!(!metadata.from_value.is_empty());
         assert!(!metadata.to_value.is_empty());
         assert_eq!(metadata.provider.unwrap(), "thorchain");
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_mayachain_quote_btc_to_eth() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+        let provider = Arc::new(NativeProvider::default());
+        let mayachain = ThorChain::new_mayachain(provider.clone());
+
+        let from_asset = SwapperQuoteAsset::from(Chain::Bitcoin.as_asset_id());
+        let to_asset = SwapperQuoteAsset::from(Chain::Ethereum.as_asset_id());
+        let mut request = mock_quote(from_asset, to_asset);
+        request.value = "5000000".to_string(); // 0.05 BTC (1e8)
+        request.destination_address = "0x1c7d4b196cb0c7b01d743fbc6116a902379c7238".to_string();
+
+        let quote = mayachain.get_quote(&request).await?;
+        let quote_data = mayachain.get_quote_data(&quote, FetchQuoteData::None).await?;
+
+        assert_eq!(quote.data.provider.id, SwapperProvider::Mayachain);
+        assert_eq!(quote.from_value, request.value);
+        assert!(quote.to_value.parse::<u64>().unwrap() > 0);
+        assert!(!quote.data.routes.is_empty());
+        assert!(!quote_data.to.is_empty());
+        assert_eq!(quote_data.memo, Some("=:e:0x1c7d4b196cb0c7b01d743fbc6116a902379c7238:0/1/0:g1:50".to_string()));
 
         Ok(())
     }

@@ -72,6 +72,7 @@ public enum Images {
         public static let mayan = Image(.mayan)
         public static let stonfi = Image(.stonfi)
         public static let thorchain = Image(.thorchain)
+        public static let mayachain = Image(.mayachain)
         public static let orca = Image(.orca)
         public static let stargate = Image(.stargate)
         public static let raydium = Image(.raydium)

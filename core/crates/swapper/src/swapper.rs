@@ -75,6 +75,7 @@ impl GemSwapper {
             uniswap::default::boxed_uniswap_v4(rpc_provider.clone()),
             uniswap::default::boxed_pancakeswap(rpc_provider.clone()),
             Box::new(thorchain::ThorChain::new(rpc_provider.clone())),
+            Box::new(thorchain::ThorChain::new_mayachain(rpc_provider.clone())),
             Box::new(jupiter::Jupiter::new(rpc_provider.clone())),
             Box::new(provider_factory::new_okx(rpc_provider.clone())),
             Box::new(across::Across::new(rpc_provider.clone())),
