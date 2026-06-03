@@ -30,7 +30,7 @@ class StakeRepository(
     private val recommendedValidators = Config().getValidators()
 
     override suspend fun sync(walletId: WalletId, assetId: AssetId, address: String, apr: Double) = withContext(Dispatchers.IO) {
-        syncValidators(assetId, apr)
+        syncValidators(assetId, address, apr)
         syncDelegations(walletId, assetId, address)
     }
 
@@ -70,15 +70,19 @@ class StakeRepository(
         stakeDao.getValidator(assetId, validatorId)?.toDTO()
     }
 
-    private suspend fun syncValidators(assetId: AssetId, apr: Double) {
+    private suspend fun syncValidators(assetId: AssetId, address: String, apr: Double) {
         val chain = assetId.chain
         val names = runCatching { gemApiStaticClient.getValidators(chain.string) }
             .getOrDefault(emptyList())
             .associateBy { it.id }
-        val validators = stakeService.getValidators(chain, apr).map { validator ->
+        val validators = stakeService.getValidators(chain, apr)
+        val validatorIds = validators.map { it.id }.toSet()
+        val delegationValidators = stakeService.getDelegationValidators(chain, address)
+            .filterNot { validatorIds.contains(it.id) }
+        val updateValidators = (validators + delegationValidators).map { validator ->
             if (validator.name.isEmpty()) validator.copy(name = names[validator.id]?.name.orEmpty()) else validator
         }
-        stakeDao.upsertValidators(validators.toRecord())
+        stakeDao.upsertValidators(updateValidators.toRecord())
     }
 
     private suspend fun syncDelegations(walletId: WalletId, assetId: AssetId, address: String) {

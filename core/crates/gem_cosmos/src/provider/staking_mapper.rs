@@ -1,3 +1,4 @@
+use crate::constants::BOND_STATUS_BONDED;
 use crate::models::staking::{Delegations, Rewards, StakingPoolResponse, UnbondingDelegations, Validator};
 use crate::models::{InflationResponse, OsmosisEpochProvisionsResponse, OsmosisMintParamsResponse, SupplyResponse};
 use num_bigint::BigUint;
@@ -13,8 +14,6 @@ use number_formatter::BigNumberFormatter;
 use primitives::chain_cosmos::CosmosChain;
 use primitives::{DelegationBase, DelegationState, DelegationValidator};
 use std::collections::HashMap;
-
-const BOND_STATUS_BONDED: &str = "BOND_STATUS_BONDED";
 
 /// Convert string amounts to BigUint, handling parsing errors gracefully
 fn parse_to_biguint(value: &str) -> BigUint {
@@ -155,6 +154,7 @@ pub fn map_staking_delegations(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::constants::BOND_STATUS_UNBONDED;
     use crate::models::staking::{Delegations, Rewards};
     use primitives::Chain;
 
@@ -243,6 +243,32 @@ mod tests {
         let validator2 = &result[1];
         assert_eq!(validator2.id, "cosmosvaloper1q6d3d089hg59x6gcx92uumx70s5y5wadklue8s");
         assert_eq!(validator2.name, "Ubik Capital");
+    }
+
+    #[test]
+    fn test_map_unbonded_validator() {
+        let validator = Validator {
+            operator_address: "celestiavaloper1eualhqh07w7p45g45hvrjagkcxsfnflzdw5jzg".to_string(),
+            jailed: true,
+            status: BOND_STATUS_UNBONDED.to_string(),
+            description: ValidatorDescription {
+                moniker: "don't stake".to_string(),
+            },
+            commission: ValidatorCommission {
+                commission_rates: ValidatorCommissionRates { rate: 0.2 },
+            },
+        };
+
+        let result = map_staking_validators(vec![validator], CosmosChain::Celestia, Some(10.55));
+
+        assert_eq!(result.len(), 1);
+        let validator = &result[0];
+        assert_eq!(validator.chain, Chain::Celestia);
+        assert_eq!(validator.id, "celestiavaloper1eualhqh07w7p45g45hvrjagkcxsfnflzdw5jzg");
+        assert_eq!(validator.name, "don't stake");
+        assert_eq!(validator.is_active, false);
+        assert_eq!(validator.commission, 20.0);
+        assert_eq!(validator.apr, 0.0);
     }
 
     #[test]
