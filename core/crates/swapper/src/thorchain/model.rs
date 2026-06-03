@@ -116,7 +116,9 @@ impl TransactionStatus {
         let swap_done = self.stages.swap_status.as_ref().is_some_and(|s| !s.pending);
         let outbound_done = self.stages.outbound_signed.as_ref().is_none_or(|s| s.completed);
 
-        if swap_done && has_output && outbound_done {
+        if swap_done && self.is_refunded() {
+            SwapStatus::Failed
+        } else if swap_done && has_output && outbound_done {
             SwapStatus::Completed
         } else {
             SwapStatus::Pending
@@ -124,6 +126,10 @@ impl TransactionStatus {
     }
 
     pub fn destination_coin(&self) -> Option<&TransactionCoin> {
+        if self.is_refunded() {
+            return None;
+        }
+
         let real_out = self
             .out_txs
             .as_ref()
@@ -137,6 +143,12 @@ impl TransactionStatus {
             return planned;
         }
         self.out_txs.as_ref().and_then(|txs| txs.first()).and_then(|tx| tx.coins.first())
+    }
+
+    fn is_refunded(&self) -> bool {
+        self.planned_out_txs
+            .as_ref()
+            .is_some_and(|transactions| !transactions.is_empty() && transactions.iter().all(|transaction| transaction.refund))
     }
 }
 
@@ -248,6 +260,13 @@ mod tests {
         let status: TransactionStatus = serde_json::from_str(include_str!("testdata/tx_status_tcy_to_eth_usdt.json")).unwrap();
         assert_eq!(status.swap_status(), SwapStatus::Completed);
         assert_eq!(status.destination_coin().unwrap().amount, "380962656200");
+    }
+
+    #[test]
+    fn test_transaction_status_refunded_mayachain() {
+        let status: TransactionStatus = serde_json::from_str(include_str!("testdata/transaction_status_mayachain_refund.json")).unwrap();
+        assert_eq!(status.swap_status(), SwapStatus::Failed);
+        assert!(status.destination_coin().is_none());
     }
 
     #[test]

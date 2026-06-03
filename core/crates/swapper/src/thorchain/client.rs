@@ -39,8 +39,8 @@ where
         affiliate_bps: i64,
     ) -> Result<QuoteSwapResponse, SwapperError> {
         let params = QuoteSwapRequest {
-            from_asset: from_asset.asset_name(),
-            to_asset: to_asset.asset_name(),
+            from_asset: from_asset.quote_asset_name(),
+            to_asset: to_asset.quote_asset_name(),
             amount: value,
             affiliate,
             affiliate_bps,

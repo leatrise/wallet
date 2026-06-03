@@ -18,7 +18,6 @@ use super::{
 use crate::{
     FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, RpcClient, RpcProvider, SwapResult, Swapper, SwapperChainAsset, SwapperError, SwapperQuoteData,
     approval::check_approval_erc20,
-    config::get_swap_proxy_url,
     cross_chain::VaultAddresses,
     fees::{default_referral_fees, quote_value_after_reserve_by_chain},
     thorchain::client::ThorChainSwapClient,
@@ -31,7 +30,8 @@ impl ThorChain<RpcClient> {
     }
 
     pub fn new_mayachain(rpc_provider: Arc<dyn RpcProvider>) -> Self {
-        Self::with_endpoint(get_swap_proxy_url("maya"), rpc_provider, THORChainNetwork::Mayachain)
+        let endpoint = rpc_provider.get_endpoint(Chain::Mayachain).expect("Failed to get Mayachain endpoint");
+        Self::with_endpoint(endpoint, rpc_provider, THORChainNetwork::Mayachain)
     }
 
     fn with_endpoint(endpoint: String, rpc_provider: Arc<dyn RpcProvider>, network: THORChainNetwork) -> Self {
@@ -154,17 +154,21 @@ where
         let fee = default_referral_fees().thorchain;
         let from_asset = THORChainAsset::from_asset_id(&quote.request.from_asset.id).ok_or(SwapperError::NotSupportedAsset)?;
         let to_asset = THORChainAsset::from_asset_id(&quote.request.to_asset.id).ok_or(SwapperError::NotSupportedAsset)?;
+        let memo_asset_name = if to_asset.is_token() {
+            to_asset.quote_asset_name()
+        } else {
+            to_asset.chain.memo_symbol(self.network).map(str::to_string).unwrap_or_else(|| to_asset.quote_asset_name())
+        };
 
-        let memo = to_asset
-            .get_memo(
-                quote.request.destination_address.clone(),
-                QUOTE_MINIMUM,
-                QUOTE_INTERVAL,
-                QUOTE_QUANTITY,
-                fee.address,
-                fee.bps,
-            )
-            .unwrap();
+        let memo = to_asset.swap_memo(
+            &memo_asset_name,
+            quote.request.destination_address.clone(),
+            QUOTE_MINIMUM,
+            QUOTE_INTERVAL,
+            QUOTE_QUANTITY,
+            fee.address,
+            fee.bps,
+        );
 
         let route_data: RouteData = serde_json::from_str(&quote.data.routes.first().unwrap().route_data).map_err(|_| SwapperError::InvalidRoute)?;
         let value = quote.from_value.clone();

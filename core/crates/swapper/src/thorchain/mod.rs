@@ -57,7 +57,11 @@ impl THORChainNetwork {
 
     pub fn supported_chains(&self) -> Vec<Chain> {
         let names: Vec<THORChainName> = match self {
-            Self::Thorchain => Chain::all().into_iter().filter_map(|chain| THORChainName::from_chain(&chain)).collect(),
+            Self::Thorchain => Chain::all()
+                .into_iter()
+                .filter_map(|chain| THORChainName::from_chain(&chain))
+                .filter(|name| *name != THORChainName::Mayachain)
+                .collect(),
             Self::Mayachain => vec![THORChainName::Bitcoin, THORChainName::Ethereum, THORChainName::Zcash],
         };
         names.into_iter().map(|name| name.chain()).collect()

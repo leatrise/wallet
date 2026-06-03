@@ -50,7 +50,7 @@ impl<C: Client> CosmosClient<C> {
             CosmosChain::Cosmos => Some("query"),
             CosmosChain::Osmosis => Some("query"),
             CosmosChain::Celestia => Some("events"),
-            CosmosChain::Thorchain => None,
+            CosmosChain::Thorchain | CosmosChain::Mayachain => None,
             CosmosChain::Injective => Some("query"),
             CosmosChain::Sei => Some("events"),
             CosmosChain::Noble => Some("query"),

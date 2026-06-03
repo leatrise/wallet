@@ -246,6 +246,7 @@ mod tests {
             Box::new(new_uniswap_v3(provider.clone())),
             Box::new(new_pancakeswap(provider.clone())),
             Box::new(thorchain::ThorChain::new(provider.clone())),
+            Box::new(thorchain::ThorChain::new_mayachain(provider.clone())),
             Box::new(jupiter::Jupiter::new(provider)),
         ];
 
@@ -298,6 +299,17 @@ mod tests {
 
         assert_eq!(filtered.len(), 1);
         assert_eq!(filtered[0].provider().id, SwapperProvider::Thorchain);
+
+        let from_chain = Chain::Ethereum;
+        let to_chain = Chain::Mayachain;
+
+        let filtered = swappers
+            .iter()
+            .filter(|x| GemSwapper::filter_by_provider_mode(&x.provider().mode, from_chain, to_chain))
+            .filter(|x| GemSwapper::filter_by_supported_chains(x.supported_chains(), from_chain, to_chain))
+            .collect::<Vec<_>>();
+
+        assert_eq!(filtered.len(), 0);
     }
 
     #[test]

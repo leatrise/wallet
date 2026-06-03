@@ -17,7 +17,7 @@ impl<C: Client> ChainStaking for CosmosClient<C> {
     async fn get_staking_apy(&self) -> Result<Option<f64>, Box<dyn Error + Sync + Send>> {
         let chain = self.get_chain();
         match chain {
-            CosmosChain::Noble | CosmosChain::Thorchain => Ok(None),
+            CosmosChain::Noble | CosmosChain::Thorchain | CosmosChain::Mayachain => Ok(None),
             CosmosChain::Cosmos | CosmosChain::Injective => {
                 let denom = chain.denom();
                 let (inflation, supply, staking_pool) = try_join!(self.get_inflation(), self.get_supply_by_denom(denom.as_ref()), self.get_staking_pool())?;
@@ -36,7 +36,7 @@ impl<C: Client> ChainStaking for CosmosClient<C> {
     async fn get_staking_validators(&self, apy: Option<f64>) -> Result<Vec<DelegationValidator>, Box<dyn Error + Sync + Send>> {
         let chain = self.get_chain();
         match chain {
-            CosmosChain::Noble | CosmosChain::Thorchain => Ok(vec![]),
+            CosmosChain::Noble | CosmosChain::Thorchain | CosmosChain::Mayachain => Ok(vec![]),
             CosmosChain::Cosmos | CosmosChain::Injective | CosmosChain::Osmosis | CosmosChain::Celestia | CosmosChain::Sei => {
                 let validators = self.get_validators().await?;
                 Ok(map_staking_validators(validators.validators, chain, apy))
@@ -49,7 +49,7 @@ impl<C: Client> ChainStaking for CosmosClient<C> {
         let denom = chain.as_denom().unwrap_or_default();
         let chain = self.get_chain();
         match chain {
-            CosmosChain::Noble | CosmosChain::Thorchain => Ok(vec![]),
+            CosmosChain::Noble | CosmosChain::Thorchain | CosmosChain::Mayachain => Ok(vec![]),
             CosmosChain::Cosmos | CosmosChain::Injective | CosmosChain::Osmosis | CosmosChain::Celestia | CosmosChain::Sei => {
                 let (active_delegations, unbonding, rewards, validators, delegation_validators) = try_join!(
                     self.get_delegations(&address),
