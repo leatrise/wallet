@@ -2,7 +2,7 @@ package com.gemwallet.android.data.repositories.bridge
 
 import com.wallet.core.primitives.Account
 
-class WalletConnectAccount(
+internal data class WalletConnectSupportedAccount(
     val address: String,
     val namespace: String,
     val reference: String,
@@ -10,11 +10,11 @@ class WalletConnectAccount(
 ) {
 
     companion object {
-        fun create(account: Account): WalletConnectAccount? {
+        fun create(account: Account): WalletConnectSupportedAccount? {
             val namespace = account.chain.getNameSpace() ?: return null
             val reference = account.chain.getReference() ?: return null
             val methods = namespace.methods.map { it.string }
-            return WalletConnectAccount(account.address, namespace.string, reference, methods)
+            return WalletConnectSupportedAccount(account.address, namespace.string, reference, methods)
         }
     }
 }

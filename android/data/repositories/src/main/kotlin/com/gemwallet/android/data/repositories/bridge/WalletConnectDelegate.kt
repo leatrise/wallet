@@ -43,7 +43,7 @@ object WalletConnectDelegate : WalletKit.WalletDelegate, CoreClient.CoreDelegate
     }
 
     override fun onProposalExpired(proposal: Wallet.Model.ExpiredProposal) {
-        log("onProposalExpired topic=${proposal.pairingTopic}")
+        log("onProposalExpired")
     }
 
     override fun onRequestExpired(request: Wallet.Model.ExpiredRequest) {

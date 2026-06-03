@@ -104,10 +104,6 @@ private fun WalletConnectOverlay(
 
     LaunchedEffect(walletConnect) {
         when (val event = walletConnect) {
-            WalletConnectIntent.SessionDelete -> {
-                makeText(context, "WalletConnect session deleted", Toast.LENGTH_LONG).show()
-                viewModel.onCancel()
-            }
             is WalletConnectIntent.SessionProposal -> {
                 if (event.verifyContext == null) {
                     makeText(context, "Session Proposal Error: Verify Context is not available", Toast.LENGTH_LONG).show()
@@ -136,8 +132,7 @@ private fun WalletConnectOverlay(
         when (val event = walletConnect) {
             is WalletConnectIntent.ConnectionState,
             WalletConnectIntent.Idle,
-            WalletConnectIntent.Cancel,
-            WalletConnectIntent.SessionDelete -> Unit
+            WalletConnectIntent.Cancel -> Unit
             is WalletConnectIntent.AuthRequest -> {
                 event.verifyContext?.let { verifyContext ->
                     AuthRequestScene(

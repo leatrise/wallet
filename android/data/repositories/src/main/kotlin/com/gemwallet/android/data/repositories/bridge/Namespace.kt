@@ -15,7 +15,7 @@ enum class ChainNamespace(val string: String, val methods: List<WalletConnection
             WalletConnectionMethods.PersonalSign,
             WalletConnectionMethods.EthSignTypedData,
             WalletConnectionMethods.EthSignTypedDataV4,
-            WalletConnectionMethods.EthSendTransaction,
+            WalletConnectionMethods.EthSignTransaction,
             WalletConnectionMethods.EthSendTransaction,
             WalletConnectionMethods.WalletAddEthereumChain,
             WalletConnectionMethods.WalletSwitchEthereumChain,
@@ -25,8 +25,10 @@ enum class ChainNamespace(val string: String, val methods: List<WalletConnection
     Solana(
         Chain.Solana.string,
         listOf(
-            WalletConnectionMethods.SolanaSignTransaction,
             WalletConnectionMethods.SolanaSignMessage,
+            WalletConnectionMethods.SolanaSignTransaction,
+            WalletConnectionMethods.SolanaSignAndSendTransaction,
+            WalletConnectionMethods.SolanaSignAllTransactions,
         )
     ),
     Sui(
@@ -54,10 +56,6 @@ enum class ChainNamespace(val string: String, val methods: List<WalletConnection
     )
 }
 
-fun Chain.getChainNameSpace(): String? {
-    return WalletConnect().getNamespace(string)
-}
-
 fun Chain.getNameSpace(): ChainNamespace? {
     return when (this.toChainType()) {
         ChainType.Ethereum -> ChainNamespace.Eip155
@@ -73,11 +71,7 @@ fun Chain.getReference(): String? {
     return WalletConnect().getReference(string)
 }
 
-fun Chain.Companion.getNamespace(walletConnectChainId: String?): Chain? { // TODO: Use Reown call for parse
-    val chainId = walletConnectChainId?.split(":")
-    return if (!chainId.isNullOrEmpty() && chainId.size >= 2) {
-        WalletConnect().getChain(chainId[0], chainId[1])?.toChain()
-    } else {
-        null
-    }
+fun Chain.Companion.getNamespace(walletConnectChainId: String?): Chain? {
+    val chainId = walletConnectChainId ?: return null
+    return WalletConnect().parseChainId(chainId)?.toChain()
 }

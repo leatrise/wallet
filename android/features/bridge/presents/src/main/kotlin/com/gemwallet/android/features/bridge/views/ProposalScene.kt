@@ -67,6 +67,8 @@ fun ProposalScene(
         viewModel.onProposal(proposal, verifyContext)
     }
 
+    val contentState = state as? ProposalSceneState.Content
+
     when {
         state is ProposalSceneState.Canceled -> onCancel()
         state is ProposalSceneState.ScamCanceled -> {
@@ -82,14 +84,14 @@ fun ProposalScene(
             message = (state as ProposalSceneState.Fail).message,
             onCancel = onCancel,
         )
-        peer == null && state is ProposalSceneState.Init -> LoadingScene(
+        peer == null || contentState == null -> LoadingScene(
             title = stringResource(id = R.string.wallet_connect_connect_title),
             onCancel = onCancel,
             closeIcon = true,
         )
         else -> Proposal(
             peer = peer!!,
-            verificationStatus = (state as ProposalSceneState.Init).verificationStatus,
+            state = contentState,
             selectedWallet = selectedWallet,
             availableWallets = availableWallets,
             onReject = viewModel::onReject,
@@ -102,7 +104,7 @@ fun ProposalScene(
 @Composable
 private fun Proposal(
     peer: SessionUI,
-    verificationStatus: WalletConnectionVerificationStatus,
+    state: ProposalSceneState.Content,
     selectedWallet: com.wallet.core.primitives.Wallet?,
     availableWallets: List<com.wallet.core.primitives.Wallet>,
     onReject: () -> Unit,
@@ -119,6 +121,7 @@ private fun Proposal(
             MainActionButton(
                 enabled = selectedWallet != null,
                 title = stringResource(id = R.string.transfer_confirm),
+                loading = state is ProposalSceneState.Approving,
                 onClick = onApprove
             )
         },
@@ -139,7 +142,11 @@ private fun Proposal(
             }
             item {
                 PropertyItem(
-                    modifier = Modifier.clickable { isShowSelectWallets = true },
+                    modifier = if (state is ProposalSceneState.Approving) {
+                        Modifier
+                    } else {
+                        Modifier.clickable { isShowSelectWallets = true }
+                    },
                     title = { PropertyTitleText(R.string.common_wallet) },
                     data = { PropertyDataText(selectedWallet?.name ?: "", badge = { DataBadgeChevron() }) },
                     listPosition = ListPosition.First,
@@ -157,14 +164,14 @@ private fun Proposal(
                     title = { PropertyTitleText(R.string.transaction_status) },
                     data = {
                         PropertyDataText(
-                            text = stringResource(verificationStatus.titleRes()),
-                            color = verificationStatus.color(),
+                            text = stringResource(state.verificationStatus.titleRes()),
+                            color = state.verificationStatus.color(),
                             badge = {
                                 DataBadgeChevron(isShowChevron = false) {
                                     Icon(
-                                        imageVector = verificationStatus.icon(),
+                                        imageVector = state.verificationStatus.icon(),
                                         contentDescription = null,
-                                        tint = verificationStatus.color(),
+                                        tint = state.verificationStatus.color(),
                                     )
                                 }
                             },
