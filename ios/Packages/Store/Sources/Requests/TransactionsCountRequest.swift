@@ -6,20 +6,27 @@ import Primitives
 
 public struct TransactionsCountRequest: DatabaseQueryable {
     public var walletId: WalletId
-    private let state: TransactionState
+    private let states: [TransactionState]
 
     public init(
         walletId: WalletId,
         state: TransactionState,
     ) {
+        self.init(walletId: walletId, states: [state])
+    }
+
+    public init(
+        walletId: WalletId,
+        states: [TransactionState],
+    ) {
         self.walletId = walletId
-        self.state = state
+        self.states = states
     }
 
     public func fetch(_ db: Database) throws -> Int {
         try TransactionRecord
             .filter(TransactionRecord.Columns.walletId == walletId.id)
-            .filter(TransactionRecord.Columns.state == state.rawValue)
+            .filter(states.map(\.rawValue).contains(TransactionRecord.Columns.state))
             .fetchCount(db)
     }
 }

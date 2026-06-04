@@ -21,7 +21,7 @@ final class MainTabViewModel {
 
     init(wallet: Wallet) {
         self.wallet = wallet
-        transactionsQuery = ObservableQuery(TransactionsCountRequest(walletId: wallet.id, state: .pending), initialValue: 0)
+        transactionsQuery = ObservableQuery(TransactionsCountRequest(walletId: wallet.id, states: [.pending, .inTransit]), initialValue: 0)
     }
 
     var walletId: WalletId {

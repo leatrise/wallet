@@ -8,6 +8,7 @@ public extension Transaction {
     static func mock(
         transactionId: TransactionId = TransactionId(chain: .ethereum, hash: "1"),
         type: TransactionType = .transfer,
+        state: TransactionState = .confirmed,
         assetId: AssetId = .mock(),
         metadata: AnyCodableValue? = nil,
     ) -> Transaction {
@@ -18,7 +19,7 @@ public extension Transaction {
             to: "to",
             contract: nil,
             type: type,
-            state: .confirmed,
+            state: state,
             blockNumber: "1",
             sequence: "1",
             fee: "1",
