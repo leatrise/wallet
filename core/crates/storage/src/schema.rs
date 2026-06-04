@@ -773,16 +773,6 @@ diesel::table! {
 }
 
 diesel::table! {
-    support_sessions (device_id) {
-        device_id -> Int4,
-        #[max_length = 1024]
-        auth_token -> Varchar,
-        updated_at -> Timestamp,
-        created_at -> Timestamp,
-    }
-}
-
-diesel::table! {
     subscriptions_addresses_exclude (address) {
         #[max_length = 128]
         address -> Varchar,
@@ -790,6 +780,16 @@ diesel::table! {
         chain -> Varchar,
         #[max_length = 64]
         name -> Nullable<Varchar>,
+        updated_at -> Timestamp,
+        created_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    support_sessions (device_id) {
+        device_id -> Int4,
+        #[max_length = 1024]
+        auth_token -> Varchar,
         updated_at -> Timestamp,
         created_at -> Timestamp,
     }
@@ -970,8 +970,8 @@ diesel::joinable!(rewards_referrals -> rewards_risk_signals (risk_signal_id));
 diesel::joinable!(rewards_risk_signals -> devices (device_id));
 diesel::joinable!(rewards_risk_signals -> rewards (referrer_username));
 diesel::joinable!(scan_addresses -> chains (chain));
-diesel::joinable!(support_sessions -> devices (device_id));
 diesel::joinable!(subscriptions_addresses_exclude -> chains (chain));
+diesel::joinable!(support_sessions -> devices (device_id));
 diesel::joinable!(transactions -> chains (chain));
 diesel::joinable!(transactions_addresses -> assets (asset_id));
 diesel::joinable!(transactions_addresses -> transactions (transaction_id));
@@ -1020,8 +1020,8 @@ diesel::allow_tables_to_appear_in_same_query!(
     rewards_referrals,
     rewards_risk_signals,
     scan_addresses,
-    support_sessions,
     subscriptions_addresses_exclude,
+    support_sessions,
     tags,
     transactions,
     transactions_addresses,
