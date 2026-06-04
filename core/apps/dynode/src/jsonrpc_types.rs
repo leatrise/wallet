@@ -6,6 +6,7 @@ use serde_json::Value;
 pub struct JsonRpcCall {
     pub jsonrpc: String,
     pub method: String,
+    #[serde(default)]
     pub params: Value,
     pub id: u64,
 }
@@ -209,6 +210,20 @@ mod tests {
         let key = request.cache_key("example.com", "/rpc").unwrap();
 
         assert_eq!(key, "example.com:POST:/rpc:eth_blockNumber");
+    }
+
+    #[test]
+    fn test_request_parsing_without_params() {
+        let body = br#"{"jsonrpc":"2.0","method":"getSlot","id":1}"#.to_vec();
+        let request_type = RequestType::from_request("POST", "/solana".to_string(), body);
+
+        match request_type {
+            RequestType::JsonRpc(JsonRpcRequest::Single(call)) => {
+                assert_eq!(call.method, "getSlot");
+                assert_eq!(call.params, Value::Null);
+            }
+            _ => panic!("Expected JSON-RPC request"),
+        }
     }
 
     #[test]
