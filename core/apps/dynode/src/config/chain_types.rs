@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use primitives::ChainType;
+use primitives::{Chain, ChainType};
 use serde::Deserialize;
 
 use crate::jsonrpc_types::RequestType;
@@ -20,7 +20,7 @@ impl ChainTypesConfig {
         }
 
         self.chain_type_config(chain_config)
-            .and_then(|config| config.allowlist.as_ref())
+            .and_then(|config| config.allowlist(chain_config.chain))
             .is_none_or(|allowlist| allowlist.allows(request_type))
     }
 
@@ -29,7 +29,10 @@ impl ChainTypesConfig {
             return rules.clone();
         }
 
-        self.chain_type_config(chain_config).and_then(|config| config.cache.as_ref()).cloned().unwrap_or_default()
+        self.chain_type_config(chain_config)
+            .and_then(|config| config.cache(chain_config.chain))
+            .cloned()
+            .unwrap_or_default()
     }
 
     fn chain_type_config(&self, chain_config: &ChainConfig) -> Option<&ChainTypeConfig> {
@@ -39,6 +42,24 @@ impl ChainTypesConfig {
 
 #[derive(Debug, Clone, Deserialize)]
 struct ChainTypeConfig {
+    #[serde(flatten)]
+    policy: ChainPolicyConfig,
+    #[serde(default)]
+    chains: HashMap<Chain, ChainPolicyConfig>,
+}
+
+impl ChainTypeConfig {
+    fn allowlist(&self, chain: Chain) -> Option<&AllowlistConfig> {
+        self.chains.get(&chain).and_then(|config| config.allowlist.as_ref()).or(self.policy.allowlist.as_ref())
+    }
+
+    fn cache(&self, chain: Chain) -> Option<&Vec<CacheRule>> {
+        self.chains.get(&chain).and_then(|config| config.cache.as_ref()).or(self.policy.cache.as_ref())
+    }
+}
+
+#[derive(Debug, Clone, Deserialize)]
+struct ChainPolicyConfig {
     allowlist: Option<AllowlistConfig>,
     cache: Option<Vec<CacheRule>>,
 }
@@ -111,19 +132,43 @@ mod tests {
             "ethereum": {
                 "allowlist": [
                     { "rpc_method": "eth_call" }
-                ]
+                ],
+                "chains": {
+                    "ethereum": {
+                        "allowlist": [
+                            { "rpc_method": "eth_getLogs" }
+                        ]
+                    }
+                }
             }
         }))
         .unwrap();
-        let mut chain_config = chain_config(Chain::Ethereum);
-        chain_config.allowlist = Some(
-            serde_json::from_value(json!([
-                { "rpc_method": "eth_getLogs" }
-            ]))
-            .unwrap(),
-        );
 
-        assert!(!config.allows(&chain_config, &jsonrpc("eth_call")));
-        assert!(config.allows(&chain_config, &jsonrpc("eth_getLogs")));
+        assert!(!config.allows(&chain_config(Chain::Ethereum), &jsonrpc("eth_call")));
+        assert!(config.allows(&chain_config(Chain::Ethereum), &jsonrpc("eth_getLogs")));
+        assert!(config.allows(&chain_config(Chain::Arbitrum), &jsonrpc("eth_call")));
+    }
+
+    #[test]
+    fn test_chain_cache_replaces_chain_type_cache() {
+        let config: ChainTypesConfig = serde_json::from_value(json!({
+            "cosmos": {
+                "cache": [
+                    { "path": "/cosmos/staking/v1beta1/validators", "method": "GET", "ttl": "1d" }
+                ],
+                "chains": {
+                    "thorchain": {
+                        "cache": [
+                            { "path": "/thorchain/inbound_addresses", "method": "GET", "ttl": "10m" }
+                        ]
+                    }
+                }
+            }
+        }))
+        .unwrap();
+
+        let rules = config.cache_rules(&chain_config(Chain::Thorchain));
+        assert_eq!(rules.len(), 1);
+        assert_eq!(rules[0].path.as_deref(), Some("/thorchain/inbound_addresses"));
     }
 }
