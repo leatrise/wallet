@@ -6,7 +6,7 @@ use serde_json::Value;
 pub struct JsonRpcCall {
     pub jsonrpc: String,
     pub method: String,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Value::is_null")]
     pub params: Value,
     pub id: u64,
 }
@@ -213,7 +213,7 @@ mod tests {
     }
 
     #[test]
-    fn test_request_parsing_without_params() {
+    fn test_request_parsing_params_serialization() {
         let body = br#"{"jsonrpc":"2.0","method":"getSlot","id":1}"#.to_vec();
         let request_type = RequestType::from_request("POST", "/solana".to_string(), body);
 
@@ -221,6 +221,26 @@ mod tests {
             RequestType::JsonRpc(JsonRpcRequest::Single(call)) => {
                 assert_eq!(call.method, "getSlot");
                 assert_eq!(call.params, Value::Null);
+                assert_eq!(
+                    serde_json::to_value(&call).unwrap(),
+                    json!({
+                        "jsonrpc": "2.0",
+                        "method": "getSlot",
+                        "id": 1
+                    })
+                );
+            }
+            _ => panic!("Expected JSON-RPC request"),
+        }
+
+        let body = br#"{"jsonrpc":"2.0","method":"getLatestBlockhash","params":[{"commitment":"confirmed"}],"id":1}"#.to_vec();
+        let request_type = RequestType::from_request("POST", "/solana".to_string(), body);
+
+        match request_type {
+            RequestType::JsonRpc(JsonRpcRequest::Single(call)) => {
+                assert_eq!(call.method, "getLatestBlockhash");
+                assert_eq!(call.params, json!([{ "commitment": "confirmed" }]));
+                assert_eq!(serde_json::to_value(&call).unwrap()["params"], json!([{ "commitment": "confirmed" }]));
             }
             _ => panic!("Expected JSON-RPC request"),
         }

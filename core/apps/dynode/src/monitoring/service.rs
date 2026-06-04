@@ -26,6 +26,8 @@ use settings_chain::BroadcastProviders;
 
 const NODE_NOT_FOUND: &str = "Node not found";
 const REQUEST_NOT_ALLOWED: &str = "Request not allowed";
+const UPSTREAMS_FAILED: &str = "All upstream URLs failed";
+const UPSTREAM_REQUEST_FAILED: &str = "Upstream request failed";
 
 #[derive(Clone)]
 pub struct NodeService {
@@ -148,7 +150,6 @@ impl NodeService {
                         return Err(e);
                     }
 
-                    let error = e.to_string();
                     let request_id = request.id.as_str();
                     let chain = request.chain.as_ref();
                     let latency = DurationMs(request.elapsed());
@@ -157,18 +158,26 @@ impl NodeService {
                         id = request_id,
                         chain = chain,
                         remote_host = remote_host.as_str(),
-                        error = error.as_str(),
+                        error = UPSTREAM_REQUEST_FAILED,
                         latency = latency,
                     );
-                    last_error = Some(error);
+                    last_error = Some(UPSTREAM_REQUEST_FAILED.to_string());
                 }
             }
         }
 
-        let error_message = last_error
-            .map(|e| format!("All upstream URLs failed, {}", e))
-            .unwrap_or_else(|| "All upstream URLs failed".to_string());
-        self.log_and_create_error_response(&request, None, &error_message, last_error_data)
+        if let Some(error) = last_error.as_deref() {
+            info_with_fields!(
+                UPSTREAMS_FAILED,
+                id = request.id.as_str(),
+                chain = request.chain.as_ref(),
+                method = request.method.as_str(),
+                uri = request.path.as_str(),
+                error = error,
+                latency = DurationMs(request.elapsed()),
+            );
+        }
+        self.log_and_create_error_response(&request, None, UPSTREAMS_FAILED, last_error_data)
     }
 
     fn get_chain_config(&self, request: &ProxyRequest) -> Result<&ChainConfig, Box<dyn Error + Send + Sync>> {
@@ -466,5 +475,42 @@ mod tests {
         let result = service.handle_request(request).await;
 
         assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_handle_request_hides_upstream_url_on_retry_failure() {
+        let chains = HashMap::from([(
+            Chain::Solana,
+            ChainConfig {
+                urls: vec![
+                    Url {
+                        url: "http://127.0.0.1:9/secret-key".to_string(),
+                        headers: None,
+                    },
+                    Url {
+                        url: "http://127.0.0.1:10/other-secret-key".to_string(),
+                        headers: None,
+                    },
+                ],
+                ..create_chain_config(Chain::Solana, "http://127.0.0.1:9")
+            },
+        )]);
+        let service = create_service_with_retry(chains, testkit::retry_config(true, vec![500], vec![]));
+        let request = ProxyRequest::new(
+            Method::POST,
+            HeaderMap::new(),
+            br#"{"jsonrpc":"2.0","method":"getSlot","params":[],"id":1}"#.to_vec(),
+            "/".to_string(),
+            "/".to_string(),
+            "solana.example.com".to_string(),
+            "test".to_string(),
+            Chain::Solana,
+        );
+
+        let response = service.handle_request(request).await.unwrap();
+        let body = serde_json::from_slice::<JsonRpcErrorResponse>(&response.body).unwrap();
+
+        assert_eq!(response.status, StatusCode::INTERNAL_SERVER_ERROR.as_u16());
+        assert_eq!(body.error.message, UPSTREAMS_FAILED);
     }
 }
