@@ -479,22 +479,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_handle_request_hides_upstream_url_on_retry_failure() {
-        let chains = HashMap::from([(
-            Chain::Solana,
-            ChainConfig {
-                urls: vec![
-                    Url {
-                        url: "http://127.0.0.1:9/secret-key".to_string(),
-                        headers: None,
-                    },
-                    Url {
-                        url: "http://127.0.0.1:10/other-secret-key".to_string(),
-                        headers: None,
-                    },
-                ],
-                ..create_chain_config(Chain::Solana, "http://127.0.0.1:9")
-            },
-        )]);
+        let mut chain_config = create_chain_config(Chain::Solana, "http://127.0.0.1:9/secret-key");
+        chain_config.urls.push(Url {
+            url: "http://127.0.0.1:10/other-secret-key".to_string(),
+            headers: None,
+        });
+        let chains = HashMap::from([(Chain::Solana, chain_config)]);
         let service = create_service_with_retry(chains, testkit::retry_config(true, vec![500], vec![]));
         let request = ProxyRequest::new(
             Method::POST,
