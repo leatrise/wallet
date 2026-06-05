@@ -1,6 +1,7 @@
 use crate::{
     ChatwootWebhookPayload,
     constants::{EVENT_CONVERSATION_STATUS_CHANGED, EVENT_CONVERSATION_UPDATED, EVENT_MESSAGE_CREATED},
+    markdown_plain_text,
 };
 use cacher::CacherClient;
 use localizer::LanguageLocalizer;
@@ -68,7 +69,7 @@ impl SupportClient {
         }
 
         let title = LanguageLocalizer::new_with_language(device.locale.as_str()).notification_support_new_message_title();
-        let message = payload.content.clone().unwrap_or_default();
+        let message = markdown_plain_text(payload.content.as_deref().unwrap_or_default());
         let data = PushNotification {
             notification_type: PushNotificationTypes::Support,
             data: serde_json::to_value(PushNotificationSupport {}).ok(),
