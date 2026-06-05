@@ -147,7 +147,7 @@ mod tests {
     }
 
     fn create_test_cache() -> MemoryCache {
-        let chains = vec![create_chain_config(Chain::Ethereum)];
+        let chains = [create_chain_config(Chain::Ethereum)];
         MemoryCache::new(CacheConfig { max_memory_mb: 64 }, &create_test_chain_types(), chains.iter())
     }
 
@@ -201,7 +201,7 @@ mod tests {
             }
         }))
         .unwrap();
-        let chains = vec![create_chain_config(Chain::Ethereum)];
+        let chains = [create_chain_config(Chain::Ethereum)];
         let cache = MemoryCache::new(CacheConfig { max_memory_mb: 64 }, &chain_types, chains.iter());
         let chain = Chain::Ethereum;
 
@@ -264,7 +264,7 @@ mod tests {
             }
         }))
         .unwrap();
-        let chains = vec![create_chain_config(Chain::Aptos)];
+        let chains = [create_chain_config(Chain::Aptos)];
         let cache = MemoryCache::new(CacheConfig { max_memory_mb: 64 }, &chain_types, chains.iter());
         let chain = Chain::Aptos;
 
@@ -305,7 +305,7 @@ mod tests {
     #[tokio::test]
     async fn test_eviction() {
         let config = CacheConfig { max_memory_mb: 0 };
-        let chains = vec![create_chain_config(Chain::Ethereum)];
+        let chains = [create_chain_config(Chain::Ethereum)];
         let cache = MemoryCache::new(config, &create_test_chain_types(), chains.iter());
         let chain = Chain::Ethereum;
 
@@ -332,7 +332,7 @@ mod tests {
             }
         }))
         .unwrap();
-        let chains = vec![create_chain_config(Chain::Tron)];
+        let chains = [create_chain_config(Chain::Tron)];
         let cache = MemoryCache::new(CacheConfig { max_memory_mb: 64 }, &chain_types, chains.iter());
         let chain = Chain::Tron;
         let request_type = RequestType::Regular {
@@ -357,7 +357,7 @@ mod tests {
             inflight: false,
             params: HashMap::new(),
         }]);
-        let chains = vec![chain_config];
+        let chains = [chain_config];
         let cache = MemoryCache::new(CacheConfig { max_memory_mb: 64 }, &chain_types, chains.iter());
 
         assert_eq!(
