@@ -187,6 +187,16 @@ impl Metrics {
             .set(1);
     }
 
+    pub fn move_node_host_current(&self, chain: &str, old_host: &str, new_host: &str) {
+        self.node_host_current
+            .get_or_create(&HostCurrentStateLabels {
+                chain: chain.to_string(),
+                host: old_host.to_string(),
+            })
+            .set(0);
+        self.set_node_host_current(chain, new_host);
+    }
+
     pub fn add_cache_hit(&self, chain: &str, path: &str) {
         let path = self.truncate_path(path);
         self.cache_hits.get_or_create(&CacheLabels { chain: chain.to_string(), path }).inc();
@@ -300,5 +310,17 @@ mod tests {
         assert!(encoded.contains("test_proxy_retries_total"));
         assert!(encoded.contains("host=\"api.trongrid.io\""));
         assert!(encoded.contains("reason=\"status=429\""));
+    }
+
+    #[test]
+    fn moves_current_node_host() {
+        let metrics = create_test_metrics();
+
+        metrics.set_node_host_current("thorchain", "thornode.ninerealms.com");
+        metrics.move_node_host_current("thorchain", "thornode.ninerealms.com", "gateway.liquify.com");
+
+        let encoded = metrics.get_metrics();
+        assert!(encoded.contains("test_node_host_current{chain=\"thorchain\",host=\"thornode.ninerealms.com\"} 0"));
+        assert!(encoded.contains("test_node_host_current{chain=\"thorchain\",host=\"gateway.liquify.com\"} 1"));
     }
 }
