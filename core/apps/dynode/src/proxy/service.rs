@@ -97,31 +97,6 @@ impl ProxyRequestService {
         headers
     }
 
-    fn log_incoming_request(request: &ProxyRequest, request_type: &RequestType) {
-        let request_id = request.id.as_str();
-        let chain = request.chain.as_ref();
-        let method = request.method.as_str();
-        let uri = request.path.as_str();
-        let user_agent = request.user_agent.as_str();
-
-        match request_type {
-            RequestType::JsonRpc(_) => {
-                info_with_fields!(
-                    "Incoming request",
-                    id = request_id,
-                    chain = chain,
-                    method = method,
-                    uri = uri,
-                    rpc_method = &request_type.get_methods_list(),
-                    user_agent = user_agent,
-                );
-            }
-            RequestType::Regular { .. } => {
-                info_with_fields!("Incoming request", id = request_id, chain = chain, method = method, uri = uri, user_agent = user_agent,);
-            }
-        }
-    }
-
     fn add_proxy_response_metrics(metrics: &Metrics, request: &ProxyRequest, methods_for_metrics: &[String], host: &str, status: u16) {
         for method_name in methods_for_metrics {
             metrics.add_proxy_response(request.chain.as_ref(), method_name, host, status, request.elapsed().as_millis());
@@ -142,8 +117,6 @@ impl ProxyRequestService {
         let headers = self.build_headers(url.url.host_str().unwrap_or_default(), &request.headers);
 
         self.metrics.add_proxy_request(request.chain.as_ref());
-
-        Self::log_incoming_request(&request, request_type);
 
         let cache_ttl = self.cache.should_cache_request(&chain, request_type);
         let cache_key = cache_ttl.and_then(|_| request_type.cache_key(&request.host, &request.path_with_query));

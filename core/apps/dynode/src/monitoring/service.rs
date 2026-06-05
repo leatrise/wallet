@@ -101,6 +101,8 @@ impl NodeService {
     }
 
     pub async fn handle_request(&self, request: ProxyRequest) -> Result<ProxyResponse, Box<dyn Error + Send + Sync>> {
+        Self::log_incoming_request(&request);
+
         let chain_config = self.get_chain_config(&request)?;
         if !self.chain_types.allows(chain_config, request.request_type()) {
             return Self::request_not_allowed_response(&request);
@@ -180,6 +182,34 @@ impl NodeService {
         self.log_and_create_error_response(&request, None, UPSTREAMS_FAILED, last_error_data)
     }
 
+    fn log_incoming_request(request: &ProxyRequest) {
+        let request_type = request.request_type();
+
+        match request_type {
+            RequestType::JsonRpc(_) => {
+                info_with_fields!(
+                    "Incoming request",
+                    id = request.id.as_str(),
+                    chain = request.chain.as_ref(),
+                    method = request.method.as_str(),
+                    uri = request.path.as_str(),
+                    rpc_method = &request_type.get_methods_list(),
+                    user_agent = request.user_agent.as_str(),
+                );
+            }
+            RequestType::Regular { .. } => {
+                info_with_fields!(
+                    "Incoming request",
+                    id = request.id.as_str(),
+                    chain = request.chain.as_ref(),
+                    method = request.method.as_str(),
+                    uri = request.path.as_str(),
+                    user_agent = request.user_agent.as_str(),
+                );
+            }
+        }
+    }
+
     fn get_chain_config(&self, request: &ProxyRequest) -> Result<&ChainConfig, Box<dyn Error + Send + Sync>> {
         self.chains.get(&request.chain).ok_or_else(|| format!("Chain {} not configured", request.chain).into())
     }
@@ -207,6 +237,7 @@ impl NodeService {
             chain = request.chain.as_ref(),
             method = request.method.as_str(),
             uri = request.path.as_str(),
+            user_agent = request.user_agent.as_str(),
             request = &request.request_type().get_methods_list(),
         );
 
