@@ -296,10 +296,6 @@ impl ChatwootTypingInput {
     }
 }
 
-pub(crate) fn support_messages(messages: &[Message]) -> Vec<SupportMessage> {
-    messages.iter().filter_map(Message::support_message).collect()
-}
-
 pub(crate) fn support_public_messages(messages: &[Message]) -> Vec<SupportMessage> {
     messages.iter().filter_map(Message::support_public_message).collect()
 }
