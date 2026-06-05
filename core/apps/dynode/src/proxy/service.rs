@@ -99,7 +99,7 @@ impl ProxyRequestService {
 
     fn add_proxy_response_metrics(metrics: &Metrics, request: &ProxyRequest, methods_for_metrics: &[String], host: &str, status: u16) {
         for method_name in methods_for_metrics {
-            metrics.add_proxy_response(request.chain.as_ref(), method_name, host, status, request.elapsed().as_millis());
+            metrics.add_proxy_upstream_response(request.chain.as_ref(), method_name, host, status, request.elapsed().as_millis());
         }
     }
 
