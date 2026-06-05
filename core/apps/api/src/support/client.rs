@@ -1,4 +1,4 @@
-use primitives::{SupportAction, SupportConversation, SupportMessage, SupportMessageInput};
+use primitives::{SupportAction, SupportMessage, SupportMessageInput};
 use std::{error::Error, future::Future};
 use storage::{Database, NewSupportSessionRow, SupportSessionsRepository, models::DeviceRow};
 
@@ -15,10 +15,6 @@ impl SupportApiClient {
             chatwoot: ChatwootClient::new(url, widget_public_token),
             database,
         }
-    }
-
-    pub async fn conversation(&self, device: &DeviceRow) -> Result<Option<SupportConversation>, Box<dyn Error + Send + Sync>> {
-        self.with_session(device, |session| async move { self.chatwoot.conversation(&session).await }).await
     }
 
     pub async fn messages(&self, device: &DeviceRow, from_timestamp: Option<u64>) -> Result<Vec<SupportMessage>, Box<dyn Error + Send + Sync>> {

@@ -1,12 +1,5 @@
-use primitives::{SupportAgent, SupportConversationStatus, SupportMessageDeliveryStatus, SupportMessageSender};
+use primitives::{SupportAgent, SupportMessageDeliveryStatus, SupportMessageSender};
 use support::ChatwootWebhookPayload;
-
-#[test]
-fn test_parse_conversation_updated_payload() {
-    let payload: ChatwootWebhookPayload = serde_json::from_str(include_str!("testdata/chatwoot_conversation_updated.json")).unwrap();
-    assert_eq!(payload.event, "conversation_updated");
-    assert_eq!(payload.get_device_id(), Some("test-device-id".to_string()));
-}
 
 #[test]
 fn test_parse_device_id() {
@@ -40,11 +33,10 @@ fn test_is_public_outgoing_message() {
 }
 
 #[test]
-fn test_support_mapping() {
+fn test_support_message_mapping() {
     let payload: ChatwootWebhookPayload = serde_json::from_str(include_str!("testdata/chatwoot_message_created.json")).unwrap();
     let message = payload.support_message().unwrap();
     assert_eq!(message.id, "1");
-    assert_eq!(message.conversation_id, "1");
     assert_eq!(message.content, "from agent");
     assert!(message.images.is_empty());
     assert_eq!(
@@ -55,14 +47,6 @@ fn test_support_mapping() {
         })
     );
     assert_eq!(message.delivery_status, SupportMessageDeliveryStatus::Sent);
-
-    let payload: ChatwootWebhookPayload = serde_json::from_str(include_str!("testdata/chatwoot_conversation_updated.json")).unwrap();
-    let conversation = payload.support_conversation().unwrap();
-    assert_eq!(conversation.id, "1");
-    assert_eq!(conversation.status, SupportConversationStatus::Open);
-    assert_eq!(conversation.first_message, None);
-    assert_eq!(conversation.last_message, Some("Test message".to_string()));
-    assert_eq!(conversation.unread_count, 1);
 }
 
 #[test]

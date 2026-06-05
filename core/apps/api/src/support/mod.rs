@@ -1,7 +1,7 @@
 mod client;
 
 pub use client::SupportApiClient;
-use primitives::{SupportAction, SupportConversation, SupportMessage, SupportMessageInput};
+use primitives::{SupportAction, SupportMessage, SupportMessageInput};
 use rocket::{Data, State, data::ToByteUnit, get, http::ContentType, post, serde::json::Json, tokio::sync::Mutex};
 
 use crate::{
@@ -10,11 +10,6 @@ use crate::{
 };
 
 const MAX_SUPPORT_IMAGE_BYTES: u64 = 10 * 1024 * 1024;
-
-#[get("/devices/support")]
-pub async fn get_support_conversation(device: AuthenticatedDevice, client: &State<Mutex<SupportApiClient>>) -> Result<ApiResponse<Option<SupportConversation>>, ApiError> {
-    Ok(client.lock().await.conversation(&device.device_row).await?.into())
-}
 
 #[get("/devices/support/messages?<from_timestamp>")]
 pub async fn get_support_messages(

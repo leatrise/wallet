@@ -1,5 +1,5 @@
 use chrono::Utc;
-use primitives::{Device, SupportConversation, SupportMessage, SupportTypingStatus};
+use primitives::{Device, SupportMessage, SupportTypingStatus};
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
 use reqwest::multipart::{Form, Part};
 use reqwest::{Client, RequestBuilder, Response};
@@ -8,9 +8,8 @@ use std::error::Error;
 use std::io;
 
 use crate::{
-    ChatwootConfigResponse, ChatwootContactResponse, ChatwootContactUpdate, ChatwootConversationResponse, ChatwootMessageInput, ChatwootMessagesResponse, ChatwootSession,
-    ChatwootTypingInput, Message,
-    constants::{PATH_CONFIG, PATH_CONTACT_SET_USER, PATH_CONVERSATIONS, PATH_MESSAGES, PATH_TOGGLE_TYPING, PATH_UPDATE_LAST_SEEN, QUERY_WIDGET_PUBLIC_TOKEN},
+    ChatwootConfigResponse, ChatwootContactResponse, ChatwootContactUpdate, ChatwootMessageInput, ChatwootMessagesResponse, ChatwootSession, ChatwootTypingInput, Message,
+    constants::{PATH_CONFIG, PATH_CONTACT_SET_USER, PATH_MESSAGES, PATH_TOGGLE_TYPING, PATH_UPDATE_LAST_SEEN, QUERY_WIDGET_PUBLIC_TOKEN},
     support_messages,
 };
 
@@ -48,26 +47,6 @@ impl ChatwootClient {
         Ok(ChatwootSession {
             auth_token: contact.widget_auth_token.unwrap_or(response.website_channel_config.auth_token),
         })
-    }
-
-    pub async fn conversation(&self, session: &ChatwootSession) -> Result<Option<SupportConversation>, Box<dyn Error + Send + Sync>> {
-        let conversation: ChatwootConversationResponse = self
-            .json(
-                self.authenticated(self.client.get(self.widget_url(PATH_CONVERSATIONS)), &session.auth_token)?
-                    .send()
-                    .await?,
-            )
-            .await?;
-
-        let Some(id) = conversation.id else {
-            return Ok(None);
-        };
-
-        let messages = self.messages(session, None).await?;
-        let conversation = conversation
-            .support_conversation(&messages)
-            .ok_or_else(|| io::Error::other(format!("conversation {id} has no activity timestamp")))?;
-        Ok(Some(conversation))
     }
 
     pub async fn messages(&self, session: &ChatwootSession, from_timestamp: Option<u64>) -> Result<Vec<SupportMessage>, Box<dyn Error + Send + Sync>> {
@@ -200,7 +179,6 @@ mod tests {
     fn message(id: &str, timestamp: i64) -> SupportMessage {
         SupportMessage {
             id: id.to_string(),
-            conversation_id: "conversation".to_string(),
             content: id.to_string(),
             sender: SupportMessageSender::User,
             delivery_status: SupportMessageDeliveryStatus::Sent,

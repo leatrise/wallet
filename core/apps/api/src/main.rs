@@ -133,7 +133,6 @@ fn mount_routes(rocket: Rocket<Build>, admin_enabled: bool) -> Rocket<Build> {
                 devices::create_device_referral_v2,
                 devices::use_device_referral_code_v2,
                 devices::redeem_device_rewards_v2,
-                support::get_support_conversation,
                 support::get_support_messages,
                 support::post_support_action,
                 support::post_support_image,
