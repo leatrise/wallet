@@ -39,12 +39,7 @@ fn test_support_message_mapping() {
     assert_eq!(message.id, "1");
     assert_eq!(message.content, "from agent");
     assert!(message.images.is_empty());
-    assert_eq!(
-        message.sender,
-        SupportMessageSender::Agent(SupportAgent {
-            name: "Test Agent".to_string(),
-        })
-    );
+    assert_eq!(message.sender, SupportMessageSender::Agent(SupportAgent { name: "Test Agent".to_string() }));
     assert_eq!(message.status, SupportMessageDeliveryStatus::Sent);
 }
 

@@ -371,12 +371,7 @@ mod tests {
         assert_eq!(messages.len(), 1);
         assert_eq!(messages[0].id, "1");
         assert_eq!(messages[0].content, "from agent");
-        assert_eq!(
-            messages[0].sender,
-            SupportMessageSender::Agent(SupportAgent {
-                name: "Test Agent".to_string(),
-            })
-        );
+        assert_eq!(messages[0].sender, SupportMessageSender::Agent(SupportAgent { name: "Test Agent".to_string() }));
         assert_eq!(messages[0].status, SupportMessageDeliveryStatus::Sent);
     }
 

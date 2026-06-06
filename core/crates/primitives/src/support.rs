@@ -95,4 +95,3 @@ pub enum SupportAction {
     Typing(SupportTypingStatus),
     LastSeen,
 }
-
