@@ -211,7 +211,7 @@ let package = Package(
                 .product(name: "WebSocketClient", package: "SwiftHTTPClient"),
             ],
             path: "StreamService",
-            exclude: ["TestKit"],
+            exclude: ["TestKit", "Tests"],
         ),
         .target(
             name: "StreamServiceTestKit",
@@ -697,6 +697,17 @@ let package = Package(
                 .product(name: "PrimitivesTestKit", package: "Primitives"),
             ],
             path: "PriceAlertService/Tests",
+        ),
+        .testTarget(
+            name: "StreamServiceTests",
+            dependencies: [
+                "StreamService",
+                "StreamServiceTestKit",
+                "PriceServiceTestKit",
+                .product(name: "PrimitivesTestKit", package: "Primitives"),
+                .product(name: "WebSocketClientTestKit", package: "SwiftHTTPClient"),
+            ],
+            path: "StreamService/Tests",
         ),
         .testTarget(
             name: "BannerServiceTests",
