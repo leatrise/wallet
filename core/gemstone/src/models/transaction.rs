@@ -167,6 +167,7 @@ pub struct GemHyperliquidOrder {
     pub approve_referral_required: bool,
     pub approve_builder_required: bool,
     pub builder_fee_bps: u32,
+    pub agent_name: String,
     pub agent_address: String,
     pub agent_private_key: String,
 }
