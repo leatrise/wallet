@@ -10,7 +10,7 @@ pub use preferences::EmptyPreferences;
 pub use preferences::GemPreferences;
 pub(crate) use preferences::PreferencesWrapper;
 
-use crate::alien::{AlienProvider, AlienProviderWrapper};
+use crate::alien::{AlienProvider, AlienProviderWrapper, coalescing_provider};
 use crate::api_client::GemApiClient;
 use crate::models::*;
 use crate::transaction_state::StatusProvider;
@@ -51,6 +51,7 @@ impl GemGateway {
 impl GemGateway {
     #[uniffi::constructor]
     pub fn new(provider: Arc<dyn AlienProvider>, preferences: Arc<dyn GemPreferences>, secure_preferences: Arc<dyn GemPreferences>, api_url: String) -> Self {
+        let provider = coalescing_provider(provider);
         let api_client = GemApiClient::new(api_url, provider.clone());
         let chain_factory = Arc::new(ChainClientFactory::new(provider.clone(), preferences, secure_preferences));
         let alien_wrapper = Arc::new(AlienProviderWrapper::new(provider));
