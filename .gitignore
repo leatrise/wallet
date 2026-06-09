@@ -1,5 +1,6 @@
 .DS_Store
 .idea/
+build/
 android/gradle/gradle-daemon-jvm.properties
 
 core/target/

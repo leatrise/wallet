@@ -8,7 +8,38 @@ plugins {
     id("kotlinx-serialization")
     id("com.google.devtools.ksp")
     id("androidx.room")
-    id("com.google.gms.google-services")
+}
+
+val googleServicesExcludedFlavors = setOf("fdroid")
+val googleServicesExcludedTaskPrefixes = googleServicesExcludedFlavors.map { flavor ->
+    "process${flavor.replaceFirstChar { it.uppercase() }}"
+}
+val googleServicesTasks = gradle.startParameter.taskNames
+    .map { it.substringAfterLast(":").lowercase() }
+    .filterNot { it == "clean" }
+val shouldApplyGoogleServices = file("google-services.json").isFile &&
+    (
+        googleServicesTasks.isEmpty() ||
+            googleServicesTasks.any { task ->
+                googleServicesExcludedFlavors.none { flavor -> task.contains(flavor) } ||
+                    task in setOf("assemble", "build", "bundle") ||
+                    task == "assemblerelease" ||
+                    task == "bundlerelease"
+            }
+    )
+
+if (shouldApplyGoogleServices) {
+    apply(plugin = "com.google.gms.google-services")
+
+    tasks.configureEach {
+        if (
+            name.startsWith("process") &&
+                name.endsWith("GoogleServices") &&
+                googleServicesExcludedTaskPrefixes.any { prefix -> name.startsWith(prefix) }
+        ) {
+            enabled = false
+        }
+    }
 }
 
 repositories {
@@ -57,6 +88,10 @@ android {
 
         create("fdroid") {
             dimension = channelDimension
+            ndk {
+                abiFilters.add("armeabi-v7a")
+                abiFilters.add("arm64-v8a")
+            }
             buildConfigField("String", "UPDATE_URL", "\"\"")
         }
         create("huawei") {
@@ -138,7 +173,10 @@ android {
         }
 
         getByName("release") {
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
@@ -289,27 +327,29 @@ dependencies {
 
     implementation(libs.reorderable)
 
-    // Google Play
-    "googleImplementation"(project(":flavors:fcm"))
-    "googleImplementation"(project(":flavors:google-review"))
-    // Solana Store
-    "solanaImplementation"(project(":flavors:fcm"))
-    "solanaImplementation"(project(":flavors:review-stub"))
-    // Universal
-    "universalImplementation"(project(":flavors:fcm"))
-    "universalImplementation"(project(":flavors:google-review"))
-    // Samsung
-    "samsungImplementation"(project(":flavors:fcm"))
-    "samsungImplementation"(project(":flavors:review-stub"))
+    if (System.getenv("FDROID_BUILD") != "true") {
+        // Google Play
+        "googleImplementation"(project(":flavors:fcm"))
+        "googleImplementation"(project(":flavors:google-review"))
+        // Solana Store
+        "solanaImplementation"(project(":flavors:fcm"))
+        "solanaImplementation"(project(":flavors:review-stub"))
+        // Universal
+        "universalImplementation"(project(":flavors:fcm"))
+        "universalImplementation"(project(":flavors:google-review"))
+        // Samsung
+        "samsungImplementation"(project(":flavors:fcm"))
+        "samsungImplementation"(project(":flavors:review-stub"))
+        // emerald
+        "emeraldImplementation"(project(":flavors:fcm"))
+        "emeraldImplementation"(project(":flavors:review-stub"))
+    }
     // huawei
     "huaweiImplementation"(project(":flavors:pushes-stub"))
     "huaweiImplementation"(project(":flavors:review-stub"))
     // fdroid
     "fdroidImplementation"(project(":flavors:pushes-stub"))
     "fdroidImplementation"(project(":flavors:review-stub"))
-    // emerald
-    "emeraldImplementation"(project(":flavors:fcm"))
-    "emeraldImplementation"(project(":flavors:review-stub"))
 
     // Preview
     debugImplementation(libs.androidx.ui.tooling)

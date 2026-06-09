@@ -1,0 +1,36 @@
+Categories:
+  - Money
+License: GPL-3.0-only
+WebSite: https://gemwallet.com
+SourceCode: https://github.com/gemwalletcom/wallet
+IssueTracker: https://github.com/gemwalletcom/wallet/issues
+
+AutoName: Gem Wallet
+
+RepoType: git
+Repo: https://github.com/gemwalletcom/wallet.git
+
+Builds:
+  - versionName: '2.80'
+    versionCode: 779
+    commit: 'REPLACE_WITH_FULL_RELEASE_COMMIT_SHA'
+    timeout: 10800
+    subdir: android
+    init: NDK_PATH="$$NDK$$" reproducible/fdroid/init.sh
+    rm:
+      - android/flavors/fcm
+      - android/flavors/google-review
+      - core/gemstone/android
+      - core/gemstone/tests/android/GemTest
+    output: app/build/outputs/apk/fdroid/release/app-fdroid-release-unsigned.apk
+    build:
+      - NDK_PATH="$$NDK$$" source reproducible/fdroid/env.sh
+      - touch local.properties
+      - gradle --no-daemon --console plain --no-configuration-cache :app:assembleFdroidRelease
+    ndk: 28.1.13356709
+    binary: https://github.com/gemwalletcom/wallet/releases/download/%v/gem_wallet_fdroid_%v.apk
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags ^[0-9]+\.[0-9]+$
+CurrentVersion: '2.80'
+CurrentVersionCode: 779
