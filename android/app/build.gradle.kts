@@ -8,7 +8,38 @@ plugins {
     id("kotlinx-serialization")
     id("com.google.devtools.ksp")
     id("androidx.room")
-    id("com.google.gms.google-services")
+}
+
+val firebaseFlavors = setOf("google", "solana", "universal", "samsung", "emerald")
+val firebaseGoogleServicesTaskPrefixes = firebaseFlavors.map { flavor ->
+    "process${flavor.replaceFirstChar { it.uppercase() }}"
+}
+val googleServicesTasks = gradle.startParameter.taskNames
+    .map { it.substringAfterLast(":").lowercase() }
+    .filterNot { it == "clean" }
+val shouldApplyGoogleServices = file("google-services.json").isFile &&
+    (
+        googleServicesTasks.isEmpty() ||
+            googleServicesTasks.any { task ->
+                firebaseFlavors.any { flavor -> task.contains(flavor) } ||
+                    task in setOf("assemble", "build", "bundle") ||
+                    task == "assemblerelease" ||
+                    task == "bundlerelease"
+            }
+    )
+
+if (shouldApplyGoogleServices) {
+    apply(plugin = "com.google.gms.google-services")
+
+    tasks.configureEach {
+        if (
+            name.startsWith("process") &&
+                name.endsWith("GoogleServices") &&
+                firebaseGoogleServicesTaskPrefixes.none { prefix -> name.startsWith(prefix) }
+        ) {
+            enabled = false
+        }
+    }
 }
 
 repositories {
@@ -57,6 +88,10 @@ android {
 
         create("fdroid") {
             dimension = channelDimension
+            ndk {
+                abiFilters.add("armeabi-v7a")
+                abiFilters.add("arm64-v8a")
+            }
             buildConfigField("String", "UPDATE_URL", "\"\"")
         }
         create("huawei") {
@@ -138,7 +173,10 @@ android {
         }
 
         getByName("release") {
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false

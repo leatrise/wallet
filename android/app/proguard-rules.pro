@@ -12,15 +12,24 @@
 #   public *;
 #}
 
-# Preserve stack traces and fix R8 non-deterministic map-id for reproducible builds.
--keepattributes SourceFile,LineNumberTable
+# Keep SourceFile stable for stack traces and avoid R8 path-derived SourceFile names.
+# Release builds intentionally omit LineNumberTable because R8 9.2.14 produced
+# non-deterministic outline and residual-signature position metadata across two
+# clean Linux builds.
+-keepattributes SourceFile
 -renamesourcefileattribute SourceFile
 
 -verbose
 #-dontobfuscate
 -ignorewarnings
 
-# These lines allow optimisation whilst preserving stack traces
+# Keep shrinking and obfuscation enabled while disabling the R8 optimization
+# phase that produced unstable pg-map-id values across clean builds.
+-dontoptimize
+
+# These lines document the previous optimization policy. They are inert while
+# -dontoptimize is active but remain here so the intended exclusions are not
+# lost if optimization is re-enabled deliberately later.
 -optimizations !code/allocation/variable
 -optimizations !class/unboxing/enum
 -keep,allowshrinking,allowoptimization class * { <methods>; }
