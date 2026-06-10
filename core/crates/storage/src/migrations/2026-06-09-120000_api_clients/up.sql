@@ -24,7 +24,7 @@ CREATE TABLE api_client_scopes (
     resource VARCHAR(128) NOT NULL DEFAULT '',
     updated_at timestamp NOT NULL default current_timestamp,
     created_at timestamp NOT NULL default current_timestamp,
-    UNIQUE (client_id, scope, resource)
+    PRIMARY KEY (client_id, scope, resource)
 );
 
 CREATE UNIQUE INDEX api_clients_secret_idx ON api_clients (secret);

@@ -113,11 +113,7 @@ fn setup_database(database: &Database) -> Result<(), Box<dyn std::error::Error +
 }
 
 fn api_client_grants() -> Vec<ApiClientGrant> {
-    webhook_api_client_grants().into_iter().chain(agent_api_client_grants()).collect()
-}
-
-fn agent_api_client_grants() -> Vec<ApiClientGrant> {
-    [
+    let agent = [
         ApiClientScope::DevicesRead,
         ApiClientScope::DevicesSubscriptionsRead,
         ApiClientScope::DevicesTransactionsRead,
@@ -127,20 +123,18 @@ fn agent_api_client_grants() -> Vec<ApiClientGrant> {
         client_name: "agent".to_string(),
         scope,
         resource: ApiClientResource::Global,
-    })
-    .collect()
-}
+    });
 
-fn webhook_api_client_grants() -> Vec<ApiClientGrant> {
-    [(WebhookKind::Transactions, "dynode".to_string()), (WebhookKind::Support, "chatwoot".to_string())]
+    let webhooks = [(WebhookKind::Transactions, "dynode".to_string()), (WebhookKind::Support, "chatwoot".to_string())]
         .into_iter()
         .chain(FiatProviderName::all().into_iter().map(|provider| (WebhookKind::Fiat, provider.id().to_string())))
         .map(|(kind, sender)| ApiClientGrant {
             client_name: format!("webhook:{}:{}", kind.as_ref(), sender),
             scope: ApiClientScope::webhook(kind),
             resource: ApiClientResource::WebhookSender(sender),
-        })
-        .collect()
+        });
+
+    agent.chain(webhooks).collect()
 }
 
 async fn setup_search_index(settings: &Settings) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
