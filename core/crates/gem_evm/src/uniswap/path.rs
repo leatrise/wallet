@@ -65,13 +65,6 @@ impl BasePair {
         // alternatives is not used for path building to reduce requests
         array
     }
-
-    pub fn fee_token_array(&self) -> Vec<Address> {
-        let mut array = vec![self.native];
-        array.extend(self.stables.iter().cloned());
-        array.extend(self.alternatives.iter().cloned());
-        array
-    }
 }
 
 pub fn get_base_pair(chain: &EVMChain, weth_as_native: bool) -> Option<BasePair> {
