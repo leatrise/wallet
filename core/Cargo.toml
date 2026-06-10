@@ -139,3 +139,6 @@ jsonwebtoken = { version = "10.4.0", features = ["aws_lc_rs"] }
 
 [profile.dev]
 debug = 0
+
+[profile.dev.package.argon2]
+opt-level = 3

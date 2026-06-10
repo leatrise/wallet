@@ -1,6 +1,6 @@
 # Gem Keystore v4 Implementation Source of Truth
 
-Last checked against implementation: 2026-06-08.
+Last checked against implementation: 2026-06-10.
 
 This is the short as-built reference for Gem Keystore v4. The long design doc keeps history and rationale; this file records the current implementation contract. The code remains canonical.
 
@@ -64,7 +64,7 @@ Security rules:
 
 Current crypto:
 
-- Argon2id, 19 MiB, 2 iterations, parallelism 1.
+- Argon2id, 19 MiB, 2 iterations, parallelism 1 (OWASP-recommended; the password is a 256-bit random device secret, so the KDF is defense-in-depth).
 - Random 16-byte salt per encryption.
 - AES-256-GCM with random 12-byte nonce and 16-byte tag.
 - Temp-file write, fsync, atomic rename, directory sync.
@@ -227,6 +227,16 @@ Rules:
 - Keep WalletCore references out of production keystore flows except explicit legacy migration support during rollout.
 
 ## Misc
+
+### Benchmarks
+
+The Argon2id KDF defaults dominate every encrypt/decrypt. Measure with:
+
+- Rust (release): `cargo bench -p gem_keystore --features storage`
+- iOS: `KeystoreBenchmarkTests` in the Keystore package (prints medians)
+- Android: `GemKeystoreBenchmarkTest` instrumented test (logs medians, `GemKeystoreBenchmark` tag)
+
+Mobile numbers are only representative on a real device with a release Gemstone build; debug builds are several times slower.
 
 ### Inspecting v4 Files
 

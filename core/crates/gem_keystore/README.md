@@ -84,3 +84,11 @@ The plaintext inside the ciphertext is the raw secret bytes, interpreted by the 
 ## Migration
 
 Legacy v3 JSON is decoded only for migration. Importing v3 decrypts the legacy secret, validates the secret shape, and writes a new v4 file. The v3 result types are not part of the public keystore API.
+
+## Benchmarks
+
+```sh
+cargo bench -p gem_keystore --features storage
+```
+
+Measures encrypt (import) and decrypt through the public API with the production KDF defaults; Argon2id dominates both. Debug builds are several times slower than release — benchmark numbers are only meaningful from `cargo bench` (release profile).
