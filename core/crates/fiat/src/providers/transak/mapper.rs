@@ -154,7 +154,7 @@ fn map_payment_type(payment_id: &str) -> Option<PaymentType> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::providers::transak::models::{Data, FiatCurrency, Response, TransakOrderResponse};
+    use crate::providers::transak::models::{AssetNetwork, Data, FiatCurrency, Response, TransakOrderResponse};
     use primitives::{FiatTransactionStatus, FiatTransactionUpdate, PaymentType};
 
     #[test]
