@@ -6,7 +6,7 @@ use storage::{Database, DevicesRepository, ScanAddressesRepository, Transactions
 
 use chrono::{DateTime, Utc};
 
-const DEVICE_TRANSACTIONS_LIMIT: i64 = 25;
+const DEVICE_TRANSACTIONS_LIMIT: i64 = 50;
 
 pub struct TransactionsClient {
     database: Database,
