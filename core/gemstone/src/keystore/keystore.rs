@@ -191,9 +191,16 @@ impl GemKeystore {
                 derive_account_from_private_key(&private_key, chain)?
             }
         };
+        let is_legacy_single_solana_mnemonic = wallet_type == WalletType::Single && chain == Chain::Solana && kind == SecretKind::Mnemonic;
         let derived = derive_wallet_id_from_account(&account, wallet_type)?;
         if &derived != expected {
-            return Err(GemstoneError::from("migrated secret does not derive the wallet id"));
+            if is_legacy_single_solana_mnemonic {
+                return Ok(());
+            }
+            return Err(GemstoneError::from(format!(
+                "migrated secret does not derive the wallet id: expected_wallet_id={expected}, derived_wallet_id={derived}, derived_chain={}, derived_address={}",
+                account.chain, account.address
+            )));
         }
         Ok(())
     }
@@ -243,6 +250,7 @@ mod migration_tests {
         "dignity possible oppose wolf early kingdom essay arctic ten fence prepare mango source federal chief south dynamic rebuild wear envelope bulb picnic own scorpion";
     const EXPECTED_PRIVATE_KEY: &str = "ae8794f84919b14ff9d1f0f7cf490a4c04e608de16864f53fe8b40af127b9da3";
     const EXPECTED_ETHEREUM_ADDRESS: &str = "0x5a8f70b44aFa00Cb70615D9c9CCb9A24933ED2D3";
+    const EXPECTED_SOLANA_ADDRESS: &str = "5T1JAioMm5vd9S5RE2JHBu3GVfG5FpUoV1BT5CNhZR2W";
     const MNEMONIC_WALLET_ID: &str = "multicoin_0x5a8f70b44aFa00Cb70615D9c9CCb9A24933ED2D3";
     const PRIVATE_KEY_WALLET_ID: &str = "privateKey_ethereum_0x5a8f70b44aFa00Cb70615D9c9CCb9A24933ED2D3";
 
@@ -331,7 +339,12 @@ mod migration_tests {
         let error = keystore
             .migrate_v3(v3_path.clone(), V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), wrong_wallet_id.clone())
             .unwrap_err();
-        assert!(error.to_string().contains("does not derive the wallet id"), "{error}");
+        assert_eq!(
+            error.to_string(),
+            format!(
+                "migrated secret does not derive the wallet id: expected_wallet_id={wrong_wallet_id}, derived_wallet_id={MNEMONIC_WALLET_ID}, derived_chain=ethereum, derived_address={EXPECTED_ETHEREUM_ADDRESS}"
+            )
+        );
         assert!(!v4_path(&base, &keystore_id).exists(), "mismatched v4 file must not be left behind");
         assert!(Path::new(&v3_path).exists(), "v3 file must be preserved when the migration is rejected");
 
@@ -341,6 +354,27 @@ mod migration_tests {
             .unwrap_err();
         assert!(error.to_string().contains("does not match wallet type"), "{error}");
         assert!(Path::new(&v3_path).exists());
+
+        let _ = std::fs::remove_dir_all(&base);
+    }
+
+    #[test]
+    fn migrate_v3_allows_legacy_single_solana_derivation_mismatch() {
+        let (base, v3_path) = prepare("single_solana_mismatch", V3_MNEMONIC);
+        let keystore = GemKeystore::new(base.to_string_lossy().into_owned()).unwrap();
+        let wallet_id = "single_solana_2e6GNStEYy7M31duwabbAx3R4Tzz62LxryGrqcMhoaaV".to_string();
+        let keystore_id = keystore_id_for_wallet(wallet_id.clone());
+
+        let migration = keystore.migrate_v3(v3_path.clone(), V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), wallet_id).unwrap();
+
+        assert_eq!(migration.keystore_id, keystore_id);
+        assert!(!Path::new(&v3_path).exists(), "legacy Solana v3 file must be removed after import");
+        assert_eq!(
+            keystore.export_recovery_phrase(keystore_id.clone(), NEW_PASSWORD.to_vec()).unwrap().join(" "),
+            EXPECTED_PHRASE
+        );
+        let accounts = keystore.add_accounts(keystore_id, NEW_PASSWORD.to_vec(), vec![Chain::Solana]).unwrap();
+        assert_eq!(accounts[0].address, EXPECTED_SOLANA_ADDRESS);
 
         let _ = std::fs::remove_dir_all(&base);
     }
