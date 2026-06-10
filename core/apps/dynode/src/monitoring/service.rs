@@ -183,14 +183,12 @@ impl NodeService {
                             RETRY_REASON_REQUEST_ERROR
                         }
                     });
-                    let error_detail = e.to_string();
                     info_with_fields!(
                         "Upstream error",
                         id = request_id,
                         chain = chain,
                         remote_host = remote_host.as_str(),
                         error = retry_reason,
-                        error_detail = error_detail.as_str(),
                         latency = latency,
                     );
                     if index + 1 < max_attempts {
