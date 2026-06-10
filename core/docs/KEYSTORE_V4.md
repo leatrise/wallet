@@ -43,7 +43,7 @@ JSON layout (see [crates/gem_keystore/README.md](../crates/gem_keystore/README.m
   "id": "<uuid v5>",
   "kind": "mnemonic | private_key",
   "crypto": {
-    "kdf": { "algorithm": "argon2id", "memory_kib": 65536, "iterations": 3, "parallelism": 1, "salt": "<hex>", "output_len": 32 },
+    "kdf": { "algorithm": "argon2id", "memory_kib": 19456, "iterations": 2, "parallelism": 1, "salt": "<hex>", "output_len": 32 },
     "cipher": { "algorithm": "aes-256-gcm", "nonce": "<hex>", "tag_len": 16 },
     "ciphertext": "<hex, tag appended>"
   }
@@ -64,7 +64,7 @@ Security rules:
 
 Current crypto:
 
-- Argon2id, 64 MiB, 3 iterations, parallelism 1.
+- Argon2id, 19 MiB, 2 iterations, parallelism 1.
 - Random 16-byte salt per encryption.
 - AES-256-GCM with random 12-byte nonce and 16-byte tag.
 - Temp-file write, fsync, atomic rename, directory sync.

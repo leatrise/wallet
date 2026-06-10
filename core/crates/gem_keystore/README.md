@@ -30,8 +30,8 @@ All v4 files are JSON:
   "crypto": {
     "kdf": {
       "algorithm": "argon2id",
-      "memory_kib": 65536,
-      "iterations": 3,
+      "memory_kib": 19456,
+      "iterations": 2,
       "parallelism": 1,
       "salt": "<16 bytes hex>",
       "output_len": 32
@@ -62,8 +62,8 @@ Current defaults:
 
 | Parameter | Value |
 | --- | ---: |
-| Argon2id memory | 65,536 KiB |
-| Argon2id iterations | 3 |
+| Argon2id memory | 19,456 KiB |
+| Argon2id iterations | 2 |
 | Argon2id parallelism | 1 |
 | Argon2id salt length | 16 bytes |
 | Derived key length | 32 bytes |

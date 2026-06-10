@@ -1,5 +1,5 @@
 use super::{
-    constants::{ARGON2_SALT_LEN, DEFAULT_ARGON2_OUTPUT_LEN},
+    constants::{ARGON2_SALT_LEN, DEFAULT_ARGON2_ITERATIONS, DEFAULT_ARGON2_MEMORY_KIB, DEFAULT_ARGON2_OUTPUT_LEN, DEFAULT_ARGON2_PARALLELISM},
     format::{CipherV4, CryptoV4, FileV4, KdfV4},
     types::KdfParams,
 };
@@ -30,9 +30,9 @@ impl FileV4 {
             crypto: CryptoV4 {
                 kdf: KdfV4 {
                     algorithm: "argon2id".to_string(),
-                    memory_kib: 65536,
-                    iterations: 3,
-                    parallelism: 1,
+                    memory_kib: DEFAULT_ARGON2_MEMORY_KIB,
+                    iterations: DEFAULT_ARGON2_ITERATIONS,
+                    parallelism: DEFAULT_ARGON2_PARALLELISM,
                     salt: "00000000000000000000000000000000".to_string(),
                     output_len: 32,
                 },
