@@ -76,6 +76,7 @@
 		C35DA07C2A9C3B4B008CCEFA /* Settings in Frameworks */ = {isa = PBXBuildFile; productRef = C35DA07B2A9C3B4B008CCEFA /* Settings */; };
 		C366790A2A0B7E5800F1D74D /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36679092A0B7E5800F1D74D /* Environment.swift */; };
 		C36679162A119C6200F1D74D /* GemAPI in Frameworks */ = {isa = PBXBuildFile; productRef = C36679152A119C6200F1D74D /* GemAPI */; };
+		C36679202F41000000F1D74D /* GemAPIDevice in Frameworks */ = {isa = PBXBuildFile; productRef = C366791F2F41000000F1D74D /* GemAPIDevice */; };
 		C366791D2A18623800F1D74D /* QRScanner in Frameworks */ = {isa = PBXBuildFile; productRef = C366791C2A18623800F1D74D /* QRScanner */; };
 		C3A7CB7C29CA5F7000431341 /* Store in Frameworks */ = {isa = PBXBuildFile; productRef = C3A7CB7B29CA5F7000431341 /* Store */; };
 		C3CF3B7729A98C7B00E96586 /* Blockchain in Frameworks */ = {isa = PBXBuildFile; productRef = C3CF3B7629A98C7B00E96586 /* Blockchain */; };
@@ -124,7 +125,7 @@
 		D8CF19E32CC747370025D6B4 /* Transfer in Frameworks */ = {isa = PBXBuildFile; productRef = D8CF19E22CC747370025D6B4 /* Transfer */; };
 		D8CFDE9E2E37FC2500D27283 /* Style in Frameworks */ = {isa = PBXBuildFile; productRef = D8CFDE9D2E37FC2500D27283 /* Style */; };
 		D8CFDEA02E37FC3B00D27283 /* Primitives in Frameworks */ = {isa = PBXBuildFile; productRef = D8CFDE9F2E37FC3B00D27283 /* Primitives */; };
-		D8CFDEA82E37FC8800D27283 /* Preferences in Frameworks */ = {isa = PBXBuildFile; productRef = D8CFDEA72E37FC8800D27283 /* Preferences */; };
+		D8CFDEA82E37FC8800D27283 /* SharedPreferences in Frameworks */ = {isa = PBXBuildFile; productRef = D8CFDEA72E37FC8800D27283 /* SharedPreferences */; };
 		D8CFDEAA2E37FC8C00D27283 /* GemAPI in Frameworks */ = {isa = PBXBuildFile; productRef = D8CFDEA92E37FC8C00D27283 /* GemAPI */; };
 		D8CFDEAE2E37FCA800D27283 /* Formatters in Frameworks */ = {isa = PBXBuildFile; productRef = D8CFDEAD2E37FCA800D27283 /* Formatters */; };
 		D8CFDEB02E37FCB000D27283 /* Components in Frameworks */ = {isa = PBXBuildFile; productRef = D8CFDEAF2E37FCB000D27283 /* Components */; };
@@ -356,6 +357,7 @@
 				D829BF422CBDD65A00DEB2E8 /* MarketInsight in Frameworks */,
 				D83D3C252D6E62F4002959EA /* ScanService in Frameworks */,
 				C36679162A119C6200F1D74D /* GemAPI in Frameworks */,
+				C36679202F41000000F1D74D /* GemAPIDevice in Frameworks */,
 				D896B57E2E2EE2D300ADE083 /* Perpetuals in Frameworks */,
 				C3CF3B7729A98C7B00E96586 /* Blockchain in Frameworks */,
 				8352C8D52D393E05000DEDD9 /* ExplorerService in Frameworks */,
@@ -414,7 +416,7 @@
 				D8WIDGBF12345678901234 /* WidgetLocalization in Frameworks */,
 				D8CFDEAE2E37FCA800D27283 /* Formatters in Frameworks */,
 				D8CFDEB02E37FCB000D27283 /* Components in Frameworks */,
-				D8CFDEA82E37FC8800D27283 /* Preferences in Frameworks */,
+				D8CFDEA82E37FC8800D27283 /* SharedPreferences in Frameworks */,
 				D838194B2E256A5A0076CDB3 /* SwiftUI.framework in Frameworks */,
 				D8CFDEAA2E37FC8C00D27283 /* GemAPI in Frameworks */,
 				D8CFDEA02E37FC3B00D27283 /* Primitives in Frameworks */,
@@ -810,6 +812,7 @@
 				C3CF3BDA29BBE45D00E96586 /* Style */,
 				C3A7CB7B29CA5F7000431341 /* Store */,
 				C36679152A119C6200F1D74D /* GemAPI */,
+				C366791F2F41000000F1D74D /* GemAPIDevice */,
 				C366791C2A18623800F1D74D /* QRScanner */,
 				C3D1C4E12A2A9485006E8EEA /* Signer */,
 				C35DA07B2A9C3B4B008CCEFA /* Settings */,
@@ -965,7 +968,7 @@
 			packageProductDependencies = (
 				D8CFDE9D2E37FC2500D27283 /* Style */,
 				D8CFDE9F2E37FC3B00D27283 /* Primitives */,
-				D8CFDEA72E37FC8800D27283 /* Preferences */,
+				D8CFDEA72E37FC8800D27283 /* SharedPreferences */,
 				D8CFDEA92E37FC8C00D27283 /* GemAPI */,
 				D8CFDEAD2E37FCA800D27283 /* Formatters */,
 				D8CFDEAF2E37FCB000D27283 /* Components */,
@@ -2043,6 +2046,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = GemAPI;
 		};
+		C366791F2F41000000F1D74D /* GemAPIDevice */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GemAPIDevice;
+		};
 		C366791C2A18623800F1D74D /* QRScanner */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = QRScanner;
@@ -2235,9 +2242,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Primitives;
 		};
-		D8CFDEA72E37FC8800D27283 /* Preferences */ = {
+		D8CFDEA72E37FC8800D27283 /* SharedPreferences */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Preferences;
+			productName = SharedPreferences;
 		};
 		D8CFDEA92E37FC8C00D27283 /* GemAPI */ = {
 			isa = XCSwiftPackageProductDependency;

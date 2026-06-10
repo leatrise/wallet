@@ -14,6 +14,10 @@ let package = Package(
             targets: ["Preferences"],
         ),
         .library(
+            name: "SharedPreferences",
+            targets: ["SharedPreferences"],
+        ),
+        .library(
             name: "PreferencesTestKit",
             targets: ["PreferencesTestKit"],
         ),
@@ -34,6 +38,13 @@ let package = Package(
             path: "Sources",
         ),
         .target(
+            name: "SharedPreferences",
+            dependencies: [
+                "Primitives",
+            ],
+            path: "SharedPreferences",
+        ),
+        .target(
             name: "PreferencesTestKit",
             dependencies: [
                 "Primitives",
@@ -45,6 +56,7 @@ let package = Package(
             name: "PreferencesTest",
             dependencies: [
                 "Preferences",
+                "SharedPreferences",
                 "PreferencesTestKit",
                 .product(name: "PrimitivesTestKit", package: "Primitives"),
             ],

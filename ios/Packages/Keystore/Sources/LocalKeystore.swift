@@ -1,9 +1,7 @@
-public import class Gemstone.MessageSigner
+public import Gemstone
 import Foundation
 import GemstonePrimitives
 import Primitives
-
-internal import Gemstone
 
 public final class LocalKeystore: Keystore, @unchecked Sendable {
     let gemKeystore: GemKeystore
@@ -294,3 +292,4 @@ func withV4Password<T>(
     defer { passwordBytes.zeroize() }
     return try operation(passwordBytes)
 }
+

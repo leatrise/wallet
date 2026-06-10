@@ -207,6 +207,7 @@ let package = Package(
                 "FiatService",
                 "DeviceService",
                 "GemAPI",
+                .product(name: "GemAPIDevice", package: "GemAPI"),
                 "Preferences",
                 .product(name: "WebSocketClient", package: "SwiftHTTPClient"),
             ],
