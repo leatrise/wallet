@@ -10,22 +10,13 @@ use crate::v3::{ReaderV3, SecretV3};
 use crate::{KeystoreError, KeystoreId, Mnemonic};
 
 use super::{
-    constants::{AES_GCM_TAG_LEN, ENCRYPTED_BODY_CAP, FILE_EXTENSION, HEADER_LEN_CAP, MAGIC, PREFIX_LEN, VERSION_V4, WHOLE_FILE_CAP},
+    constants::{AES_GCM_TAG_LEN, ENCRYPTED_BODY_CAP, FILE_EXTENSION, VERSION_V4, WHOLE_FILE_CAP},
     crypto::derive_key,
     file_io::{new_secret_file_options, read_capped, set_owner_read_write, sync_directory},
-    format::{meta_from_header, parse_v4, validate_payload_kind, validate_v4_password},
+    format::{authenticated_bytes, encode_v4, meta_from_header, parse_v4, validate_v4_password},
     queue,
     types::{CipherParams, FileKeystore, Header, KdfParams, KeystoreFileError, KeystoreInspection, ParsedFile, SecretKind, SecretPayload, StoredSecretMeta},
 };
-
-struct OwnedHeader {
-    header: Header,
-}
-
-struct OwnedFile {
-    parsed: OwnedHeader,
-    bytes: Vec<u8>,
-}
 
 impl FileKeystore {
     pub fn open(base_dir: PathBuf) -> Result<Self, KeystoreError> {
@@ -33,7 +24,7 @@ impl FileKeystore {
             base_dir,
             default_kdf: KdfParams::default_argon2id()?,
         };
-        fs::create_dir_all(keystore.v4_dir())?;
+        fs::create_dir_all(&keystore.base_dir)?;
         Ok(keystore)
     }
 
@@ -72,8 +63,8 @@ impl FileKeystore {
         let _queue = queue::lock()?;
         let id = KeystoreId::parse(keystore_id)?;
         let parsed = self.read_parsed_by_id(&id)?;
-        let meta = meta_from_header(&parsed.parsed.header);
-        let phrase = self.decrypt_parsed(&parsed.bytes, Some(&id), password)?.into_mnemonic()?;
+        let meta = meta_from_header(&parsed.header);
+        let phrase = decrypt_file(parsed, Some(&id), password)?.into_mnemonic()?;
         Ok((meta, phrase))
     }
 
@@ -87,8 +78,8 @@ impl FileKeystore {
         validate_v4_password(new_password)?;
         let id = KeystoreId::parse(keystore_id)?;
         let parsed = self.read_parsed_by_id(&id)?;
-        let kind = parsed.parsed.header.kind;
-        let payload = self.decrypt_parsed(&parsed.bytes, Some(&id), old_password)?;
+        let kind = parsed.header.kind;
+        let payload = decrypt_file(parsed, Some(&id), old_password)?;
         let body = self.encrypt_payload(&kind, payload, new_password, Some(id.clone()))?;
         self.write_new_file(&id, &body, true)?;
         Ok(StoredSecretMeta {
@@ -131,7 +122,7 @@ impl FileKeystore {
     pub fn list(&self) -> Result<Vec<Result<StoredSecretMeta, KeystoreFileError>>, KeystoreError> {
         let _queue = queue::lock()?;
         let mut entries = Vec::new();
-        for entry in fs::read_dir(self.v4_dir())? {
+        for entry in fs::read_dir(&self.base_dir)? {
             let entry = entry?;
             let path = entry.path();
             if path.extension().and_then(|extension| extension.to_str()) != Some(FILE_EXTENSION) {
@@ -154,8 +145,7 @@ impl FileKeystore {
             meta: Some(meta_from_header(&parsed.header)),
             authenticated: false,
             file_len: bytes.len() as u64,
-            header_len: parsed.header_len,
-            ciphertext_len: parsed.body.len() as u64,
+            ciphertext_len: parsed.ciphertext.len() as u64,
             tag_len: parsed.header.cipher.tag_len(),
             warnings: Vec::new(),
         })
@@ -165,9 +155,9 @@ impl FileKeystore {
         let _queue = queue::lock()?;
         let bytes = read_capped(path, WHOLE_FILE_CAP)?;
         let parsed = parse_v4(&bytes)?;
-        let payload = decrypt_parsed_bytes(&bytes, &parsed, None, password)?;
-        validate_payload_kind(&parsed.header.kind, &payload)?;
-        Ok(meta_from_header(&parsed.header))
+        let meta = meta_from_header(&parsed.header);
+        let _payload = decrypt_file(parsed, None, password)?;
+        Ok(meta)
     }
 
     pub fn verify(&self, keystore_id: &str, password: &[u8]) -> Result<StoredSecretMeta, KeystoreError> {
@@ -178,21 +168,25 @@ impl FileKeystore {
     fn verify_unlocked(&self, keystore_id: &str, password: &[u8]) -> Result<StoredSecretMeta, KeystoreError> {
         let id = KeystoreId::parse(keystore_id)?;
         let parsed = self.read_parsed_by_id(&id)?;
-        let payload = self.decrypt_parsed(&parsed.bytes, Some(&id), password)?;
-        validate_payload_kind(&parsed.parsed.header.kind, &payload)?;
-        Ok(meta_from_header(&parsed.parsed.header))
+        let meta = meta_from_header(&parsed.header);
+        let _payload = decrypt_file(parsed, Some(&id), password)?;
+        Ok(meta)
     }
 
     #[cfg(feature = "v3")]
     pub fn import_v3(&self, v3_path: &Path, v3_password: &[u8], new_password: &[u8], keystore_id: Option<String>) -> Result<StoredSecretMeta, KeystoreError> {
         let _queue = queue::lock()?;
-        // Idempotent retry: authenticate an existing staged v4 file by id+password instead of failing.
+        // Idempotent retry: authenticate an existing staged v4 file by id+password; replace it only when corrupt.
         if let Some(parsed_id) = keystore_id
             .as_deref()
             .and_then(|id| KeystoreId::parse(id).ok())
             .filter(|parsed_id| self.path_for_id(parsed_id).exists())
         {
-            return self.verify_unlocked(parsed_id.as_str(), new_password);
+            match self.verify_unlocked(parsed_id.as_str(), new_password) {
+                Ok(meta) => return Ok(meta),
+                Err(KeystoreError::CorruptFile(_)) => fs::remove_file(self.path_for_id(&parsed_id))?,
+                Err(error) => return Err(error),
+            }
         }
         let secret = ReaderV3::decrypt_path(v3_path, v3_password)?;
         match &secret {
@@ -223,61 +217,40 @@ impl FileKeystore {
             kdf: self.default_kdf.with_random_salt()?,
             cipher: CipherParams::random_aes256_gcm()?,
         };
-        let header_bytes = borsh::to_vec(&header).map_err(|error| KeystoreError::corrupt_file(error.to_string()))?;
-        if header_bytes.len() > HEADER_LEN_CAP {
-            return Err(KeystoreError::corrupt_file("header too large"));
-        }
-        let mut bytes = Vec::with_capacity(PREFIX_LEN + header_bytes.len() + AES_GCM_TAG_LEN as usize);
-        bytes.extend_from_slice(MAGIC);
-        bytes.push(VERSION_V4);
-        bytes.extend_from_slice(&(header_bytes.len() as u32).to_be_bytes());
-        bytes.extend_from_slice(&header_bytes);
-        let aad_len = bytes.len();
-        let mut body = borsh::to_vec(&payload).map_err(|error| KeystoreError::corrupt_file(error.to_string()))?;
+        let aad = authenticated_bytes(&header)?;
+        let mut body = payload.into_bytes();
         if body.len() + AES_GCM_TAG_LEN as usize > ENCRYPTED_BODY_CAP {
-            body.zeroize();
             return Err(KeystoreError::corrupt_file("payload too large"));
         }
         let key = derive_key(password, &header.kdf)?;
-        if let Err(error) = super::crypto::encrypt_aes256_gcm(key.as_ref(), header.cipher.nonce(), &bytes[..aad_len], &mut body) {
-            body.zeroize();
-            return Err(error);
+        super::crypto::encrypt_aes256_gcm(key.as_ref(), header.cipher.nonce(), &aad, &mut body)?;
+        let bytes = encode_v4(&header, &body)?;
+        // Hex doubles the ciphertext; reject anything the read cap would refuse later.
+        if bytes.len() > WHOLE_FILE_CAP {
+            return Err(KeystoreError::corrupt_file("payload too large"));
         }
-        bytes.append(&mut body);
         Ok(bytes)
     }
 
     fn decrypt_payload_unlocked(&self, keystore_id: &str, password: &[u8]) -> Result<SecretPayload, KeystoreError> {
         let id = KeystoreId::parse(keystore_id)?;
         let parsed = self.read_parsed_by_id(&id)?;
-        self.decrypt_parsed(&parsed.bytes, Some(&id), password)
+        decrypt_file(parsed, Some(&id), password)
     }
 
-    fn decrypt_parsed(&self, bytes: &[u8], expected_id: Option<&KeystoreId>, password: &[u8]) -> Result<SecretPayload, KeystoreError> {
-        let parsed = parse_v4(bytes)?;
-        decrypt_parsed_bytes(bytes, &parsed, expected_id, password)
-    }
-
-    fn read_parsed_by_id(&self, id: &KeystoreId) -> Result<OwnedFile, KeystoreError> {
+    fn read_parsed_by_id(&self, id: &KeystoreId) -> Result<ParsedFile, KeystoreError> {
         let path = self.path_for_id(id);
         let bytes = read_capped(&path, WHOLE_FILE_CAP)?;
-        let header = {
-            let parsed = parse_v4(&bytes)?;
-            parsed.header.clone()
-        };
-        Ok(OwnedFile {
-            parsed: OwnedHeader { header },
-            bytes,
-        })
+        parse_v4(&bytes)
     }
 
     fn write_new_file(&self, id: &KeystoreId, bytes: &[u8], replace: bool) -> Result<(), KeystoreError> {
-        fs::create_dir_all(self.v4_dir())?;
+        fs::create_dir_all(&self.base_dir)?;
         let path = self.path_for_id(id);
         if !replace && path.exists() {
             return Err(KeystoreError::AlreadyExists);
         }
-        let temp_path = self.v4_dir().join(format!("{}.{FILE_EXTENSION}.tmp.{}", id.as_str(), KeystoreId::new()));
+        let temp_path = self.base_dir.join(format!("{}.{FILE_EXTENSION}.tmp.{}", id.as_str(), KeystoreId::new()));
         let options = new_secret_file_options();
         let write_result = (|| -> Result<(), KeystoreError> {
             let mut file = options.open(&temp_path)?;
@@ -285,7 +258,7 @@ impl FileKeystore {
             file.write_all(bytes)?;
             file.sync_all()?;
             fs::rename(&temp_path, &path)?;
-            sync_directory(&self.v4_dir())?;
+            sync_directory(&self.base_dir)?;
             Ok(())
         })();
         if write_result.is_err() {
@@ -295,11 +268,7 @@ impl FileKeystore {
     }
 
     fn path_for_id(&self, id: &KeystoreId) -> PathBuf {
-        self.v4_dir().join(format!("{}.{FILE_EXTENSION}", id.as_str()))
-    }
-
-    fn v4_dir(&self) -> PathBuf {
-        self.base_dir.join("v4")
+        self.base_dir.join(format!("{}.{FILE_EXTENSION}", id.as_str()))
     }
 }
 
@@ -307,35 +276,27 @@ impl FileKeystore {
 impl FileKeystore {
     pub(super) fn open_with_kdf(base_dir: PathBuf, default_kdf: KdfParams) -> Result<Self, KeystoreError> {
         let keystore = Self { base_dir, default_kdf };
-        fs::create_dir_all(keystore.v4_dir())?;
+        fs::create_dir_all(&keystore.base_dir)?;
         Ok(keystore)
     }
 }
 
-fn decrypt_parsed_bytes(bytes: &[u8], parsed: &ParsedFile<'_>, expected_id: Option<&KeystoreId>, password: &[u8]) -> Result<SecretPayload, KeystoreError> {
+fn decrypt_file(parsed: ParsedFile, expected_id: Option<&KeystoreId>, password: &[u8]) -> Result<SecretPayload, KeystoreError> {
     validate_v4_password(password)?;
     if let Some(expected_id) = expected_id
         && parsed.header.keystore_id != expected_id.as_str()
     {
         return Err(KeystoreError::corrupt_file("authenticated keystore id does not match filename"));
     }
-    let key = derive_key(password, &parsed.header.kdf)?;
-    let mut body = parsed.body.to_vec();
+    let ParsedFile { header, ciphertext: mut body } = parsed;
+    let aad = authenticated_bytes(&header)?;
+    let key = derive_key(password, &header.kdf)?;
     // On tag failure aes-gcm leaves unauthenticated plaintext in the buffer, so zeroize before bailing.
-    if let Err(error) = super::crypto::decrypt_aes256_gcm(key.as_ref(), parsed.header.cipher.nonce(), &bytes[..parsed.header_end], &mut body) {
+    if let Err(error) = super::crypto::decrypt_aes256_gcm(key.as_ref(), header.cipher.nonce(), &aad, &mut body) {
         body.zeroize();
         return Err(error);
     }
-    let payload = match borsh::from_slice::<SecretPayload>(&body) {
-        Ok(payload) => payload,
-        Err(error) => {
-            body.zeroize();
-            return Err(KeystoreError::corrupt_file(error.to_string()));
-        }
-    };
-    body.zeroize();
-    validate_payload_kind(&parsed.header.kind, &payload)?;
-    Ok(payload)
+    SecretPayload::from_bytes(header.kind, body)
 }
 
 fn listed_meta(path: &Path) -> Result<StoredSecretMeta, KeystoreError> {

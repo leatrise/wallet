@@ -2,9 +2,10 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use gem_derivation::{
-    derive_account_from_private_key_value, derive_accounts_from_mnemonic, derive_private_key_from_mnemonic, derive_wallet_id_from_account, import_account_from_private_key,
+    derive_account_from_private_key, derive_account_from_private_key_value, derive_accounts_from_mnemonic, derive_private_key_from_mnemonic, derive_wallet_id_from_account,
+    import_account_from_private_key,
 };
-use gem_keystore::{FileKeystore, KeystoreError, KeystoreId};
+use gem_keystore::{FileKeystore, KeystoreError, KeystoreId, SecretKind};
 use primitives::{Account, Chain, WalletId, WalletType};
 use signer::encode_private_key;
 use zeroize::Zeroizing;
@@ -100,10 +101,22 @@ impl GemKeystore {
         Ok(encode_private_key(&chain, &private_key)?)
     }
 
-    pub fn migrate_v3(&self, v3_path: String, v3_password: Vec<u8>, new_password: Vec<u8>, keystore_id: String) -> Result<GemStoredSecretMigration, GemstoneError> {
+    pub fn migrate_v3(&self, v3_path: String, v3_password: Vec<u8>, new_password: Vec<u8>, wallet_id: String) -> Result<GemStoredSecretMigration, GemstoneError> {
         let v3_password = Zeroizing::new(v3_password);
         let new_password = Zeroizing::new(new_password);
-        let meta = self.inner.import_v3(&PathBuf::from(v3_path), &v3_password, &new_password, Some(keystore_id))?;
+        let expected_wallet_id = WalletId::from_id(&wallet_id).ok_or_else(|| GemstoneError::from("invalid wallet id"))?;
+        let keystore_id = KeystoreId::from_wallet_id(&wallet_id).into_string();
+        let meta = self.inner.import_v3(&PathBuf::from(&v3_path), &v3_password, &new_password, Some(keystore_id.clone()))?;
+        if let Err(error) = self.verify_migrated_secret(&keystore_id, &new_password, &expected_wallet_id, meta.kind) {
+            let _ = self.inner.delete(&keystore_id);
+            return Err(error);
+        }
+        // The v3 file is the migration-pending marker; remove it only after the binding is verified.
+        match std::fs::remove_file(&v3_path) {
+            Ok(()) => {}
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(error) => return Err(GemstoneError::from(format!("v3 cleanup failed: {error}"))),
+        }
         Ok(GemStoredSecretMigration {
             keystore_id: meta.keystore_id,
             kind: meta.kind,
@@ -150,6 +163,40 @@ impl GemKeystore {
             Err(error) => Err(error.into()),
         }
     }
+
+    fn verify_migrated_secret(&self, keystore_id: &str, password: &[u8], expected: &WalletId, kind: SecretKind) -> Result<(), GemstoneError> {
+        let (wallet_type, chain) = match expected {
+            WalletId::Multicoin(_) => (WalletType::Multicoin, Chain::Ethereum),
+            WalletId::Single(chain, _) => (WalletType::Single, *chain),
+            WalletId::PrivateKey(chain, _) => (WalletType::PrivateKey, *chain),
+            WalletId::View(_, _) => return Err(GemstoneError::from("view wallets have no keystore secret")),
+        };
+        let kind_matches_type = match kind {
+            SecretKind::Mnemonic => wallet_type != WalletType::PrivateKey,
+            SecretKind::PrivateKey => wallet_type == WalletType::PrivateKey,
+        };
+        if !kind_matches_type {
+            return Err(GemstoneError::from("migrated secret kind does not match wallet type"));
+        }
+        let account = match kind {
+            SecretKind::Mnemonic => {
+                let phrase = self.inner.decrypt_mnemonic(keystore_id, password)?;
+                derive_accounts_from_mnemonic(&phrase, vec![chain])?
+                    .into_iter()
+                    .next()
+                    .ok_or_else(|| GemstoneError::from("wallet id account derivation returned no account"))?
+            }
+            SecretKind::PrivateKey => {
+                let private_key = self.inner.decrypt_private_key(keystore_id, password)?;
+                derive_account_from_private_key(&private_key, chain)?
+            }
+        };
+        let derived = derive_wallet_id_from_account(&account, wallet_type)?;
+        if &derived != expected {
+            return Err(GemstoneError::from("migrated secret does not derive the wallet id"));
+        }
+        Ok(())
+    }
 }
 
 fn derive_mnemonic_wallet(
@@ -182,21 +229,26 @@ fn derive_mnemonic_wallet(
 
 #[cfg(test)]
 mod migration_tests {
-    use std::path::PathBuf;
+    use std::path::{Path, PathBuf};
 
     use primitives::{Chain, hex};
 
-    use super::GemKeystore;
+    use super::{GemKeystore, keystore_id_for_wallet};
 
     const V3_MNEMONIC: &str = include_str!("../../../crates/gem_keystore/testdata/v3_ios_mnemonic.json");
     const V3_PRIVATE_KEY: &str = include_str!("../../../crates/gem_keystore/testdata/v3_ios_private_key.json");
     const V3_PASSWORD: &[u8] = b"000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f";
     const NEW_PASSWORD: &[u8] = b"raw-v4-password-bytes";
-    const KEYSTORE_ID: &str = "70b3b599-4bf1-4f7a-9ad4-a7746cc38ab3";
     const EXPECTED_PHRASE: &str =
         "dignity possible oppose wolf early kingdom essay arctic ten fence prepare mango source federal chief south dynamic rebuild wear envelope bulb picnic own scorpion";
     const EXPECTED_PRIVATE_KEY: &str = "ae8794f84919b14ff9d1f0f7cf490a4c04e608de16864f53fe8b40af127b9da3";
     const EXPECTED_ETHEREUM_ADDRESS: &str = "0x5a8f70b44aFa00Cb70615D9c9CCb9A24933ED2D3";
+    const MNEMONIC_WALLET_ID: &str = "multicoin_0x5a8f70b44aFa00Cb70615D9c9CCb9A24933ED2D3";
+    const PRIVATE_KEY_WALLET_ID: &str = "privateKey_ethereum_0x5a8f70b44aFa00Cb70615D9c9CCb9A24933ED2D3";
+
+    fn v4_path(base: &Path, keystore_id: &str) -> PathBuf {
+        base.join(format!("{keystore_id}.json"))
+    }
 
     fn prepare(name: &str, fixture: &str) -> (PathBuf, String) {
         let base = std::env::temp_dir().join(format!("gemstone_migration_{name}"));
@@ -211,25 +263,26 @@ mod migration_tests {
     fn migrate_v3_mnemonic_round_trip_and_idempotent() {
         let (base, v3_path) = prepare("mnemonic", V3_MNEMONIC);
         let keystore = GemKeystore::new(base.to_string_lossy().into_owned()).unwrap();
+        let wallet_id = MNEMONIC_WALLET_ID.to_string();
+        let keystore_id = keystore_id_for_wallet(wallet_id.clone());
 
         let migration = keystore
-            .migrate_v3(v3_path.clone(), V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), KEYSTORE_ID.to_string())
+            .migrate_v3(v3_path.clone(), V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), wallet_id.clone())
             .unwrap();
-        assert_eq!(migration.keystore_id, KEYSTORE_ID);
+        assert_eq!(migration.keystore_id, keystore_id);
+        assert!(!Path::new(&v3_path).exists(), "v3 file must be removed after a verified migration");
 
         assert_eq!(
-            keystore.export_recovery_phrase(KEYSTORE_ID.to_string(), NEW_PASSWORD.to_vec()).unwrap().join(" "),
+            keystore.export_recovery_phrase(keystore_id.clone(), NEW_PASSWORD.to_vec()).unwrap().join(" "),
             EXPECTED_PHRASE
         );
-        let accounts = keystore.add_accounts(KEYSTORE_ID.to_string(), NEW_PASSWORD.to_vec(), vec![Chain::Ethereum]).unwrap();
+        let accounts = keystore.add_accounts(keystore_id.clone(), NEW_PASSWORD.to_vec(), vec![Chain::Ethereum]).unwrap();
         assert_eq!(accounts[0].address, EXPECTED_ETHEREUM_ADDRESS);
 
-        let again = keystore.migrate_v3(v3_path, V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), KEYSTORE_ID.to_string()).unwrap();
-        assert_eq!(again.keystore_id, KEYSTORE_ID);
-        assert_eq!(
-            keystore.export_recovery_phrase(KEYSTORE_ID.to_string(), NEW_PASSWORD.to_vec()).unwrap().join(" "),
-            EXPECTED_PHRASE
-        );
+        // idempotent re-run with the v3 file already gone
+        let again = keystore.migrate_v3(v3_path, V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), wallet_id).unwrap();
+        assert_eq!(again.keystore_id, keystore_id);
+        assert_eq!(keystore.export_recovery_phrase(keystore_id, NEW_PASSWORD.to_vec()).unwrap().join(" "), EXPECTED_PHRASE);
 
         let _ = std::fs::remove_dir_all(&base);
     }
@@ -238,13 +291,16 @@ mod migration_tests {
     fn migrate_v3_private_key_round_trip_and_idempotent() {
         let (base, v3_path) = prepare("private_key", V3_PRIVATE_KEY);
         let keystore = GemKeystore::new(base.to_string_lossy().into_owned()).unwrap();
+        let wallet_id = PRIVATE_KEY_WALLET_ID.to_string();
+        let keystore_id = keystore_id_for_wallet(wallet_id.clone());
 
         let migration = keystore
-            .migrate_v3(v3_path.clone(), V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), KEYSTORE_ID.to_string())
+            .migrate_v3(v3_path.clone(), V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), wallet_id.clone())
             .unwrap();
-        assert_eq!(migration.keystore_id, KEYSTORE_ID);
+        assert_eq!(migration.keystore_id, keystore_id);
+        assert!(!Path::new(&v3_path).exists(), "v3 file must be removed after a verified migration");
         assert_eq!(
-            hex::encode(keystore.private_key(KEYSTORE_ID.to_string(), Chain::Ethereum, NEW_PASSWORD.to_vec()).unwrap()),
+            hex::encode(keystore.private_key(keystore_id.clone(), Chain::Ethereum, NEW_PASSWORD.to_vec()).unwrap()),
             EXPECTED_PRIVATE_KEY
         );
         let account = keystore
@@ -255,13 +311,52 @@ mod migration_tests {
             .unwrap();
         assert_eq!(account.accounts[0].address, EXPECTED_ETHEREUM_ADDRESS);
 
-        // idempotent re-run
-        let again = keystore.migrate_v3(v3_path, V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), KEYSTORE_ID.to_string()).unwrap();
-        assert_eq!(again.keystore_id, KEYSTORE_ID);
+        let again = keystore.migrate_v3(v3_path, V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), wallet_id).unwrap();
+        assert_eq!(again.keystore_id, keystore_id);
         assert_eq!(
-            hex::encode(keystore.private_key(KEYSTORE_ID.to_string(), Chain::Ethereum, NEW_PASSWORD.to_vec()).unwrap()),
+            hex::encode(keystore.private_key(keystore_id, Chain::Ethereum, NEW_PASSWORD.to_vec()).unwrap()),
             EXPECTED_PRIVATE_KEY
         );
+
+        let _ = std::fs::remove_dir_all(&base);
+    }
+
+    #[test]
+    fn migrate_v3_rejects_secret_that_does_not_derive_the_wallet_id() {
+        let (base, v3_path) = prepare("mismatch", V3_MNEMONIC);
+        let keystore = GemKeystore::new(base.to_string_lossy().into_owned()).unwrap();
+        let wrong_wallet_id = "multicoin_0x0000000000000000000000000000000000000000".to_string();
+        let keystore_id = keystore_id_for_wallet(wrong_wallet_id.clone());
+
+        let error = keystore
+            .migrate_v3(v3_path.clone(), V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), wrong_wallet_id.clone())
+            .unwrap_err();
+        assert!(error.to_string().contains("does not derive the wallet id"), "{error}");
+        assert!(!v4_path(&base, &keystore_id).exists(), "mismatched v4 file must not be left behind");
+        assert!(Path::new(&v3_path).exists(), "v3 file must be preserved when the migration is rejected");
+
+        // wrong wallet type for the secret kind is also rejected
+        let error = keystore
+            .migrate_v3(v3_path.clone(), V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), PRIVATE_KEY_WALLET_ID.to_string())
+            .unwrap_err();
+        assert!(error.to_string().contains("does not match wallet type"), "{error}");
+        assert!(Path::new(&v3_path).exists());
+
+        let _ = std::fs::remove_dir_all(&base);
+    }
+
+    #[test]
+    fn migrate_v3_replaces_corrupt_staged_v4_file() {
+        let (base, v3_path) = prepare("corrupt_v4", V3_MNEMONIC);
+        let keystore = GemKeystore::new(base.to_string_lossy().into_owned()).unwrap();
+        let wallet_id = MNEMONIC_WALLET_ID.to_string();
+        let keystore_id = keystore_id_for_wallet(wallet_id.clone());
+        std::fs::write(v4_path(&base, &keystore_id), b"not a keystore").unwrap();
+
+        let migration = keystore.migrate_v3(v3_path.clone(), V3_PASSWORD.to_vec(), NEW_PASSWORD.to_vec(), wallet_id).unwrap();
+        assert_eq!(migration.keystore_id, keystore_id);
+        assert!(!Path::new(&v3_path).exists());
+        assert_eq!(keystore.export_recovery_phrase(keystore_id, NEW_PASSWORD.to_vec()).unwrap().join(" "), EXPECTED_PHRASE);
 
         let _ = std::fs::remove_dir_all(&base);
     }

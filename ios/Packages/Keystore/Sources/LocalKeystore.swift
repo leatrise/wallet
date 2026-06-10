@@ -123,9 +123,6 @@ public final class LocalKeystore: Keystore, @unchecked Sendable {
         case .view:
             return nil
         case .multicoin, .single, .privateKey:
-            if v4KeystoreExists(wallet.keystoreId) {
-                return nil
-            }
             let password = try await getPassword()
             guard !password.isEmpty else { return nil }
             return try await queue.asyncTask { [gemKeystore, keystoreURL] in
@@ -142,7 +139,7 @@ public final class LocalKeystore: Keystore, @unchecked Sendable {
                     v3Path: v3URL.path,
                     v3Password: v3Password,
                     newPassword: newPassword,
-                    keystoreId: wallet.keystoreId,
+                    walletId: wallet.id.id,
                 )
                 return migration.keystoreId
             }
@@ -237,7 +234,7 @@ public final class LocalKeystore: Keystore, @unchecked Sendable {
     }
 
     private func v4KeystoreExists(_ keystoreId: String) -> Bool {
-        let url = keystoreURL.appendingPathComponent("v4").appendingPathComponent("\(keystoreId).gemk")
+        let url = keystoreURL.appendingPathComponent("\(keystoreId).json")
         return FileManager.default.fileExists(atPath: url.path)
     }
 

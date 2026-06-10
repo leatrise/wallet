@@ -5,8 +5,8 @@ use std::thread;
 use crate::{KeystoreError, KeystoreId};
 
 use super::super::{
-    constants::{AES_GCM_TAG_LEN, HEADER_LEN_CAP, MAGIC, PREFIX_LEN, VERSION_V4},
-    format::parse_v4,
+    constants::AES_GCM_TAG_LEN,
+    format::{FileV4, parse_v4},
     types::{FileKeystore, KdfParams, SecretKind},
 };
 use super::testkit::{PHRASE, assert_verify_path_error, new_keystore_id, test_keystore, v4_path, write_tampered};
@@ -44,7 +44,7 @@ fn test_v4_rejects_invalid_ids_before_path_construction() {
         "../secret",
         "550e8400-e29b-11d4-a716-446655440000",
         "550E8400-E29B-41D4-A716-446655440000",
-        "550e8400-e29b-41d4-a716-446655440000.gemk",
+        "550e8400-e29b-41d4-a716-446655440000.json",
     ];
     for id in invalid_ids {
         assert_eq!(
@@ -62,7 +62,7 @@ fn test_v4_header_filename_mismatch_fails_after_authentication() {
     let id_a = KeystoreId::new();
     let id_b = KeystoreId::new();
     let meta = keystore.import_mnemonic(PHRASE, password, Some(id_a.to_string())).unwrap();
-    fs::copy(v4_path(&dir, &meta.keystore_id), dir.path().join("v4").join(format!("{}.gemk", id_b.as_str()))).unwrap();
+    fs::copy(v4_path(&dir, &meta.keystore_id), dir.path().join(format!("{}.json", id_b.as_str()))).unwrap();
     assert_eq!(
         keystore.get_meta(id_b.as_str()).unwrap_err(),
         KeystoreError::corrupt_file("keystore id does not match filename")
@@ -112,67 +112,113 @@ fn test_v4_password_bounds() {
 }
 
 #[test]
+fn test_v4_json_shape() {
+    let (dir, keystore) = test_keystore();
+    let meta = keystore.import_mnemonic(PHRASE, b"password", None).unwrap();
+    let file = read_file_v4(&dir, &meta.keystore_id);
+
+    assert_eq!(file.version, 4);
+    assert_eq!(file.id, meta.keystore_id);
+    assert_eq!(file.kind, "mnemonic");
+    assert_eq!(file.crypto.kdf.algorithm, "argon2id");
+    assert_eq!(file.crypto.kdf.salt.len(), 32);
+    assert_eq!(file.crypto.cipher.algorithm, "aes-256-gcm");
+    assert_eq!(file.crypto.cipher.nonce.len(), 24);
+    assert_eq!(file.crypto.cipher.tag_len, 16);
+    assert!(file.crypto.ciphertext.len() > 32);
+}
+
+#[test]
 fn test_v4_rejects_roundtrip_tampering() {
     let (dir, keystore) = test_keystore();
     let password = b"password";
     let meta = keystore.import_mnemonic(PHRASE, password, None).unwrap();
-    let original = fs::read(v4_path(&dir, &meta.keystore_id)).unwrap();
-    let tampered_path = dir.path().join("tampered.gemk");
+    let original = read_file_v4(&dir, &meta.keystore_id);
+    let tampered_path = dir.path().join("tampered.json");
+    let tamper = |mutate: &dyn Fn(&mut FileV4)| {
+        let mut file = original.clone();
+        mutate(&mut file);
+        write_tampered(&tampered_path, &serde_json::to_vec(&file).unwrap());
+    };
 
-    let mut magic = original.clone();
-    magic[0] ^= 0xff;
-    write_tampered(&tampered_path, &magic);
-    assert_verify_path_error(&tampered_path, password, KeystoreError::corrupt_file("invalid magic"));
-
-    let mut version = original.clone();
-    version[4] ^= 0xff;
-    write_tampered(&tampered_path, &version);
+    tamper(&|file| file.version = 5);
     assert_verify_path_error(&tampered_path, password, KeystoreError::unsupported("version"));
 
-    // borsh header layout: id len (4) + id + kind tag (1) + kdf tag (1) + memory/iterations/parallelism (12), then the salt
-    let kdf_salt_offset = PREFIX_LEN + 4 + meta.keystore_id.len() + 1 + 1 + 12;
-    let mut header = original.clone();
-    header[kdf_salt_offset] ^= 0xff;
-    write_tampered(&tampered_path, &header);
+    tamper(&|file| file.kind = "private_key".to_string());
     assert_verify_path_error(&tampered_path, password, KeystoreError::AuthenticationFailed);
 
-    let parsed = parse_v4(&original).unwrap();
-    let mut ciphertext = original.clone();
-    ciphertext[parsed.header_end] ^= 0xff;
-    write_tampered(&tampered_path, &ciphertext);
+    tamper(&|file| file.crypto.kdf.memory_kib = 8);
     assert_verify_path_error(&tampered_path, password, KeystoreError::AuthenticationFailed);
 
-    let mut tag = original;
-    let last = tag.len() - 1;
-    tag[last] ^= 0xff;
-    write_tampered(&tampered_path, &tag);
+    tamper(&|file| file.crypto.kdf.salt = flip_hex_at(&file.crypto.kdf.salt, 0));
+    assert_verify_path_error(&tampered_path, password, KeystoreError::AuthenticationFailed);
+
+    tamper(&|file| file.crypto.cipher.nonce = flip_hex_at(&file.crypto.cipher.nonce, 0));
+    assert_verify_path_error(&tampered_path, password, KeystoreError::AuthenticationFailed);
+
+    tamper(&|file| file.crypto.ciphertext = flip_hex_at(&file.crypto.ciphertext, 0));
+    assert_verify_path_error(&tampered_path, password, KeystoreError::AuthenticationFailed);
+
+    // The last ciphertext byte is part of the GCM tag.
+    tamper(&|file| file.crypto.ciphertext = flip_hex_at(&file.crypto.ciphertext, file.crypto.ciphertext.len() - 1));
     assert_verify_path_error(&tampered_path, password, KeystoreError::AuthenticationFailed);
 }
 
 #[test]
 fn test_v4_rejects_malformed_files() {
-    let mut bytes = Vec::new();
-    assert_eq!(parse_v4(&bytes).unwrap_err(), KeystoreError::corrupt_file("file too short"));
-    bytes.extend_from_slice(b"NOPE");
-    bytes.push(VERSION_V4);
-    bytes.extend_from_slice(&0u32.to_be_bytes());
-    assert_eq!(parse_v4(&bytes).unwrap_err(), KeystoreError::corrupt_file("invalid magic"));
+    for bytes in [b"".as_slice(), b"not json".as_slice(), br#"{"version":4}"#.as_slice()] {
+        match parse_v4(bytes).unwrap_err() {
+            KeystoreError::CorruptFile(message) => assert!(!message.is_empty()),
+            error => panic!("expected corrupt file, got {error:?}"),
+        }
+    }
 
-    let mut huge_header = Vec::new();
-    huge_header.extend_from_slice(MAGIC);
-    huge_header.push(VERSION_V4);
-    huge_header.extend_from_slice(&((HEADER_LEN_CAP + 1) as u32).to_be_bytes());
-    assert_eq!(parse_v4(&huge_header).unwrap_err(), KeystoreError::corrupt_file("header too large"));
+    let parse_error = |file: &FileV4| parse_v4(&serde_json::to_vec(file).unwrap()).unwrap_err();
 
-    let mut malicious_borsh_header = Vec::new();
-    malicious_borsh_header.extend_from_slice(MAGIC);
-    malicious_borsh_header.push(VERSION_V4);
-    malicious_borsh_header.extend_from_slice(&8u32.to_be_bytes());
-    malicious_borsh_header.extend_from_slice(&u64::MAX.to_le_bytes());
-    match parse_v4(&malicious_borsh_header).unwrap_err() {
-        KeystoreError::CorruptFile(message) => assert!(!message.is_empty()),
+    let mut file = FileV4::mock();
+    file.version = 3;
+    assert_eq!(parse_error(&file), KeystoreError::unsupported("version"));
+
+    let mut file = FileV4::mock();
+    file.kind = "seed".to_string();
+    assert_eq!(parse_error(&file), KeystoreError::corrupt_file("unknown secret kind"));
+
+    let mut file = FileV4::mock();
+    file.crypto.kdf.salt = "zz".to_string();
+    assert_eq!(parse_error(&file), KeystoreError::corrupt_file("invalid hex"));
+
+    let mut file = FileV4::mock();
+    file.crypto.kdf.salt = "0000".to_string();
+    assert_eq!(parse_error(&file), KeystoreError::corrupt_file("invalid Argon2 salt length"));
+
+    let mut json = serde_json::to_string(&FileV4::mock()).unwrap();
+    json.insert_str(1, r#""unknown_field":1,"#);
+    match parse_v4(json.as_bytes()).unwrap_err() {
+        KeystoreError::CorruptFile(message) => assert!(message.contains("unknown field"), "{message}"),
         error => panic!("expected corrupt file, got {error:?}"),
     }
+}
+
+#[test]
+fn test_v4_rejects_payload_that_would_exceed_the_read_cap() {
+    let (_dir, keystore) = test_keystore();
+    let oversized = vec![7u8; 65_500];
+    assert_eq!(
+        keystore.import_private_key(&oversized, b"password", None).unwrap_err(),
+        KeystoreError::corrupt_file("payload too large")
+    );
+    assert!(keystore.list().unwrap().is_empty());
+}
+
+fn read_file_v4(dir: &tempfile::TempDir, keystore_id: &str) -> FileV4 {
+    serde_json::from_slice(&fs::read(v4_path(dir, keystore_id)).unwrap()).unwrap()
+}
+
+fn flip_hex_at(text: &str, index: usize) -> String {
+    let mut text = text.to_string();
+    let replacement = if &text[index..index + 1] == "0" { "1" } else { "0" };
+    text.replace_range(index..index + 1, replacement);
+    text
 }
 
 #[test]

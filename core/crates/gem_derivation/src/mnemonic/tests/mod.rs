@@ -28,7 +28,5 @@ pub(super) fn bitcoin_family_v3_vectors() -> Vec<BitcoinFamilyV3Vector> {
 
 pub(super) fn expected_derivation(chain: Chain) -> DerivationExpectation {
     let mut expectations: HashMap<Chain, DerivationExpectation> = serde_json::from_str(include_str!("../../../testdata/derivation_expectations.json")).unwrap();
-    expectations
-        .remove(&chain)
-        .unwrap_or_else(|| panic!("missing derivation expectation for chain {chain}"))
+    expectations.remove(&chain).unwrap_or_else(|| panic!("missing derivation expectation for chain {chain}"))
 }

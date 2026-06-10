@@ -16,7 +16,7 @@ pub(super) fn test_keystore() -> (TempDir, FileKeystore) {
 }
 
 pub(super) fn v4_path(dir: &TempDir, keystore_id: &str) -> PathBuf {
-    dir.path().join("v4").join(format!("{}.gemk", keystore_id))
+    dir.path().join(format!("{}.json", keystore_id))
 }
 
 pub(super) fn write_tampered(path: &Path, bytes: &[u8]) {

@@ -11,8 +11,8 @@ class GemMigrateKeystoreOperator(
         legacyPath: String,
         legacyPassword: ByteArray,
         newPassword: ByteArray,
-        keystoreId: String,
+        walletId: String,
     ): String = GemKeystore(baseDir).use { keystore ->
-        keystore.migrateV3(legacyPath, legacyPassword, newPassword, keystoreId).keystoreId
+        keystore.migrateV3(legacyPath, legacyPassword, newPassword, walletId).keystoreId
     }
 }

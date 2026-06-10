@@ -30,31 +30,36 @@ Gem Keystore v4 stores one encrypted secret file per controlled wallet. Wallet/a
 File path:
 
 ```text
-<base_dir>/v4/<keystore_id>.gemk
+<base_dir>/<keystore_id>.json
 ```
 
 ## v4 File Format
 
-Binary layout:
+JSON layout (see [crates/gem_keystore/README.md](../crates/gem_keystore/README.md) for the full example):
 
-```text
-GEMK | version=4 | header_len_be_u32 | borsh_header | aes_256_gcm_ciphertext_and_tag
+```json
+{
+  "version": 4,
+  "id": "<uuid v5>",
+  "kind": "mnemonic | private_key",
+  "crypto": {
+    "kdf": { "algorithm": "argon2id", "memory_kib": 65536, "iterations": 3, "parallelism": 1, "salt": "<hex>", "output_len": 32 },
+    "cipher": { "algorithm": "aes-256-gcm", "nonce": "<hex>", "tag_len": 16 },
+    "ciphertext": "<hex, tag appended>"
+  }
+}
 ```
 
-Header fields:
-
-- `keystore_id`
-- `kind`: `Mnemonic` or `PrivateKey`
-- Argon2id KDF params and random salt
-- AES-256-GCM params and random nonce
+The plaintext inside the ciphertext is the raw secret bytes (UTF-8 phrase or raw key), interpreted by the authenticated `kind`.
 
 Security rules:
 
-- Header is plaintext but is authenticated as AES-GCM AAD.
-- Managed reads require authenticated header `keystore_id` to match the filename id.
-- Header metadata from `list`, `get_meta`, or `inspect` is not proof of migration success.
+- The metadata is plaintext but every field except `crypto.ciphertext` is authenticated as AES-GCM AAD, via a canonical re-serialization of the parsed values (reformatting the JSON is harmless; changing any value fails authentication).
+- Managed reads require the authenticated `id` to match the filename id.
+- Metadata from `list`, `get_meta`, or `inspect` is not proof of migration success.
 - Passworded `verify` or a real decrypt is required before trusting a file for migration state.
-- Reads cap file/header/body sizes before parsing.
+- Unknown JSON fields are rejected (`deny_unknown_fields`); nothing unauthenticated can ride along in the file.
+- Reads cap file and ciphertext sizes before parsing; writes reject anything the read cap would refuse later.
 - Unknown versions, invalid ids, invalid KDF/cipher params, malformed files, and auth failures return typed errors.
 
 Current crypto:
@@ -151,14 +156,14 @@ Rules:
 - `Wallet.keystoreId` is always computed from `wallet.id.id`.
 - v4 wallets should keep `Wallet.externalId == nil`.
 - `Wallet.externalId` is legacy-only and exposed as `legacyV3Id = externalId ?? id.id`.
-- iOS v3 migration locates the WalletCore file using `legacyV3Id`.
-- iOS writes v4 at `Wallet.keystoreId`.
+- iOS v3 migration locates the WalletCore file using `legacyV3Id`; v4 files share the same directory but never match its name, suffix, or JSON `id` rules.
+- iOS passes `wallet.id.id` to `migrate_v3`; Rust derives the keystore id and verifies the binding.
 - iOS does not update the wallet DB after v3 migration.
-- After v4 write succeeds, iOS leaves the v3 file in place; the migration marker is the v4 file's presence (see Migration Semantics).
-- If migration fails before v4 write, the v3 file remains and startup retries later.
-- If the app crashes after v4 write, future reads still work because the v4 id is deterministic.
+- A verified migration deletes the v3 file; the migration-pending marker is the v3 file's presence (see Migration Semantics).
+- If migration fails before the verified v4 write, the v3 file remains and startup retries later.
+- If the app crashes after v4 write, the next launch re-runs migration idempotently and finishes the v3 cleanup.
 - Startup logs per-wallet migration failures instead of swallowing them silently.
-- Deleting a wallet removes every copy: the v4 file and the in-place v3 file.
+- Deleting a wallet removes every copy: the v4 file and any v3 file that never migrated.
 
 Important test coverage:
 
@@ -180,24 +185,25 @@ Rules:
 - Android computes `Wallet.keystoreId` from `wallet.id.id` on demand.
 - Android does not persist an `external_id` for v4 lookup.
 - Android v3 files are located at `<dataDir>/<wallet.id.id>`.
-- Android writes v4 at the deterministic id and leaves the v3 file in place; later launches skip migration once `v4/<keystore_id>.gemk` exists.
+- Android passes `wallet.id.id` to `migrate_v3`; Rust derives the keystore id, verifies the binding, and deletes the v3 file.
+- Android runs migration whenever the v3 file still exists; its presence is the migration-pending marker.
 - There is no v3-to-v4 DB update.
 - Migration failures are logged and retried next launch while the v3 file remains.
 - Account backfill uses Rust `add_accounts`; it should not export mnemonic/private key into Kotlin.
-- Deleting a wallet removes every copy (the v4 file and the in-place v3 file); the stored password is cleared only when both are gone.
+- Deleting a wallet removes every copy (the v4 file and any v3 file that never migrated); the stored password is cleared only when both are gone.
 
 ## Migration Semantics
 
 - Normal v4 decrypt APIs do not silently upgrade or rewrite v3 files.
 - v3 support exists only for explicit migration.
-- `migrate_v3` requires the app-provided deterministic `keystore_id`.
-- If the target v4 file already exists, Rust authenticates it with the supplied new password and returns metadata.
-- Idempotent import verifies id and password only; it does not compare the incoming v3 payload with the existing v4 payload. This relies on wallet-id derivation and duplicate detection being correct.
+- `migrate_v3` takes the app's `wallet_id`; Rust derives the deterministic keystore id from it.
+- After import, Rust verifies the binding: the migrated secret must derive the wallet id (account address + wallet type) it is stored under. On mismatch the staged v4 file is deleted, the v3 file is preserved, and the migration fails.
+- A verified migration deletes the v3 file. Its presence is the migration-pending marker; both apps run migration while it exists and skip once it is gone, so Argon2id is not re-run on normal launches.
+- If the target v4 file already exists, Rust authenticates it with the supplied new password, re-verifies the binding, and finishes the v3 cleanup (crash-safe idempotent retry).
+- A corrupt staged v4 file (parse/authenticated-header corruption, not a wrong password) is deleted and rebuilt from the v3 file on the next migration run.
 - Wrong password never overwrites an existing v4 file.
-- The migration marker is the presence of the v4 file, not the absence of the v3 file. Both apps skip migration once `v4/<keystore_id>.gemk` exists, so Argon2id is never re-run.
-- The v3 file is left at its original path after a successful v4 write (downgrade safety): an older or rolled-back build still finds the wallet where it expects it. The two encrypted copies (WalletCore v3 + v4) coexist during the rollout window.
-- v3 cleanup is deferred to a later release, after v4 is proven and a downgrade/rollback to a pre-v4 build is no longer supported.
-- Deleting a wallet is app-owned and must remove every on-disk copy (the v4 file and any v3 file) so no secret is orphaned; the password is cleared only after all copies are gone.
+- Deleting a wallet is app-owned and must remove every on-disk copy (the v4 file and any v3 file that never migrated) so no secret is orphaned; the password is cleared only after all copies are gone.
+- Downgrading to a pre-v4 build after migration is not supported: the v3 file is gone once the wallet has migrated.
 
 ## Mobile Import/Create Flow
 
@@ -222,40 +228,10 @@ Rules:
 
 ## Misc
 
-### v4 Header Dump Script
+### Inspecting v4 Files
 
-Purpose:
-
-- Dumps plaintext v4 `.gemk` headers to JSON without requiring a Rust build.
-- Never decrypts the body and never asks for a password.
-- Reports encrypted body length, ciphertext length, and tag length only.
-- Flags whether the filename stem matches the plaintext header `keystore_id`.
-- Supports either one `.gemk` file or a directory of `.gemk` files.
-
-Usage:
-
-```sh
-python3 core/scripts/dump_v4_keystore.py <file.gemk>
-python3 core/scripts/dump_v4_keystore.py <dir>/v4/
-python3 core/scripts/dump_v4_keystore.py <dir>/v4/ -o dump.json
-```
-
-The script lives at [`../scripts/dump_v4_keystore.py`](../scripts/dump_v4_keystore.py).
-
-Verified behavior:
-
-- Parsed a real v4 file generated by `gem_keystore::FileKeystore`.
-- Correctly decoded `GEMK`, version `4`, Borsh header fields, deterministic v5 `keystore_id`, `Mnemonic` kind, Argon2id params, AES-256-GCM params, body lengths, and filename/header match.
-- Directory mode and `-o` JSON output work.
-- Malformed files are reported as per-file JSON errors instead of aborting a batch.
-
-Caveats:
-
-- Header output is unauthenticated diagnostic metadata. Do not use this script to decide migration success, wallet ownership, or secret validity.
-- A passworded `verify` or decrypt path in Rust is required before trusting header metadata.
-- The script exits `0` even when individual files produce JSON `error` entries; inspect output if using it in automation.
+v4 files are plaintext JSON, so `cat`/`jq` work directly for debugging. The metadata is unauthenticated until a passworded `verify`/decrypt runs in Rust — do not use it to decide migration success, wallet ownership, or secret validity.
 
 ## Known Follow-Ups
 
 - Migration failures are logged and retried on next launch; decide whether they also need durable telemetry or user-visible recovery.
-- v3 files are left in place after migration for downgrade safety, so the secret exists as two encrypted copies. Schedule a cleanup release that deletes the v3 file once a downgrade/rollback to a pre-v4 build is no longer supported.

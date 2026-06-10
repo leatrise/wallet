@@ -57,13 +57,12 @@ struct MigrateV3KeystoreTests {
         try FileManager.default.copyItem(at: fixtureURL, to: v3URL)
 
         let keystoreId = try #require(try await keystore.migrateV3Keystore(for: legacy))
-        let v4URL = baseDir.appending(path: "v4/\(keystoreId).gemk")
+        let v4URL = baseDir.appending(path: "\(keystoreId).json")
         #expect(FileManager.default.fileExists(atPath: v4URL.path))
-        #expect(FileManager.default.fileExists(atPath: v3URL.path))
+        #expect(!FileManager.default.fileExists(atPath: v3URL.path), "a verified migration deletes the v3 file")
 
         try await keystore.deleteKey(for: legacy)
         #expect(!FileManager.default.fileExists(atPath: v4URL.path))
-        #expect(!FileManager.default.fileExists(atPath: v3URL.path))
     }
 
     @discardableResult
@@ -85,14 +84,13 @@ struct MigrateV3KeystoreTests {
 
         let keystoreId = try #require(try await keystore.migrateV3Keystore(for: legacy))
         #expect(keystoreId == legacy.keystoreId)
-        #expect(FileManager.default.fileExists(atPath: baseDir.appending(path: "v4/\(keystoreId).gemk").path))
-        #expect(FileManager.default.fileExists(atPath: v3URL.path))
+        #expect(FileManager.default.fileExists(atPath: baseDir.appending(path: "\(keystoreId).json").path))
+        #expect(!FileManager.default.fileExists(atPath: v3URL.path), "a verified migration deletes the v3 file")
 
         let key = try await keystore.getPrivateKey(wallet: legacy, chain: .ethereum)
         #expect(key.hex == Self.expectedPrivateKey)
 
         #expect(try await keystore.migrateV3Keystore(for: legacy) == nil)
-        #expect(FileManager.default.fileExists(atPath: v3URL.path))
         let keyAgain = try await keystore.getPrivateKey(wallet: legacy, chain: .ethereum)
         #expect(keyAgain.hex == Self.expectedPrivateKey)
 

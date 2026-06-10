@@ -1,5 +1,6 @@
 package com.gemwallet.android.data.coordinators.wallet
 
+import android.util.Log
 import com.gemwallet.android.application.wallet.coordinators.DeleteWallet
 import com.gemwallet.android.blockchain.operators.DeleteKeyStoreOperator
 import com.gemwallet.android.cases.device.SyncSubscription
@@ -37,9 +38,11 @@ class DeleteWalletImpl @Inject constructor(
 
         // Delete the keystore before the DB row; if it fails, keep the wallet so the secret is never orphaned silently.
         if (wallet.type != WalletType.View && !deleteKeyStoreOperator(wallet)) {
+            Log.e(TAG, "keystore delete failed for ${walletId.id}; keeping the wallet")
             return@withContext
         }
         if (!walletsRepository.removeWallet(walletId = walletId)) {
+            Log.e(TAG, "wallet row removal failed for ${walletId.id}; retry delete to finish")
             return@withContext
         }
 
@@ -68,5 +71,9 @@ class DeleteWalletImpl @Inject constructor(
         withContext(Dispatchers.Main) {
             callback()
         }
+    }
+
+    private companion object {
+        const val TAG = "DeleteWallet"
     }
 }

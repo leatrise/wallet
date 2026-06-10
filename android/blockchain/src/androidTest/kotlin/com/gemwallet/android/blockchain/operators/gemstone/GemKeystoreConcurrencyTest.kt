@@ -55,7 +55,7 @@ class GemKeystoreConcurrencyTest {
         val keystoreId = created.first().keystoreId
         assertTrue("concurrent creates of the same wallet must return one deterministic id", created.all { it.keystoreId == keystoreId })
 
-        val files = File(baseDir, "v4").listFiles { file -> file.extension == "gemk" }.orEmpty()
+        val files = baseDir.listFiles { file -> file.extension == "json" }.orEmpty()
         assertEquals("the race must leave exactly one keystore file, not duplicates", 1, files.size)
 
         val startRead = CyclicBarrier(THREADS)
@@ -74,7 +74,7 @@ class GemKeystoreConcurrencyTest {
                 GemKeystore(baseDir.path).use { runCatching { it.delete(keystoreId) } }
             }
         }.awaitAll()
-        assertFalse("keystore file must be removed after concurrent delete", File(baseDir, "v4/$keystoreId.gemk").exists())
+        assertFalse("keystore file must be removed after concurrent delete", File(baseDir, "$keystoreId.json").exists())
     }
 
     companion object {

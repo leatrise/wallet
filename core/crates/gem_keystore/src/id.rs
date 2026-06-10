@@ -93,7 +93,7 @@ mod tests {
             KeystoreError::invalid_input("keystore id")
         );
         assert_eq!(
-            KeystoreId::parse("550e8400-e29b-41d4-a716-446655440000.gemk").unwrap_err(),
+            KeystoreId::parse("550e8400-e29b-41d4-a716-446655440000.json").unwrap_err(),
             KeystoreError::invalid_input("keystore id")
         );
         assert_eq!(

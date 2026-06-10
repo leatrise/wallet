@@ -1,13 +1,14 @@
 use std::fmt;
 use std::path::PathBuf;
 
-use borsh::{BorshDeserialize, BorshSerialize};
+use strum::{AsRefStr, EnumString};
 use zeroize::{Zeroize, Zeroizing};
 
 use super::constants::{AES_GCM_NONCE_LEN, ARGON2_SALT_LEN};
 use crate::KeystoreError;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, AsRefStr, EnumString)]
+#[strum(serialize_all = "snake_case")]
 pub enum SecretKind {
     Mnemonic,
     PrivateKey,
@@ -25,7 +26,6 @@ pub struct KeystoreInspection {
     pub meta: Option<StoredSecretMeta>,
     pub authenticated: bool,
     pub file_len: u64,
-    pub header_len: u32,
     pub ciphertext_len: u64,
     pub tag_len: u8,
     pub warnings: Vec<String>,
@@ -43,7 +43,7 @@ pub struct FileKeystore {
     pub(super) default_kdf: KdfParams,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(super) struct Header {
     pub(super) keystore_id: String,
     pub(super) kind: SecretKind,
@@ -51,7 +51,7 @@ pub(super) struct Header {
     pub(super) cipher: CipherParams,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(super) enum KdfParams {
     Argon2id {
         memory_kib: u32,
@@ -62,12 +62,11 @@ pub(super) enum KdfParams {
     },
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(super) enum CipherParams {
     Aes256Gcm { nonce: [u8; AES_GCM_NONCE_LEN], tag_len: u8 },
 }
 
-#[derive(Clone, PartialEq, Eq, BorshSerialize, BorshDeserialize)]
 pub(super) enum SecretPayload {
     Mnemonic { phrase: String },
     PrivateKey { bytes: Vec<u8> },
@@ -92,6 +91,27 @@ impl Drop for SecretPayload {
 }
 
 impl SecretPayload {
+    pub(super) fn from_bytes(kind: SecretKind, bytes: Vec<u8>) -> Result<Self, KeystoreError> {
+        match kind {
+            SecretKind::Mnemonic => match String::from_utf8(bytes) {
+                Ok(phrase) => Ok(SecretPayload::Mnemonic { phrase }),
+                Err(error) => {
+                    let mut bytes = error.into_bytes();
+                    bytes.zeroize();
+                    Err(KeystoreError::corrupt_file("mnemonic payload is not valid UTF-8"))
+                }
+            },
+            SecretKind::PrivateKey => Ok(SecretPayload::PrivateKey { bytes }),
+        }
+    }
+
+    pub(super) fn into_bytes(mut self) -> Zeroizing<Vec<u8>> {
+        match &mut self {
+            SecretPayload::Mnemonic { phrase } => Zeroizing::new(std::mem::take(phrase).into_bytes()),
+            SecretPayload::PrivateKey { bytes } => Zeroizing::new(std::mem::take(bytes)),
+        }
+    }
+
     pub(super) fn into_mnemonic(mut self) -> Result<Zeroizing<String>, KeystoreError> {
         match &mut self {
             SecretPayload::Mnemonic { phrase } => Ok(Zeroizing::new(std::mem::take(phrase))),
@@ -108,9 +128,7 @@ impl SecretPayload {
 }
 
 #[derive(Debug)]
-pub(super) struct ParsedFile<'a> {
+pub(super) struct ParsedFile {
     pub(super) header: Header,
-    pub(super) header_len: u32,
-    pub(super) header_end: usize,
-    pub(super) body: &'a [u8],
+    pub(super) ciphertext: Vec<u8>,
 }

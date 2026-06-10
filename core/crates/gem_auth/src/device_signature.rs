@@ -1,6 +1,7 @@
 use alloy_primitives::hex;
 use ed25519_dalek::{Signature, Signer, SigningKey, VerifyingKey};
 use gem_encoding::{decode_base64, encode_base64};
+use zeroize::Zeroizing;
 
 pub const GEM_AUTH_SCHEME: &str = "Gem ";
 
@@ -15,12 +16,12 @@ pub fn device_auth_message(timestamp: &str, method: &str, path: &str, wallet_id:
 }
 
 pub fn device_public_key(private_key: &[u8]) -> Result<[u8; 32], &'static str> {
-    let seed: [u8; ED25519_SEED_LENGTH] = private_key.try_into().map_err(|_| "invalid device private key length")?;
+    let seed: Zeroizing<[u8; ED25519_SEED_LENGTH]> = Zeroizing::new(private_key.try_into().map_err(|_| "invalid device private key length")?);
     Ok(SigningKey::from_bytes(&seed).verifying_key().to_bytes())
 }
 
 pub fn build_device_auth_header(private_key: &[u8], method: &str, path: &str, wallet_id: &str, body: &[u8], timestamp_ms: u64) -> Result<String, &'static str> {
-    let seed: [u8; ED25519_SEED_LENGTH] = private_key.try_into().map_err(|_| "invalid device private key length")?;
+    let seed: Zeroizing<[u8; ED25519_SEED_LENGTH]> = Zeroizing::new(private_key.try_into().map_err(|_| "invalid device private key length")?);
     let signing_key = SigningKey::from_bytes(&seed);
     let public_key = hex::encode(signing_key.verifying_key().to_bytes());
     let body_hash = device_body_hash(body);

@@ -1,5 +1,6 @@
 use super::{
     constants::{ARGON2_SALT_LEN, DEFAULT_ARGON2_OUTPUT_LEN},
+    format::{CipherV4, CryptoV4, FileV4, KdfV4},
     types::KdfParams,
 };
 
@@ -16,6 +17,32 @@ impl KdfParams {
             parallelism: MOCK_ARGON2_PARALLELISM,
             salt: [MOCK_ARGON2_SALT_BYTE; ARGON2_SALT_LEN],
             output_len: DEFAULT_ARGON2_OUTPUT_LEN,
+        }
+    }
+}
+
+impl FileV4 {
+    pub(super) fn mock() -> Self {
+        Self {
+            version: 4,
+            id: "550e8400-e29b-41d4-a716-446655440000".to_string(),
+            kind: "mnemonic".to_string(),
+            crypto: CryptoV4 {
+                kdf: KdfV4 {
+                    algorithm: "argon2id".to_string(),
+                    memory_kib: 65536,
+                    iterations: 3,
+                    parallelism: 1,
+                    salt: "00000000000000000000000000000000".to_string(),
+                    output_len: 32,
+                },
+                cipher: CipherV4 {
+                    algorithm: "aes-256-gcm".to_string(),
+                    nonce: "000000000000000000000000".to_string(),
+                    tag_len: 16,
+                },
+                ciphertext: "00000000000000000000000000000000".to_string(),
+            },
         }
     }
 }

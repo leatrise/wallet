@@ -1,10 +1,5 @@
-pub(super) const MAGIC: &[u8; 4] = b"GEMK";
 pub(super) const VERSION_V4: u8 = 4;
-pub(super) const FILE_EXTENSION: &str = "gemk";
-pub(super) const PREFIX_LEN: usize = 9;
-pub(super) const HEADER_LEN_OFFSET: usize = 5;
-pub(super) const HEADER_LEN_END: usize = 9;
-pub(super) const HEADER_LEN_CAP: usize = 16 * 1024;
+pub(super) const FILE_EXTENSION: &str = "json";
 pub(super) const ENCRYPTED_BODY_CAP: usize = 64 * 1024;
 pub(super) const WHOLE_FILE_CAP: usize = 128 * 1024;
 pub(super) const PASSWORD_CAP: usize = 1024 * 1024;

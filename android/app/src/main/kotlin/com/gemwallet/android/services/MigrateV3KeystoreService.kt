@@ -5,7 +5,6 @@ import android.util.Log
 import com.gemwallet.android.application.PasswordStore
 import com.gemwallet.android.blockchain.operators.MigrateKeystoreOperator
 import com.gemwallet.android.data.repositories.wallets.WalletsRepository
-import com.gemwallet.android.ext.keystoreId
 import com.gemwallet.android.math.fromHex
 import com.wallet.core.primitives.Wallet
 import com.wallet.core.primitives.WalletType
@@ -41,16 +40,14 @@ class MigrateV3KeystoreService @Inject constructor(
 
         val passwordBytes = passwordStore.getPassword(wallet.id.id).fromHex()
         try {
-            migrateKeystoreOperator(legacyFile.path, passwordBytes, passwordBytes, wallet.keystoreId)
+            migrateKeystoreOperator(legacyFile.path, passwordBytes, passwordBytes, wallet.id.id)
         } finally {
             passwordBytes.fill(0)
         }
     }
 
     private fun needsMigration(wallet: Wallet): Boolean =
-        wallet.type != WalletType.View &&
-            File(baseDir, wallet.id.id).exists() &&
-            !File(baseDir, "v4/${wallet.keystoreId}.gemk").exists()
+        wallet.type != WalletType.View && File(baseDir, wallet.id.id).exists()
 
     private companion object {
         const val TAG = "MigrateV3Keystore"

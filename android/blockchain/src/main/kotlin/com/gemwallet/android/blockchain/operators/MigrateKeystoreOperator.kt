@@ -5,6 +5,6 @@ interface MigrateKeystoreOperator {
         legacyPath: String,
         legacyPassword: ByteArray,
         newPassword: ByteArray,
-        keystoreId: String,
+        walletId: String,
     ): String
 }

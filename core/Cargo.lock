@@ -3259,6 +3259,7 @@ dependencies = [
  "serde",
  "serde_json",
  "uuid",
+ "zeroize",
 ]
 
 [[package]]
@@ -3506,7 +3507,6 @@ dependencies = [
  "aes-gcm",
  "argon2",
  "bip39",
- "borsh",
  "ctr",
  "gem_crypto",
  "hex",
@@ -3515,6 +3515,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha3 0.12.0",
+ "strum",
  "tempfile",
  "unicode-normalization",
  "uuid",

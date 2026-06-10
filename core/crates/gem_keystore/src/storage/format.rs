@@ -1,109 +1,163 @@
-use std::convert::TryInto;
+use std::str::FromStr;
+
+use serde::{Deserialize, Serialize};
 
 use super::{
-    constants::{ENCRYPTED_BODY_CAP, HEADER_LEN_CAP, HEADER_LEN_END, HEADER_LEN_OFFSET, MAGIC, PASSWORD_CAP, PREFIX_LEN, VERSION_V4, WHOLE_FILE_CAP},
-    types::{Header, ParsedFile, SecretKind, SecretPayload, StoredSecretMeta},
+    constants::{AES_GCM_NONCE_LEN, ARGON2_SALT_LEN, ENCRYPTED_BODY_CAP, PASSWORD_CAP, VERSION_V4},
+    types::{CipherParams, Header, KdfParams, ParsedFile, SecretKind, StoredSecretMeta},
 };
 use crate::{KeystoreError, KeystoreId};
 
-pub(super) fn parse_v4(bytes: &[u8]) -> Result<ParsedFile<'_>, KeystoreError> {
-    validate_file_len(bytes)?;
-    validate_magic(bytes)?;
-    validate_version(bytes)?;
-    let header_len = read_header_len(bytes)?;
-    let header_end = checked_header_end(header_len)?;
-    let header_bytes = read_header_bytes(bytes, header_end)?;
-    let body = read_body(bytes, header_end)?;
-    validate_body_len(body)?;
-    let header = parse_header(header_bytes)?;
-    validate_header(&header)?;
-    validate_body_tag(body, &header)?;
-    Ok(ParsedFile {
-        header,
-        header_len,
-        header_end,
-        body,
-    })
+const KDF_ARGON2ID: &str = "argon2id";
+const CIPHER_AES_256_GCM: &str = "aes-256-gcm";
+
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct FileV4 {
+    pub(super) version: u8,
+    pub(super) id: String,
+    pub(super) kind: String,
+    pub(super) crypto: CryptoV4,
 }
 
-fn validate_file_len(bytes: &[u8]) -> Result<(), KeystoreError> {
-    if bytes.len() > WHOLE_FILE_CAP {
-        return Err(KeystoreError::corrupt_file("file too large"));
-    }
-    if bytes.len() < PREFIX_LEN {
-        return Err(KeystoreError::corrupt_file("file too short"));
-    }
-    Ok(())
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct CryptoV4 {
+    pub(super) kdf: KdfV4,
+    pub(super) cipher: CipherV4,
+    pub(super) ciphertext: String,
 }
 
-fn validate_magic(bytes: &[u8]) -> Result<(), KeystoreError> {
-    let magic = bytes.get(..MAGIC.len()).ok_or_else(|| KeystoreError::corrupt_file("missing magic"))?;
-    if magic != MAGIC.as_slice() {
-        return Err(KeystoreError::corrupt_file("invalid magic"));
-    }
-    Ok(())
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct KdfV4 {
+    pub(super) algorithm: String,
+    pub(super) memory_kib: u32,
+    pub(super) iterations: u32,
+    pub(super) parallelism: u32,
+    pub(super) salt: String,
+    pub(super) output_len: u32,
 }
 
-fn validate_version(bytes: &[u8]) -> Result<(), KeystoreError> {
-    let version = *bytes.get(MAGIC.len()).ok_or_else(|| KeystoreError::corrupt_file("missing version"))?;
-    if version != VERSION_V4 {
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct CipherV4 {
+    pub(super) algorithm: String,
+    pub(super) nonce: String,
+    pub(super) tag_len: u8,
+}
+
+/// Everything except the ciphertext, rebuilt from parsed values so the bytes are canonical
+/// regardless of how the JSON on disk is formatted. Used as AES-GCM AAD.
+#[derive(Serialize)]
+struct AuthenticatedV4 {
+    version: u8,
+    id: String,
+    kind: String,
+    kdf: KdfV4,
+    cipher: CipherV4,
+}
+
+pub(super) fn parse_v4(bytes: &[u8]) -> Result<ParsedFile, KeystoreError> {
+    let file: FileV4 = serde_json::from_slice(bytes).map_err(|error| KeystoreError::corrupt_file(error.to_string()))?;
+    if file.version != VERSION_V4 {
         return Err(KeystoreError::unsupported("version"));
     }
-    Ok(())
-}
-
-fn read_header_len(bytes: &[u8]) -> Result<u32, KeystoreError> {
-    let header_len_bytes: [u8; 4] = bytes
-        .get(HEADER_LEN_OFFSET..HEADER_LEN_END)
-        .ok_or_else(|| KeystoreError::corrupt_file("missing header length"))?
+    let kind = SecretKind::from_str(&file.kind).map_err(|_| KeystoreError::corrupt_file("unknown secret kind"))?;
+    if file.crypto.kdf.algorithm != KDF_ARGON2ID {
+        return Err(KeystoreError::corrupt_file("unknown kdf algorithm"));
+    }
+    if file.crypto.cipher.algorithm != CIPHER_AES_256_GCM {
+        return Err(KeystoreError::corrupt_file("unknown cipher algorithm"));
+    }
+    let salt: [u8; ARGON2_SALT_LEN] = decode_hex(&file.crypto.kdf.salt)?
         .try_into()
-        .map_err(|_| KeystoreError::corrupt_file("invalid header length"))?;
-    Ok(u32::from_be_bytes(header_len_bytes))
-}
-
-fn checked_header_end(header_len: u32) -> Result<usize, KeystoreError> {
-    let header_len_usize = usize::try_from(header_len).map_err(|_| KeystoreError::corrupt_file("header length overflow"))?;
-    if header_len_usize > HEADER_LEN_CAP {
-        return Err(KeystoreError::corrupt_file("header too large"));
+        .map_err(|_| KeystoreError::corrupt_file("invalid Argon2 salt length"))?;
+    let nonce: [u8; AES_GCM_NONCE_LEN] = decode_hex(&file.crypto.cipher.nonce)?
+        .try_into()
+        .map_err(|_| KeystoreError::corrupt_file("invalid AES-GCM nonce length"))?;
+    let ciphertext = decode_hex(&file.crypto.ciphertext)?;
+    let header = Header {
+        keystore_id: file.id,
+        kind,
+        kdf: KdfParams::Argon2id {
+            memory_kib: file.crypto.kdf.memory_kib,
+            iterations: file.crypto.kdf.iterations,
+            parallelism: file.crypto.kdf.parallelism,
+            salt,
+            output_len: file.crypto.kdf.output_len,
+        },
+        cipher: CipherParams::Aes256Gcm {
+            nonce,
+            tag_len: file.crypto.cipher.tag_len,
+        },
+    };
+    validate_header(&header)?;
+    if ciphertext.len() < usize::from(header.cipher.tag_len()) {
+        return Err(KeystoreError::corrupt_file("ciphertext shorter than tag"));
     }
-    PREFIX_LEN
-        .checked_add(header_len_usize)
-        .ok_or_else(|| KeystoreError::corrupt_file("header length overflow"))
-}
-
-fn read_header_bytes(bytes: &[u8], header_end: usize) -> Result<&[u8], KeystoreError> {
-    bytes.get(PREFIX_LEN..header_end).ok_or_else(|| KeystoreError::corrupt_file("truncated header"))
-}
-
-fn read_body(bytes: &[u8], header_end: usize) -> Result<&[u8], KeystoreError> {
-    bytes.get(header_end..).ok_or_else(|| KeystoreError::corrupt_file("missing encrypted body"))
-}
-
-fn validate_body_len(body: &[u8]) -> Result<(), KeystoreError> {
-    if body.len() > ENCRYPTED_BODY_CAP {
-        return Err(KeystoreError::corrupt_file("encrypted body too large"));
+    if ciphertext.len() > ENCRYPTED_BODY_CAP {
+        return Err(KeystoreError::corrupt_file("ciphertext too large"));
     }
-    Ok(())
+    Ok(ParsedFile { header, ciphertext })
 }
 
-fn parse_header(header_bytes: &[u8]) -> Result<Header, KeystoreError> {
-    borsh::from_slice::<Header>(header_bytes).map_err(|error| KeystoreError::corrupt_file(error.to_string()))
+pub(super) fn encode_v4(header: &Header, ciphertext: &[u8]) -> Result<Vec<u8>, KeystoreError> {
+    let file = FileV4 {
+        version: VERSION_V4,
+        id: header.keystore_id.clone(),
+        kind: header.kind.as_ref().to_string(),
+        crypto: CryptoV4 {
+            kdf: kdf_to_wire(&header.kdf),
+            cipher: cipher_to_wire(&header.cipher),
+            ciphertext: hex::encode(ciphertext),
+        },
+    };
+    serde_json::to_vec_pretty(&file).map_err(|error| KeystoreError::corrupt_file(error.to_string()))
 }
 
-fn validate_body_tag(body: &[u8], header: &Header) -> Result<(), KeystoreError> {
-    if body.len() < usize::from(header.cipher.tag_len()) {
-        return Err(KeystoreError::corrupt_file("encrypted body shorter than tag"));
+pub(super) fn authenticated_bytes(header: &Header) -> Result<Vec<u8>, KeystoreError> {
+    let authenticated = AuthenticatedV4 {
+        version: VERSION_V4,
+        id: header.keystore_id.clone(),
+        kind: header.kind.as_ref().to_string(),
+        kdf: kdf_to_wire(&header.kdf),
+        cipher: cipher_to_wire(&header.cipher),
+    };
+    serde_json::to_vec(&authenticated).map_err(|error| KeystoreError::corrupt_file(error.to_string()))
+}
+
+fn kdf_to_wire(kdf: &KdfParams) -> KdfV4 {
+    match kdf {
+        KdfParams::Argon2id {
+            memory_kib,
+            iterations,
+            parallelism,
+            salt,
+            output_len,
+        } => KdfV4 {
+            algorithm: KDF_ARGON2ID.to_string(),
+            memory_kib: *memory_kib,
+            iterations: *iterations,
+            parallelism: *parallelism,
+            salt: hex::encode(salt),
+            output_len: *output_len,
+        },
     }
-    Ok(())
 }
 
-pub(super) fn validate_payload_kind(kind: &SecretKind, payload: &SecretPayload) -> Result<(), KeystoreError> {
-    match (kind, payload) {
-        (SecretKind::Mnemonic, SecretPayload::Mnemonic { .. }) | (SecretKind::PrivateKey, SecretPayload::PrivateKey { .. }) => Ok(()),
-        (SecretKind::Mnemonic, SecretPayload::PrivateKey { .. }) | (SecretKind::PrivateKey, SecretPayload::Mnemonic { .. }) => {
-            Err(KeystoreError::corrupt_file("header kind does not match payload"))
-        }
+fn cipher_to_wire(cipher: &CipherParams) -> CipherV4 {
+    match cipher {
+        CipherParams::Aes256Gcm { nonce, tag_len } => CipherV4 {
+            algorithm: CIPHER_AES_256_GCM.to_string(),
+            nonce: hex::encode(nonce),
+            tag_len: *tag_len,
+        },
     }
+}
+
+fn decode_hex(value: &str) -> Result<Vec<u8>, KeystoreError> {
+    hex::decode(value).map_err(|_| KeystoreError::corrupt_file("invalid hex"))
 }
 
 pub(super) fn meta_from_header(header: &Header) -> StoredSecretMeta {

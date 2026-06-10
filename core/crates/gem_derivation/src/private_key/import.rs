@@ -32,7 +32,7 @@ fn decode_supported_private_key(value: &str, chain: Chain) -> Result<Zeroizing<V
     decode_private_key(&chain, value).map_err(|_| AccountDerivationError::InvalidPrivateKey)
 }
 
-pub(crate) fn derive_account_from_private_key(private_key: &[u8], chain: Chain) -> Result<Account, AccountDerivationError> {
+pub fn derive_account_from_private_key(private_key: &[u8], chain: Chain) -> Result<Account, AccountDerivationError> {
     let public_key = public_key_from_private_key(private_key, chain)?;
     let address = match &public_key {
         Some(public_key) => address_from_public_key(public_key, chain)?,
