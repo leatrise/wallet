@@ -63,7 +63,7 @@ struct LockSceneViewModelTests {
     }
 
     @Test
-    func systemCancelledUnlockLocksForNextActivation() async {
+    func systemCancelledUnlockWithoutBackgroundingShowsUnlockButton() async {
         let mockService = MockBiometryAuthenticationService(
             isAuthEnabled: true,
             availableAuth: .biometrics,
@@ -73,8 +73,20 @@ struct LockSceneViewModelTests {
 
         await viewModel.startUnlock()?.value
 
+        #expect(viewModel.state == .lockedCanceled)
+        #expect(viewModel.isUnlockButtonVisible)
+    }
+
+    @Test
+    func lockedStateDoesNotShowUnlockButton() {
+        let mockService = MockBiometryAuthenticationService(
+            isAuthEnabled: true,
+            availableAuth: .biometrics,
+        )
+        let viewModel = LockSceneViewModel(service: mockService)
+
         #expect(viewModel.state == .locked)
-        #expect(viewModel.shouldShowLockScreen)
+        #expect(!viewModel.isUnlockButtonVisible)
     }
 
     @Test
@@ -168,6 +180,35 @@ struct LockSceneViewModelTests {
         await viewModel.startUnlock()?.value
         #expect(viewModel.state == .unlocked)
         #expect(mockService.authenticateCallsCount == 2)
+    }
+
+    @Test
+    func staleAttemptIsReplacedOnActivationAndLateResultIgnored() async {
+        let mockService = MockBiometryAuthenticationService(
+            isAuthEnabled: true,
+            availableAuth: .biometrics,
+        )
+        mockService.holdAuthentication = true
+        let viewModel = LockSceneViewModel(service: mockService)
+
+        let first = viewModel.startUnlock()
+        await Task.yield()
+        viewModel.handleSceneChange(to: .inactive)
+        viewModel.handleSceneChange(to: .background)
+        viewModel.handleSceneChange(to: .active)
+
+        #expect(viewModel.isUnlocking)
+        let second = viewModel.startUnlock()
+        await Task.yield()
+        #expect(mockService.authenticateCallsCount == 2)
+
+        mockService.releaseNextAuthentication()
+        await first?.value
+        #expect(viewModel.isUnlocking, "a stale result must not apply after the attempt was replaced")
+
+        mockService.releaseAuthentication()
+        await second?.value
+        #expect(viewModel.state == .unlocked)
     }
 
     @Test
@@ -501,7 +542,7 @@ struct LockSceneViewModelTests {
 class MockBiometryAuthenticationService: BiometryAuthenticatable, @unchecked Sendable {
     var lockPeriod: LockPeriod
 
-    var isAuthenticationEnabled: Bool
+    var requiresAuthentication: Bool
     var isPrivacyLockEnabled: Bool
     var availableAuthentication: KeystoreAuthentication
 
@@ -510,14 +551,14 @@ class MockBiometryAuthenticationService: BiometryAuthenticatable, @unchecked Sen
     var holdAuthentication: Bool = false
     private(set) var authenticateCallsCount: Int = 0
 
-    private var holdContinuation: CheckedContinuation<Void, Never>?
+    private var holdContinuations: [CheckedContinuation<Void, Never>] = []
 
     init(isAuthEnabled: Bool,
          availableAuth: KeystoreAuthentication,
          lockPeriod: LockPeriod = .default,
          isPrivacyLockEnabled: Bool = false)
     {
-        isAuthenticationEnabled = isAuthEnabled
+        requiresAuthentication = isAuthEnabled
         availableAuthentication = availableAuth
         self.lockPeriod = lockPeriod
         self.isPrivacyLockEnabled = isPrivacyLockEnabled
@@ -525,7 +566,7 @@ class MockBiometryAuthenticationService: BiometryAuthenticatable, @unchecked Sen
 
     @MainActor
     func enableAuthentication(_ enable: Bool, context _: LAContext, reason _: String) async throws {
-        isAuthenticationEnabled = enable
+        requiresAuthentication = enable
         if !enable {
             isPrivacyLockEnabled = false
             lockPeriod = .default
@@ -536,7 +577,7 @@ class MockBiometryAuthenticationService: BiometryAuthenticatable, @unchecked Sen
     func authenticate(context _: LAContext, reason _: String) async throws {
         authenticateCallsCount += 1
         if holdAuthentication {
-            await withCheckedContinuation { holdContinuation = $0 }
+            await withCheckedContinuation { holdContinuations.append($0) }
         }
         if let error = errorToThrow {
             throw error
@@ -548,8 +589,13 @@ class MockBiometryAuthenticationService: BiometryAuthenticatable, @unchecked Sen
 
     func releaseAuthentication() {
         holdAuthentication = false
-        holdContinuation?.resume()
-        holdContinuation = nil
+        holdContinuations.forEach { $0.resume() }
+        holdContinuations.removeAll()
+    }
+
+    func releaseNextAuthentication() {
+        guard holdContinuations.isNotEmpty else { return }
+        holdContinuations.removeFirst().resume()
     }
 
     func update(period: LockPeriod) throws {

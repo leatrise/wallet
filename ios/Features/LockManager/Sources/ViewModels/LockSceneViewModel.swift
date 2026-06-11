@@ -23,7 +23,7 @@ public class LockSceneViewModel {
         service: any BiometryAuthenticatable = BiometryAuthenticationService(),
     ) {
         self.service = service
-        state = service.isAuthenticationEnabled ? .locked : .unlocked
+        state = service.requiresAuthentication ? .locked : .unlocked
     }
 
     var unlockTitle: String {
@@ -39,7 +39,7 @@ public class LockSceneViewModel {
     }
 
     var isAutoLockEnabled: Bool {
-        service.isAuthenticationEnabled
+        service.requiresAuthentication
     }
 
     var isLocked: Bool {
@@ -51,7 +51,7 @@ public class LockSceneViewModel {
     }
 
     var isUnlockButtonVisible: Bool {
-        state == .locked || state == .lockedCanceled
+        state == .lockedCanceled
     }
 
     var shouldLock: Bool {
@@ -91,8 +91,8 @@ extension LockSceneViewModel {
     func handleSceneChange(to phase: ScenePhase) {
         switch phase {
         case .background:
-            if case let .unlocking(attempt) = state {
-                attempt.context.invalidate()
+            if case let .unlocking(attempt) = state, !attempt.isInvalidated {
+                state = .unlocking(attempt.invalidated())
             }
             if state == .unlocked, !shouldLock {
                 lastUnlockTime = Date().addingTimeInterval(TimeInterval(lockPeriod.value))
@@ -100,6 +100,9 @@ extension LockSceneViewModel {
         case .active:
             showPlaceholderPreview = false
             if state == .unlocked, shouldLock {
+                state = .locked
+            }
+            if case let .unlocking(attempt) = state, attempt.isInvalidated {
                 state = .locked
             }
             if state == .locked {
@@ -156,13 +159,27 @@ extension LockSceneViewModel {
 
 extension LockSceneViewModel {
     private func authenticate(context: LAContext) async {
+        let newState = await getAuthenticationState(context: context)
+        guard case let .unlocking(attempt) = state, attempt.context === context else { return }
+
+        switch newState {
+        case .unlocked:
+            resetLockState()
+        case .locked where !attempt.isInvalidated:
+            state = .lockedCanceled
+        default:
+            state = newState
+        }
+    }
+
+    private func getAuthenticationState(context: LAContext) async -> LockSceneState {
         do {
             try await service.authenticate(context: context, reason: Self.reason)
-            resetLockState()
+            return .unlocked
         } catch let error as BiometryAuthenticationError {
-            state = error == .cancelledBySystem ? .locked : .lockedCanceled
+            return error == .cancelledBySystem ? .locked : .lockedCanceled
         } catch {
-            state = .lockedCanceled
+            return .lockedCanceled
         }
     }
 }
