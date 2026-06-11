@@ -6,9 +6,9 @@ use super::{
     tx_builder::{NextSwapParams, ReferralParams, SwapTransactionParams, build_swap_transaction},
 };
 use crate::{
-    FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, RpcClient, RpcProvider, Swapper, SwapperChainAsset, SwapperError, SwapperProvider, SwapperQuoteAsset,
-    SwapperQuoteData,
-    fees::{ReferralFee, default_referral_fees, max_quote_value_with_fee_reserve},
+    FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, RpcClient, RpcProvider, SwapAmountMode, Swapper, SwapperChainAsset, SwapperError, SwapperProvider,
+    SwapperQuoteAsset, SwapperQuoteData,
+    fees::{ReferralFee, default_referral_fees},
     route_cache::DiscoveryCache,
 };
 use async_trait::async_trait;
@@ -416,8 +416,12 @@ where
         vec![SwapperChainAsset::All(Chain::Ton)]
     }
 
+    fn amount_mode(&self, _request: &QuoteRequest) -> SwapAmountMode {
+        SwapAmountMode::Fixed
+    }
+
     async fn get_quote(&self, request: &QuoteRequest) -> Result<Quote, SwapperError> {
-        let from_value = max_quote_value_with_fee_reserve(request)?;
+        let from_value = request.value.clone();
         let path = self.get_quotes(request, &from_value).await?;
 
         Ok(Quote {

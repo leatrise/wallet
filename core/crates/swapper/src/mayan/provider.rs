@@ -8,11 +8,11 @@ use super::{
     wormhole_chain,
 };
 use crate::{
-    FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, RpcClient, RpcProvider, SwapResult, Swapper, SwapperChainAsset, SwapperError, SwapperProvider,
-    SwapperQuoteData,
+    FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, RpcClient, RpcProvider, SwapAmountMode, SwapResult, Swapper, SwapperChainAsset, SwapperError,
+    SwapperProvider, SwapperQuoteData,
     config::get_swap_proxy_url,
     cross_chain::VaultAddresses,
-    fees::{default_referral_address, default_referral_fees, max_quote_value_with_fee_reserve},
+    fees::{default_referral_address, default_referral_fees},
 };
 use async_trait::async_trait;
 use gem_client::Client;
@@ -92,12 +92,16 @@ where
         mayan_supported_assets()
     }
 
+    fn amount_mode(&self, _request: &QuoteRequest) -> SwapAmountMode {
+        SwapAmountMode::Fixed
+    }
+
     async fn get_quote(&self, request: &QuoteRequest) -> Result<Quote, SwapperError> {
         if !self.supports_chain_pair(request.from_asset.chain(), request.to_asset.chain()) {
             return Err(SwapperError::NotSupportedChain);
         }
 
-        let from_value = max_quote_value_with_fee_reserve(request)?;
+        let from_value = request.value.clone();
         let from_asset = request.from_asset.asset_id();
         let to_asset = request.to_asset.asset_id();
         let referral_fees = default_referral_fees();
@@ -387,26 +391,6 @@ mod tests {
 
         assert!(provider.supports_chain_pair(Chain::Hyperliquid, Chain::HyperCore));
         assert!(!provider.supports_chain_pair(Chain::HyperCore, Chain::Hyperliquid));
-    }
-
-    #[test]
-    fn test_max_quote_value_with_fee_reserve_for_solana() {
-        let mut request = QuoteRequest {
-            from_asset: SwapperQuoteAsset::from(AssetId::from_chain(Chain::Solana)),
-            to_asset: SwapperQuoteAsset::from(AssetId::from_chain(Chain::Sui)),
-            wallet_address: "address".to_string(),
-            destination_address: "address".to_string(),
-            value: "105814789".to_string(),
-            options: Options {
-                use_max_amount: true,
-                ..Default::default()
-            },
-        };
-
-        assert_eq!(max_quote_value_with_fee_reserve(&request).unwrap(), "100814789");
-
-        request.from_asset = SwapperQuoteAsset::from(AssetId::from_token(Chain::Solana, SOLANA_USDC_TOKEN_ID));
-        assert_eq!(max_quote_value_with_fee_reserve(&request).unwrap(), "105814789");
     }
 }
 

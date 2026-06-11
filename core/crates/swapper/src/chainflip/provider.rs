@@ -15,12 +15,13 @@ use super::{
     tx_builder,
 };
 use crate::{
-    FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, SwapResult, Swapper, SwapperChainAsset, SwapperError, SwapperProvider, SwapperQuoteData,
+    FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, SwapAmountMode, SwapResult, Swapper, SwapperChainAsset, SwapperError, SwapperProvider,
+    SwapperQuoteData,
     alien::RpcProvider,
     amount_to_value,
     approval::{check_approval_erc20, get_swap_gas_limit_with_approval},
     cross_chain::VaultAddresses,
-    fees::{DEFAULT_CHAINFLIP_FEE_BPS, max_quote_value_with_fee_reserve},
+    fees::DEFAULT_CHAINFLIP_FEE_BPS,
     solana::DEFAULT_SWAP_GAS_LIMIT,
 };
 use primitives::{Asset, ChainType, chain::Chain, swap::QuoteAsset};
@@ -79,7 +80,7 @@ fn build_quote_request(request: &QuoteRequest) -> Result<ChainflipQuoteRequestDa
         ChainType::Ethereum | ChainType::Solana => {}
         _ => return Err(SwapperError::NotSupportedChain),
     }
-    let from_value = max_quote_value_with_fee_reserve(request)?;
+    let from_value = request.value.clone();
     let src_asset = map_asset_id(&request.from_asset);
     let dest_asset = map_asset_id(&request.to_asset);
     let fee_bps = DEFAULT_CHAINFLIP_FEE_BPS;
@@ -177,6 +178,10 @@ where
 
     fn supported_assets(&self) -> Vec<SwapperChainAsset> {
         CHAINFLIP_SUPPORTED_ASSETS.clone()
+    }
+
+    fn amount_mode(&self, _request: &QuoteRequest) -> SwapAmountMode {
+        SwapAmountMode::Fixed
     }
 
     async fn get_quote(&self, request: &QuoteRequest) -> Result<Quote, SwapperError> {

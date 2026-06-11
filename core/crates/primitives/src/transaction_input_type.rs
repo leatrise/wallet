@@ -1,16 +1,19 @@
 use crate::contract_call_data::ContractCallData;
 use crate::earn_type::EarnType;
 use crate::stake_type::StakeType;
-use crate::swap::{ApprovalData, SwapData};
+use crate::swap::{ApprovalData, SwapData, SwapQuoteDataType};
 use crate::transaction_fee::TransactionFee;
 use crate::transaction_load_metadata::TransactionLoadMetadata;
 use crate::{
     Asset, GasPriceType, PerpetualType, SignerError, TransactionPreloadInput, TransactionType, TransferDataExtra, WalletConnectionSessionAppMetadata, nft::NFTAsset,
     perpetual::AccountDataType,
 };
+use num_bigint::BigInt;
+use num_traits::ToPrimitive;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::ops::Deref;
+use std::str::FromStr;
 use typeshare::typeshare;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -202,15 +205,26 @@ impl SignerInput {
         Self { input, fee }
     }
 
-    pub fn swap_value(&self) -> Result<u64, SignerError> {
+    pub fn swap_value_u64(&self) -> Result<u64, SignerError> {
+        self.swap_value()?.to_u64().ok_or_else(|| SignerError::invalid_input("invalid transaction amount"))
+    }
+
+    pub fn swap_value(&self) -> Result<BigInt, SignerError> {
         let swap = self.input_type.get_swap_data()?;
-        let value = self.value_as_u64()?;
-        if !swap.quote.use_max_amount.unwrap_or(self.is_max_value) {
+        let value = BigInt::from_str(&self.value).map_err(|_| SignerError::invalid_input("invalid transaction amount"))?;
+        if !swap.quote.use_max_amount.unwrap_or(self.is_max_value) || !self.input_type.get_asset().id.is_native() {
             return Ok(value);
         }
-        let value = value.checked_sub(self.fee.fee()?).ok_or(SignerError::InsufficientFunds)?;
+        match swap.data.data_type {
+            SwapQuoteDataType::Transfer => {}
+            SwapQuoteDataType::Contract => return Ok(value),
+        }
+        let value = value - &self.fee.fee;
+        if value < BigInt::ZERO {
+            return Err(SignerError::InsufficientFunds);
+        }
         if let Some(min_from_value) = &swap.quote.min_from_value {
-            let min_value = min_from_value.parse::<u64>().map_err(|_| SignerError::invalid_input("invalid swap minimum value"))?;
+            let min_value = BigInt::from_str(min_from_value).map_err(|_| SignerError::invalid_input("invalid swap minimum value"))?;
             if value < min_value {
                 return Err(SignerError::SwapValueBelowMinimum);
             }
@@ -245,7 +259,40 @@ impl TransactionLoadData {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{Asset, DelegationValidator, PerpetualConfirmData, PerpetualDirection, Resource};
+    use crate::{Asset, Chain, DelegationValidator, PerpetualConfirmData, PerpetualDirection, Resource, SwapProvider};
+
+    fn swap_signer_input(swap_data: SwapData, value: &str) -> SignerInput {
+        SignerInput::mock_evm(
+            TransactionInputType::Swap(Asset::from_chain(Chain::Ethereum), Asset::from_chain(Chain::Tron), swap_data),
+            value,
+            21000,
+        )
+    }
+
+    #[test]
+    fn test_swap_value() {
+        let fee = 21000u64 * 20_000_000_000;
+        let value = "1000000000000000000";
+        let mut swap_data = SwapData::mock_transfer(SwapProvider::NearIntents, value, "1", "0x0000000000000000000000000000000000000001");
+        swap_data.quote.use_max_amount = Some(true);
+
+        let input = swap_signer_input(swap_data.clone(), value);
+        assert_eq!(input.swap_value().unwrap(), BigInt::from(1_000_000_000_000_000_000u64 - fee));
+
+        swap_data.quote.use_max_amount = Some(false);
+        let input = swap_signer_input(swap_data.clone(), value);
+        assert_eq!(input.swap_value().unwrap(), BigInt::from(1_000_000_000_000_000_000u64));
+
+        swap_data.quote.use_max_amount = Some(true);
+        swap_data.quote.min_from_value = Some(value.to_string());
+        let input = swap_signer_input(swap_data.clone(), value);
+        assert_eq!(input.swap_value().unwrap_err(), SignerError::SwapValueBelowMinimum);
+
+        swap_data.quote.min_from_value = None;
+        swap_data.data.data_type = SwapQuoteDataType::Contract;
+        let input = swap_signer_input(swap_data, value);
+        assert_eq!(input.swap_value().unwrap(), BigInt::from(1_000_000_000_000_000_000u64));
+    }
 
     #[test]
     fn transaction_types() {

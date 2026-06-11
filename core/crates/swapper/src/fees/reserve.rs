@@ -54,10 +54,36 @@ pub fn max_quote_value_with_fee_reserve(request: &QuoteRequest) -> Result<String
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{Options, SwapperQuoteAsset};
+    use primitives::{AssetId, asset_constants::SOLANA_USDC_TOKEN_ID};
 
     #[test]
     fn solana_reserve_covers_rent_and_priority_fees() {
         let reserve: u64 = reserved_transaction_fees(Chain::Solana).unwrap().parse().unwrap();
         assert!(reserve >= 2_500_000, "Solana reserve {reserve} too small to cover wSOL ATA rent plus priority fees");
+    }
+
+    #[test]
+    fn max_quote_value_applies_reserve_for_native_only() {
+        let mut request = QuoteRequest {
+            from_asset: SwapperQuoteAsset::from(AssetId::from_chain(Chain::Solana)),
+            to_asset: SwapperQuoteAsset::from(AssetId::from_chain(Chain::Sui)),
+            wallet_address: "address".to_string(),
+            destination_address: "address".to_string(),
+            value: "105814789".to_string(),
+            options: Options {
+                use_max_amount: true,
+                ..Default::default()
+            },
+        };
+
+        assert_eq!(max_quote_value_with_fee_reserve(&request).unwrap(), "100814789");
+
+        request.from_asset = SwapperQuoteAsset::from(AssetId::from_token(Chain::Solana, SOLANA_USDC_TOKEN_ID));
+        assert_eq!(max_quote_value_with_fee_reserve(&request).unwrap(), "105814789");
+
+        request.from_asset = SwapperQuoteAsset::from(AssetId::from_chain(Chain::Solana));
+        request.options.use_max_amount = false;
+        assert_eq!(max_quote_value_with_fee_reserve(&request).unwrap(), "105814789");
     }
 }

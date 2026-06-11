@@ -24,7 +24,7 @@ pub(crate) fn sign_swap(input: &SignerInput, private_key: &[u8]) -> Result<Vec<S
     let result = if from_asset.id.is_token() {
         sign_token_transfer_to(input, &swap.data.to, private_key)?
     } else {
-        sign_native_transfer(input, &swap.data.to, input.swap_value()?, private_key)?
+        sign_native_transfer(input, &swap.data.to, input.swap_value_u64()?, private_key)?
     };
 
     Ok(vec![result])
