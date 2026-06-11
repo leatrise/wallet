@@ -201,6 +201,22 @@ impl SignerInput {
     pub fn new(input: TransactionLoadInput, fee: TransactionFee) -> Self {
         Self { input, fee }
     }
+
+    pub fn swap_value(&self) -> Result<u64, SignerError> {
+        let swap = self.input_type.get_swap_data()?;
+        let value = self.value_as_u64()?;
+        if !swap.quote.use_max_amount.unwrap_or(self.is_max_value) {
+            return Ok(value);
+        }
+        let value = value.checked_sub(self.fee.fee()?).ok_or(SignerError::InsufficientFunds)?;
+        if let Some(min_from_value) = &swap.quote.min_from_value {
+            let min_value = min_from_value.parse::<u64>().map_err(|_| SignerError::invalid_input("invalid swap minimum value"))?;
+            if value < min_value {
+                return Err(SignerError::SwapValueBelowMinimum);
+            }
+        }
+        Ok(value)
+    }
 }
 
 impl Deref for SignerInput {

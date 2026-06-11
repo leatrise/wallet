@@ -8,7 +8,7 @@ use super::{
 use crate::{
     FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, RpcClient, RpcProvider, Swapper, SwapperChainAsset, SwapperError, SwapperProvider, SwapperQuoteAsset,
     SwapperQuoteData,
-    fees::{ReferralFee, default_referral_fees, quote_value_after_reserve_by_chain},
+    fees::{ReferralFee, default_referral_fees, max_quote_value_with_fee_reserve},
     route_cache::DiscoveryCache,
 };
 use async_trait::async_trait;
@@ -417,7 +417,7 @@ where
     }
 
     async fn get_quote(&self, request: &QuoteRequest) -> Result<Quote, SwapperError> {
-        let from_value = quote_value_after_reserve_by_chain(request)?;
+        let from_value = max_quote_value_with_fee_reserve(request)?;
         let path = self.get_quotes(request, &from_value).await?;
 
         Ok(Quote {

@@ -123,7 +123,6 @@ where
 
         let deadline_minutes = Self::get_deadline_by_chain(from_chain).max(Self::get_deadline_by_chain(to_chain));
         let deadline = (Utc::now() + Duration::minutes(deadline_minutes)).to_rfc3339();
-
         Ok(NearQuoteRequest {
             origin_asset,
             destination_asset,

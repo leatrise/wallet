@@ -5,7 +5,7 @@ use super::{
     tx_builder,
 };
 use crate::{
-    FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, Swapper, SwapperChainAsset, SwapperError, SwapperQuoteData, fees::quote_value_after_reserve_by_chain,
+    FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, Swapper, SwapperChainAsset, SwapperError, SwapperQuoteData, fees::max_quote_value_with_fee_reserve,
 };
 use async_trait::async_trait;
 use gem_sui::coin_type_matches;
@@ -22,7 +22,7 @@ impl Swapper for CetusClmm {
     }
 
     async fn get_quote(&self, request: &QuoteRequest) -> Result<Quote, SwapperError> {
-        let from_value = quote_value_after_reserve_by_chain(request)?;
+        let from_value = max_quote_value_with_fee_reserve(request)?;
         let from_asset = request.from_asset.asset_id();
         let to_asset = request.to_asset.asset_id();
         let amount = from_value.parse::<u64>()?;

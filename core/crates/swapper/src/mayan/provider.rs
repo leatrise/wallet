@@ -12,14 +12,12 @@ use crate::{
     SwapperQuoteData,
     config::get_swap_proxy_url,
     cross_chain::VaultAddresses,
-    fees::{default_referral_address, default_referral_fees, quote_value_after_reserve, quote_value_after_reserve_by_chain},
+    fees::{default_referral_address, default_referral_fees, max_quote_value_with_fee_reserve},
 };
 use async_trait::async_trait;
 use gem_client::Client;
 use primitives::{Chain, ChainType};
 use std::{collections::BTreeSet, fmt::Debug, sync::Arc};
-
-const SOLANA_NATIVE_SWAP_RESERVE: &str = "5000000";
 
 #[derive(Debug)]
 pub struct Mayan<C>
@@ -99,7 +97,7 @@ where
             return Err(SwapperError::NotSupportedChain);
         }
 
-        let from_value = quote_value_after_mayan_reserve(request)?;
+        let from_value = max_quote_value_with_fee_reserve(request)?;
         let from_asset = request.from_asset.asset_id();
         let to_asset = request.to_asset.asset_id();
         let referral_fees = default_referral_fees();
@@ -187,13 +185,6 @@ where
             send: send.into_iter().collect(),
         })
     }
-}
-
-fn quote_value_after_mayan_reserve(request: &QuoteRequest) -> Result<String, SwapperError> {
-    if request.options.use_max_amount && request.from_asset.chain() == Chain::Solana && request.from_asset.is_native() {
-        return quote_value_after_reserve(request, SOLANA_NATIVE_SWAP_RESERVE);
-    }
-    quote_value_after_reserve_by_chain(request)
 }
 
 impl<C> Mayan<C>
@@ -399,7 +390,7 @@ mod tests {
     }
 
     #[test]
-    fn test_quote_value_after_mayan_reserve_uses_larger_solana_native_reserve() {
+    fn test_max_quote_value_with_fee_reserve_for_solana() {
         let mut request = QuoteRequest {
             from_asset: SwapperQuoteAsset::from(AssetId::from_chain(Chain::Solana)),
             to_asset: SwapperQuoteAsset::from(AssetId::from_chain(Chain::Sui)),
@@ -412,10 +403,10 @@ mod tests {
             },
         };
 
-        assert_eq!(quote_value_after_mayan_reserve(&request).unwrap(), "100814789");
+        assert_eq!(max_quote_value_with_fee_reserve(&request).unwrap(), "100814789");
 
         request.from_asset = SwapperQuoteAsset::from(AssetId::from_token(Chain::Solana, SOLANA_USDC_TOKEN_ID));
-        assert_eq!(quote_value_after_mayan_reserve(&request).unwrap(), "105814789");
+        assert_eq!(max_quote_value_with_fee_reserve(&request).unwrap(), "105814789");
     }
 }
 

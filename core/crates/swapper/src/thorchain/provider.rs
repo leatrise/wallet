@@ -19,7 +19,7 @@ use crate::{
     FetchQuoteData, ProviderData, ProviderType, Quote, QuoteRequest, Route, RpcClient, RpcProvider, SwapResult, Swapper, SwapperChainAsset, SwapperError, SwapperQuoteData,
     approval::check_approval_erc20,
     cross_chain::VaultAddresses,
-    fees::{default_referral_fees, quote_value_after_reserve_by_chain},
+    fees::{default_referral_fees, max_quote_value_with_fee_reserve},
     thorchain::client::ThorChainSwapClient,
 };
 
@@ -42,7 +42,7 @@ impl ThorChain<RpcClient> {
 
 fn quote_input_value(from_asset: &THORChainAsset, request: &QuoteRequest) -> Result<String, SwapperError> {
     if from_asset.use_evm_router() || from_asset.chain.is_evm_chain() {
-        return quote_value_after_reserve_by_chain(request);
+        return max_quote_value_with_fee_reserve(request);
     }
     Ok(request.value.clone())
 }
