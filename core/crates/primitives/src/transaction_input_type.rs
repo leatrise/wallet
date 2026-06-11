@@ -211,7 +211,7 @@ impl SignerInput {
 
     pub fn swap_value(&self) -> Result<BigInt, SignerError> {
         let swap = self.input_type.get_swap_data()?;
-        let value = BigInt::from_str(&self.value).map_err(|_| SignerError::invalid_input("invalid transaction amount"))?;
+        let value = BigInt::from_str(&swap.data.value).map_err(|_| SignerError::invalid_input("invalid transaction amount"))?;
         if !swap.quote.use_max_amount.unwrap_or(self.is_max_value) || !self.input_type.get_asset().id.is_native() {
             return Ok(value);
         }

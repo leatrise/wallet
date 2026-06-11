@@ -6,23 +6,22 @@ use crate::{QuoteRequest, SwapperError};
 
 pub static RESERVED_NATIVE_FEES: LazyLock<HashMap<Chain, &'static str>> = LazyLock::new(|| {
     HashMap::from([
-        (Chain::Near, "50000000000000000000000"), // 0.05 NEAR
-        (Chain::Ethereum, "1000000000000000"),    // 0.001 ETH
-        (Chain::Arbitrum, "300000000000000"),     // 0.0003 ARB ETH
-        (Chain::Base, "300000000000000"),         // 0.0003 BASE ETH
-        (Chain::Optimism, "500000000000000"),     // 0.0005 OP ETH
-        (Chain::AvalancheC, "3000000000000000"),  // 0.003 AVAX
-        (Chain::SmartChain, "2000000000000000"),  // 0.002 BNB
-        (Chain::Polygon, "20000000000000000"),    // 0.02 MATIC
-        (Chain::Gnosis, "5000000000000000"),      // 0.005 XDAI
-        (Chain::Berachain, "5000000000000000"),   // 0.005 BERA
-        (Chain::Sui, "50000000"),                 // 0.05 SUI
-        (Chain::Solana, "5000000"),               // 0.005 SOL: base + priority fees + wSOL ATA rent
-        (Chain::Ton, "20000000"),                 // 0.02 TON
-        (Chain::Aptos, "20000000"),               // 0.2 APT
-        (Chain::Monad, "5000000000000000"),       // 0.005 MON
-        (Chain::XLayer, "5000000000000000"),      // 0.005 OKB
-        (Chain::Plasma, "5000000000000000"),      // 0.005 XPL
+        (Chain::Ethereum, "1000000000000000"),   // 0.001 ETH
+        (Chain::Arbitrum, "300000000000000"),    // 0.0003 ARB ETH
+        (Chain::Base, "300000000000000"),        // 0.0003 BASE ETH
+        (Chain::Optimism, "500000000000000"),    // 0.0005 OP ETH
+        (Chain::AvalancheC, "3000000000000000"), // 0.003 AVAX
+        (Chain::SmartChain, "2000000000000000"), // 0.002 BNB
+        (Chain::Polygon, "20000000000000000"),   // 0.02 MATIC
+        (Chain::Gnosis, "5000000000000000"),     // 0.005 XDAI
+        (Chain::Berachain, "5000000000000000"),  // 0.005 BERA
+        (Chain::Sui, "50000000"),                // 0.05 SUI
+        (Chain::Solana, "5000000"),              // 0.005 SOL: base + priority fees + wSOL ATA rent
+        (Chain::Ton, "20000000"),                // 0.02 TON
+        (Chain::Aptos, "20000000"),              // 0.2 APT
+        (Chain::Monad, "5000000000000000"),      // 0.005 MON
+        (Chain::XLayer, "5000000000000000"),     // 0.005 OKB
+        (Chain::Plasma, "5000000000000000"),     // 0.005 XPL
     ])
 });
 
