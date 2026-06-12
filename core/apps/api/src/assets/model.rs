@@ -46,6 +46,10 @@ impl SearchRequest {
     pub fn should_search_lists(&self) -> bool {
         self.query.chars().count() >= MIN_LIST_SEARCH_QUERY_LENGTH
     }
+
+    pub fn has_asset_tag_filter(&self) -> bool {
+        !self.tags.is_empty()
+    }
 }
 
 #[cfg(test)]
@@ -63,6 +67,12 @@ mod tests {
     fn should_search_lists() {
         assert!(!SearchRequest::new("BT", None, None, None, None).should_search_lists());
         assert!(SearchRequest::new("BTC", None, None, None, None).should_search_lists());
+    }
+
+    #[test]
+    fn has_asset_tag_filter() {
+        assert!(!SearchRequest::new("BTC", None, None, None, None).has_asset_tag_filter());
+        assert!(SearchRequest::new("BTC", None, Some("stocks"), None, None).has_asset_tag_filter());
     }
 
     #[test]
