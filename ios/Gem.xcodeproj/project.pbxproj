@@ -50,6 +50,7 @@
 		AA0000032F26000000000002 /* ConnectionsService in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000022F26000000000002 /* ConnectionsService */; };
 		B604C2E82F3F538000CBAFDC /* Contacts in Frameworks */ = {isa = PBXBuildFile; productRef = B604C2E92F3F538100CBAFDC /* Contacts */; };
 		B60C6C352E68848900899BAC /* Support in Frameworks */ = {isa = PBXBuildFile; productRef = B60C6C342E68848900899BAC /* Support */; };
+		SUPPCHATSVC0000000000002 /* SupportChatService in Frameworks */ = {isa = PBXBuildFile; productRef = SUPPCHATSVC0000000000001 /* SupportChatService */; };
 		B617D60B2D5B75F0001697A6 /* AvatarService in Frameworks */ = {isa = PBXBuildFile; productRef = B617D60A2D5B75F0001697A6 /* AvatarService */; };
 		B62F6B9D2DE61ADF00AF56AB /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = B62F6B9C2DE61ADF00AF56AB /* Onboarding */; };
 		B66AFC6C2DDB260A0082C026 /* AppService in Frameworks */ = {isa = PBXBuildFile; productRef = B66AFC6B2DDB260A0082C026 /* AppService */; };
@@ -383,6 +384,7 @@
 				B66DEDB02D49F0EA00309D53 /* ImageGalleryService in Frameworks */,
 				83D6808B2CCA90D900B45089 /* InfoSheet in Frameworks */,
 				D829BF542CBF314100DEB2E8 /* PriceAlertService in Frameworks */,
+				SUPPCHATSVC0000000000002 /* SupportChatService in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -871,6 +873,7 @@
 				B60C6C342E68848900899BAC /* Support */,
 				83D0114E2EFB6341009274B8 /* TransactionStateService */,
 				AA0000022F26000000000002 /* ConnectionsService */,
+				SUPPCHATSVC0000000000001 /* SupportChatService */,
 			);
 			productName = wallet;
 			productReference = C30952B0299C39D70004C0F9 /* Gem.app */;
@@ -1878,6 +1881,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		SUPPCHATSVC0000000000001 /* SupportChatService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SupportChatService;
+		};
 		074168392D3AFDBB00AC26A4 /* NFT */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NFT;
