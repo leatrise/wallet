@@ -3719,7 +3719,6 @@ dependencies = [
  "gem_hash",
  "hex",
  "num-bigint",
- "num-traits",
  "number_formatter",
  "primitives",
  "reqwest 0.13.4",
