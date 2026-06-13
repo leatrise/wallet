@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::error::Error;
 
-use super::filter::{build_assets_filters, build_filter, build_perpetuals_filters};
+use super::filter::{build_asset_lists_filters, build_assets_filters, build_filter, build_perpetuals_filters};
 use super::model::SearchRequest;
 use chrono::{DateTime, Utc};
 use pricer::PriceClient;
@@ -104,9 +104,11 @@ impl SearchClient {
     }
 
     pub async fn get_asset_lists_search(&self, request: &SearchRequest) -> Result<Vec<AssetList>, Box<dyn Error + Send + Sync>> {
+        let filters = build_asset_lists_filters(request);
+
         let lists: Vec<AssetListDocument> = self
             .client
-            .search(ASSET_LISTS_INDEX_NAME, &request.query, &build_filter(vec![]), [].as_ref(), request.limit, request.offset)
+            .search(ASSET_LISTS_INDEX_NAME, &request.query, &build_filter(filters), [].as_ref(), request.limit, request.offset)
             .await?;
 
         Ok(lists.into_iter().map(Into::into).collect())

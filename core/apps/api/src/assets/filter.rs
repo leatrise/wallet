@@ -1,5 +1,13 @@
 use super::SearchRequest;
 
+pub fn build_asset_lists_filters(request: &SearchRequest) -> Vec<String> {
+    if request.has_tag_filter() {
+        vec![filter_array("id", request.tags.clone())]
+    } else {
+        vec![]
+    }
+}
+
 pub fn build_assets_filters(request: &SearchRequest) -> Vec<String> {
     let mut filters = vec![];
     filters.push("properties.isEnabled = true".to_string());
@@ -74,6 +82,14 @@ mod tests {
         let filters = build_perpetuals_filters(&request);
 
         assert_eq!(filters, vec!["tags IN [\"stocks\"]"]);
+    }
+
+    #[test]
+    fn build_asset_lists_filters_with_tags() {
+        let request = SearchRequest::new("", None, Some("stocks"), None, None);
+        let filters = build_asset_lists_filters(&request);
+
+        assert_eq!(filters, vec!["id IN [\"stocks\"]"]);
     }
 
     #[test]

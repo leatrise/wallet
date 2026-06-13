@@ -44,7 +44,7 @@ impl SearchRequest {
     }
 
     pub fn should_search_lists(&self) -> bool {
-        self.query.chars().count() >= MIN_LIST_SEARCH_QUERY_LENGTH
+        self.query.chars().count() >= MIN_LIST_SEARCH_QUERY_LENGTH || self.has_tag_filter()
     }
 
     pub fn has_tag_filter(&self) -> bool {
@@ -67,6 +67,7 @@ mod tests {
     fn should_search_lists() {
         assert!(!SearchRequest::new("BT", None, None, None, None).should_search_lists());
         assert!(SearchRequest::new("BTC", None, None, None, None).should_search_lists());
+        assert!(SearchRequest::new("", None, Some("stocks"), None, None).should_search_lists());
     }
 
     #[test]
