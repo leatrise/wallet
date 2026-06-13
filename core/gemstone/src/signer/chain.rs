@@ -18,7 +18,7 @@ use gem_ton::signer::TonChainSigner;
 use gem_tron::signer::TronChainSigner;
 use gem_xrp::signer::XrpChainSigner;
 use primitives::swap::{SwapData, SwapQuoteDataType};
-use primitives::{Asset, BitcoinChain, Chain, ChainSigner, ChainType, EVMChain, SignerError, SignerInput, TransactionInputType};
+use primitives::{Asset, BitcoinChain, Chain, ChainSigner, ChainType, SignerError, SignerInput, TransactionInputType};
 use zeroize::Zeroizing;
 
 pub struct GemChainSigner {
@@ -29,7 +29,7 @@ pub struct GemChainSigner {
 impl GemChainSigner {
     pub fn new(chain: Chain) -> Self {
         let signer: Box<dyn ChainSigner> = match chain.chain_type() {
-            ChainType::Ethereum => Box::new(EvmChainSigner::new(EVMChain::from_chain(chain).unwrap())),
+            ChainType::Ethereum => Box::new(EvmChainSigner),
             ChainType::Aptos => Box::new(AptosChainSigner),
             ChainType::HyperCore => Box::new(HyperCoreSigner),
             ChainType::Sui => Box::new(SuiChainSigner),
