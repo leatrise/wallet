@@ -4,7 +4,7 @@ use super::sync::{SearchSyncClient, SearchSyncResult};
 use primitives::ConfigKey;
 use search_index::{PERPETUALS_INDEX_NAME, PerpetualDocument, SearchIndexClient, sanitize_index_primary_id};
 use storage::models::{AssetRow, PerpetualRow};
-use storage::{AssetsRepository, Database, PerpetualFilter, PerpetualsRepository, TagRepository};
+use storage::{AssetsRepository, Database, PerpetualsRepository, TagRepository};
 
 pub struct PerpetualsIndexUpdater {
     database: Database,
@@ -21,8 +21,8 @@ impl PerpetualsIndexUpdater {
 
     pub async fn update(&self) -> Result<SearchSyncResult, Box<dyn std::error::Error + Send + Sync>> {
         let sync = self.sync_client.for_key(ConfigKey::SearchPerpetualsLastUpdatedAt)?;
-        let filters = sync.since().map(PerpetualFilter::UpdatedSince).into_iter().collect();
-        let perpetuals = self.database.perpetuals()?.get_perpetuals_by_filter(filters)?;
+        let perpetuals = self.database.perpetuals()?.get_perpetual_rows()?;
+        let perpetuals_tags = self.database.tag()?.get_perpetuals_tags()?;
 
         if perpetuals.is_empty() {
             return sync.write(PERPETUALS_INDEX_NAME, Vec::<PerpetualDocument>::new()).await;
@@ -30,7 +30,6 @@ impl PerpetualsIndexUpdater {
 
         let asset_ids = perpetuals.iter().map(|p| p.asset_id.0.clone()).collect::<Vec<_>>();
         let assets = self.database.assets()?.get_assets_rows(asset_ids)?;
-        let perpetuals_tags = self.database.tag()?.get_perpetuals_tags()?;
 
         let assets_map: HashMap<String, AssetRow> = assets.into_iter().map(|a| (a.id.to_string(), a)).collect();
         let perpetuals_tags_map: HashMap<String, Vec<String>> = perpetuals_tags.into_iter().fold(HashMap::new(), |mut acc, tag| {

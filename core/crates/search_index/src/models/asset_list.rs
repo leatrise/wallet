@@ -2,7 +2,7 @@ use primitives::AssetList;
 use serde::{Deserialize, Serialize};
 
 pub const ASSET_LISTS_INDEX_NAME: &str = "asset_lists";
-pub const ASSET_LISTS_FILTERS: &[&str] = &["id"];
+pub const ASSET_LISTS_FILTERS: &[&str] = &[];
 pub const ASSET_LISTS_SEARCH_ATTRIBUTES: &[&str] = &["name", "id"];
 pub const ASSET_LISTS_RANKING_RULES: &[&str] = &["words", "typo", "proximity", "attribute", "exactness"];
 pub const ASSET_LISTS_SORTS: &[&str] = &[];
