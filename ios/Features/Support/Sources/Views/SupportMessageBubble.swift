@@ -15,7 +15,7 @@ struct SupportMessageBubble: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: .tiny) {
+        VStack(alignment: model.alignment.horizontal, spacing: .tiny) {
             if model.hasImages {
                 imagesView
             }
@@ -23,7 +23,7 @@ struct SupportMessageBubble: View {
                 textBubble
             }
         }
-        .frame(maxWidth: Constants.maxWidth, alignment: .leading)
+        .frame(maxWidth: Constants.maxWidth, alignment: model.alignment)
     }
 
     private var textBubble: some View {
