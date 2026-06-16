@@ -35,6 +35,15 @@ interface PerpetualDao {
     fun getPerpetualsData(): Flow<List<DbPerpetualData>>
 
     @Transaction
+    @Query("""
+        SELECT perpetuals.* FROM perpetuals
+        JOIN search ON perpetuals.id = search.perpetualId
+        WHERE search.`query` = :query
+        ORDER BY search.priority ASC, perpetuals.volume24h DESC
+    """)
+    fun searchWithPriority(query: String): Flow<List<DbPerpetualData>>
+
+    @Transaction
     @Query("SELECT * FROM perpetuals WHERE id = :perpetualId")
     fun getPerpetual(perpetualId: String): Flow<DbPerpetualData?>
 

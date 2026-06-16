@@ -92,18 +92,11 @@ fun AssetSelectScene(
     chainsFilter: List<Chain> = emptyList(),
     balanceFilter: Boolean = false,
     searchable: Boolean = true,
-    onChainFilter: (Chain) -> Unit,
-    onBalanceFilter: (Boolean) -> Unit,
-    onClearFilters: () -> Unit,
-    onSelect: ((AssetId) -> Unit)?,
-    onTagSelect: (AssetTag?) -> Unit,
-    onCancel: () -> Unit,
+    onAction: (AssetSelectAction) -> Unit,
     itemTrailing: (@Composable (AssetItemUIModel) -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
-    onAddAsset: (() -> Unit)? = null,
-    onSelectRecent: ((AssetId) -> Unit)? = null,
-    onOpenRecentsSheet: (() -> Unit)? = null,
     contextActions: AssetContextActions = AssetContextActions.Empty,
+    recentsSheetEnabled: Boolean = false,
 ) {
     AssetSelectScene(
         title = {
@@ -128,18 +121,11 @@ fun AssetSelectScene(
         availableChains = availableChains,
         chainsFilter = chainsFilter,
         balanceFilter = balanceFilter,
-        onChainFilter = onChainFilter,
-        onBalanceFilter = onBalanceFilter,
-        onClearFilters = onClearFilters,
-        onSelect = onSelect,
-        onTagSelect = onTagSelect,
-        onCancel = onCancel,
+        onAction = onAction,
         itemTrailing = itemTrailing,
         actions = actions,
-        onAddAsset = onAddAsset,
-        onSelectRecent = onSelectRecent,
-        onOpenRecentsSheet = onOpenRecentsSheet,
         contextActions = contextActions,
+        recentsSheetEnabled = recentsSheetEnabled,
     )
 }
 
@@ -161,19 +147,20 @@ fun AssetSelectScene(
     chainsFilter: List<Chain> = emptyList(),
     balanceFilter: Boolean = false,
     searchable: Boolean = true,
-    onChainFilter: (Chain) -> Unit,
-    onBalanceFilter: (Boolean) -> Unit,
-    onClearFilters: () -> Unit,
-    onSelect: ((AssetId) -> Unit)?,
-    onTagSelect: (AssetTag?) -> Unit,
-    onCancel: () -> Unit,
+    onAction: (AssetSelectAction) -> Unit,
     itemTrailing: (@Composable (AssetItemUIModel) -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
-    onAddAsset: (() -> Unit)? = null,
-    onSelectRecent: ((AssetId) -> Unit)? = null,
-    onOpenRecentsSheet: (() -> Unit)? = null,
     contextActions: AssetContextActions = AssetContextActions.Empty,
+    recentsSheetEnabled: Boolean = false,
+    pinnedPerpetualRows: List<@Composable (ListPosition) -> Unit> = emptyList(),
+    perpetualsContent: (LazyListScope.() -> Unit)? = null,
+    assetsHeaderRes: Int? = null,
+    assetsHeaderClickable: Boolean = false,
 ) {
+    val onSelect: (AssetId) -> Unit = { onAction(AssetSelectAction.Select(it)) }
+    val onSelectRecent: (AssetId) -> Unit = { onAction(AssetSelectAction.SelectRecent(it)) }
+    val onOpenRecentsSheet: (() -> Unit)? = if (recentsSheetEnabled) { { onAction(AssetSelectAction.OpenRecentsSheet) } } else null
+    val onAssetsHeaderClick: (() -> Unit)? = if (assetsHeaderClickable) { { onAction(AssetSelectAction.ShowAllAssets) } } else null
     val listState = rememberLazyListState()
     var isReturnToTop by remember { mutableStateOf(false) }
 
@@ -213,7 +200,7 @@ fun AssetSelectScene(
             }
             actions()
         },
-        onClose = onCancel
+        onClose = { onAction(AssetSelectAction.Cancel) }
     ) {
         if (searchable) {
             SearchBar(query = query)
@@ -227,7 +214,7 @@ fun AssetSelectScene(
                     TabsBar(
                         tabs = tags,
                         selected = selectedTag,
-                        onSelect = onTagSelect,
+                        onSelect = { onAction(AssetSelectAction.SelectTag(it)) },
                         scrollable = true,
                         equalWidth = false,
                     ) { item ->
@@ -242,10 +229,33 @@ fun AssetSelectScene(
             }
             recent(recent, onSelectRecent, onOpenRecentsSheet)
             assets(popular, AssetsGroupType.Popular, onSelect, support, titleBadge, itemTrailing, longPressedAsset, contextActions)
-            assets(pinned, AssetsGroupType.Pined, onSelect, support, titleBadge, itemTrailing, longPressedAsset, contextActions)
+            if (pinned.isNotEmpty() || pinnedPerpetualRows.isNotEmpty()) {
+                item { PinnedAssetsHeaderItem(AssetsGroupType.Pined) }
+                val pinnedTotal = pinnedPerpetualRows.size + pinned.size
+                itemsPositioned(pinnedPerpetualRows, totalCount = pinnedTotal) { position, row ->
+                    row(position)
+                }
+                assetRows(
+                    pinned,
+                    onSelect,
+                    support,
+                    titleBadge,
+                    itemTrailing,
+                    longPressedAsset,
+                    contextActions,
+                    indexOffset = pinnedPerpetualRows.size,
+                    totalCount = pinnedTotal,
+                )
+            }
+            perpetualsContent?.invoke(this)
+            if (assetsHeaderRes != null && unpinned.isNotEmpty()) {
+                item {
+                    SubheaderItem(assetsHeaderRes, onAssetsHeaderClick)
+                }
+            }
             assets(unpinned, AssetsGroupType.None, onSelect, support, titleBadge, itemTrailing, longPressedAsset, contextActions)
             loading(state)
-            notFound(state = state, onAddAsset = onAddAsset, isAddAvailable = isAddAvailable)
+            notFound(state = state, onAddAsset = { onAction(AssetSelectAction.AddAsset) }, isAddAvailable = isAddAvailable)
         }
     }
 
@@ -255,9 +265,9 @@ fun AssetSelectScene(
             chainFilter = chainsFilter,
             balanceFilter = balanceFilter,
             onDismissRequest = { showSelectNetworks = false },
-            onChainFilter = onChainFilter,
-            onBalanceFilter = onBalanceFilter,
-            onClearFilters = onClearFilters
+            onChainFilter = { onAction(AssetSelectAction.ChainFilter(it)) },
+            onBalanceFilter = { onAction(AssetSelectAction.BalanceFilter(it)) },
+            onClearFilters = { onAction(AssetSelectAction.ClearFilters) }
         )
     }
 }
@@ -276,7 +286,21 @@ private fun LazyListScope.assets(
 
     item { PinnedAssetsHeaderItem(group) }
 
-    itemsPositioned(items) { position, item ->
+    assetRows(items, onSelect, support, titleBadge, itemTrailing, longPressedAsset, contextActions)
+}
+
+fun LazyListScope.assetRows(
+    items: List<AssetItemUIModel>,
+    onSelect: ((AssetId) -> Unit)?,
+    support: ((AssetItemUIModel) -> (@Composable () -> Unit)?)?,
+    titleBadge: (AssetItemUIModel) -> String?,
+    itemTrailing: (@Composable (AssetItemUIModel) -> Unit)?,
+    longPressedAsset: MutableState<AssetId?>,
+    contextActions: AssetContextActions,
+    indexOffset: Int = 0,
+    totalCount: Int = items.size,
+) {
+    itemsPositioned(items, indexOffset = indexOffset, totalCount = totalCount) { position, item ->
         AssetSelectRow(
             position = position,
             item = item,
@@ -291,7 +315,7 @@ private fun LazyListScope.assets(
 }
 
 @Composable
-private fun AssetSelectRow(
+fun AssetSelectRow(
     position: ListPosition,
     item: AssetItemUIModel,
     support: ((AssetItemUIModel) -> (@Composable () -> Unit)?)?,
@@ -364,11 +388,7 @@ private fun LazyListScope.recent(
         return
     }
     item {
-        if (onOpenRecentsSheet == null) {
-            SubheaderItem(R.string.recent_activity_title)
-        } else {
-            SubheaderItem(R.string.recent_activity_title, onClick = onOpenRecentsSheet)
-        }
+        SubheaderItem(R.string.recent_activity_title, onOpenRecentsSheet)
     }
     item {
         LazyRow(
@@ -409,13 +429,7 @@ fun PreviewAssetScreenUI() {
             tags = AssetTag.entries,
             selectedTag = null,
             query = rememberTextFieldState(),
-            onSelect = {},
-            onAddAsset = {},
-            onChainFilter = {},
-            onBalanceFilter = {},
-            onClearFilters = {},
-            onCancel = {},
-            onTagSelect = {},
+            onAction = {},
         )
     }
 }

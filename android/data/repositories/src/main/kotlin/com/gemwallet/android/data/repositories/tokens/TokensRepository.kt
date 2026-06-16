@@ -5,14 +5,15 @@ import com.gemwallet.android.blockchain.services.TokenService
 import com.gemwallet.android.cases.tokens.SearchTokensCase
 import com.gemwallet.android.cases.tokens.SyncAssetPrices
 import com.gemwallet.android.data.service.store.database.AssetsDao
-import com.gemwallet.android.data.service.store.database.AssetsPriorityDao
 import com.gemwallet.android.data.service.store.database.PricesDao
+import com.gemwallet.android.data.service.store.database.SearchDao
 import com.gemwallet.android.data.service.store.database.entities.toDTO
 import com.gemwallet.android.data.service.store.database.entities.toRecord
 import com.gemwallet.android.data.service.store.database.entities.toPriceRecord
-import com.gemwallet.android.data.service.store.database.entities.toRecordPriority
+import com.gemwallet.android.data.service.store.database.entities.toSearchRecord
 import com.gemwallet.android.data.service.store.database.entities.toUpdateRecord
 import com.gemwallet.android.domains.asset.defaultBasic
+import com.gemwallet.android.ext.runCatchingCancellable
 import com.gemwallet.android.ext.toIdentifier
 import com.wallet.core.primitives.AssetBasic
 import com.wallet.core.primitives.AssetId
@@ -27,7 +28,7 @@ import kotlinx.coroutines.withContext
 class TokensRepository (
     private val assetsDao: AssetsDao,
     private val pricesDao: PricesDao,
-    private val assetsPriorityDao: AssetsPriorityDao,
+    private val searchDao: SearchDao,
     private val searchAssets: SearchAssets,
     private val tokenService: TokenService,
 ) : SearchTokensCase, SyncAssetPrices {
@@ -37,22 +38,24 @@ class TokensRepository (
             return@withContext false
         }
         val nodeAssets = async { tokenService.search(query) }
-        val tokens = try {
-            searchAssets.search(
+        val tokens = runCatchingCancellable {
+            searchAssets.searchAssets(
                 query = query,
                 chains = chains,
                 tags = tags,
             )
-        } catch (_: Throwable) {
+        }.getOrElse {
             nodeAssets.cancel()
             return@withContext false
         }
+        val priorityQuery = tags.toPriorityQuery(query)
         val assets = (tokens + nodeAssets.await()).distinctBy { it.asset.id }
         if (assets.isEmpty()) {
+            searchDao.deleteAssets(priorityQuery)
             return@withContext false
         }
         updateAssets(assets, currency)
-        assetsPriorityDao.put(assets.toRecordPriority(tags.toPriorityQuery(query)))
+        searchDao.put(assets.toSearchRecord(priorityQuery))
         true
     }
 
@@ -84,7 +87,7 @@ class TokensRepository (
         Unit
     }
 
-    private suspend fun updateAssets(assets: List<AssetBasic>, currency: Currency) {
+    internal suspend fun updateAssets(assets: List<AssetBasic>, currency: Currency) {
         if (assets.isEmpty()) {
             return
         }

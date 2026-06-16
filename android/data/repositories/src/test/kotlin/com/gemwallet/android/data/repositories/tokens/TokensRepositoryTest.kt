@@ -3,11 +3,11 @@ package com.gemwallet.android.data.repositories.tokens
 import com.gemwallet.android.application.assets.coordinators.SearchAssets
 import com.gemwallet.android.blockchain.services.TokenService
 import com.gemwallet.android.data.service.store.database.AssetsDao
-import com.gemwallet.android.data.service.store.database.AssetsPriorityDao
 import com.gemwallet.android.data.service.store.database.PricesDao
+import com.gemwallet.android.data.service.store.database.SearchDao
 import com.gemwallet.android.data.service.store.database.entities.DbAssetBasicUpdate
-import com.gemwallet.android.data.service.store.database.entities.DbAssetPriority
 import com.gemwallet.android.data.service.store.database.entities.DbFiatRate
+import com.gemwallet.android.data.service.store.database.entities.DbSearch
 import com.gemwallet.android.data.service.store.database.entities.DbPrice
 import com.gemwallet.android.ext.toIdentifier
 import com.gemwallet.android.testkit.mockAsset
@@ -31,14 +31,14 @@ class TokensRepositoryTest {
 
     private val assetsDao = mockk<AssetsDao>(relaxed = true)
     private val pricesDao = mockk<PricesDao>(relaxed = true)
-    private val assetsPriorityDao = mockk<AssetsPriorityDao>(relaxed = true)
+    private val searchDao = mockk<SearchDao>(relaxed = true)
     private val searchAssets = mockk<SearchAssets>()
     private val tokenService = mockk<TokenService>(relaxed = true)
 
     private val subject = TokensRepository(
         assetsDao = assetsDao,
         pricesDao = pricesDao,
-        assetsPriorityDao = assetsPriorityDao,
+        searchDao = searchDao,
         searchAssets = searchAssets,
         tokenService = tokenService,
     )
@@ -47,7 +47,7 @@ class TokensRepositoryTest {
     fun search_usesSearchAssetsAndStoresPriority() = runTest {
         val asset = mockAssetBasic()
         coEvery {
-            searchAssets.search(
+            searchAssets.searchAssets(
                 query = "btc",
                 chains = listOf(Chain.Bitcoin),
                 tags = listOf(AssetTag.Trending),
@@ -61,17 +61,17 @@ class TokensRepositoryTest {
             chains = listOf(Chain.Bitcoin),
             tags = listOf(AssetTag.Trending),
         )
-        val priorities = slot<List<DbAssetPriority>>()
+        val priorities = slot<List<DbSearch>>()
 
         assertTrue(result)
         coVerify {
-            searchAssets.search(
+            searchAssets.searchAssets(
                 query = "btc",
                 chains = listOf(Chain.Bitcoin),
                 tags = listOf(AssetTag.Trending),
             )
         }
-        coVerify { assetsPriorityDao.put(capture(priorities)) }
+        coVerify { searchDao.put(capture(priorities)) }
         assertEquals("btc::trending", priorities.captured.single().query)
     }
 
@@ -80,7 +80,7 @@ class TokensRepositoryTest {
         val firstResult = mockAssetBasic(asset = mockAssetEthereum(), rank = 10)
         val secondResult = mockAssetBasic(asset = mockAsset(), rank = 999)
         coEvery {
-            searchAssets.search(
+            searchAssets.searchAssets(
                 query = "usdt arbitrum",
                 chains = emptyList(),
                 tags = emptyList(),
@@ -95,8 +95,8 @@ class TokensRepositoryTest {
             tags = emptyList(),
         )
 
-        val priorities = slot<List<DbAssetPriority>>()
-        coVerify { assetsPriorityDao.put(capture(priorities)) }
+        val priorities = slot<List<DbSearch>>()
+        coVerify { searchDao.put(capture(priorities)) }
         val captured = priorities.captured
 
         assertEquals(listOf(firstResult.asset.id.toIdentifier(), secondResult.asset.id.toIdentifier()), captured.map { it.assetId })

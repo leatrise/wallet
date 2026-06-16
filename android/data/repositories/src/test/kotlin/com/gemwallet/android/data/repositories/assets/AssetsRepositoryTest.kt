@@ -5,9 +5,9 @@ import com.gemwallet.android.data.repositories.session.SessionRepository
 import com.gemwallet.android.data.repositories.stream.StreamSubscriptionService
 import com.gemwallet.android.cases.tokens.SearchTokensCase
 import com.gemwallet.android.data.service.store.database.AssetsDao
-import com.gemwallet.android.data.service.store.database.AssetsPriorityDao
 import com.gemwallet.android.data.service.store.database.BalancesDao
 import com.gemwallet.android.data.service.store.database.PricesDao
+import com.gemwallet.android.data.service.store.database.SearchDao
 import com.gemwallet.android.data.service.store.database.entities.DbAsset
 import com.gemwallet.android.data.service.store.database.entities.DbAssetBasicUpdate
 import com.gemwallet.android.data.service.store.database.entities.DbFiatRate
@@ -28,12 +28,12 @@ import com.gemwallet.android.testkit.mockAssetLink
 import com.gemwallet.android.testkit.mockAssetEthereum
 import com.gemwallet.android.testkit.mockAssetMarket
 import com.gemwallet.android.testkit.mockWalletId
+import com.gemwallet.android.testkit.mockWalletId
 import com.gemwallet.android.testkit.mockAssetProperties
 import com.gemwallet.android.testkit.mockAssetSolana
 import com.gemwallet.android.testkit.mockAssetSolanaUSDC
 import com.gemwallet.android.testkit.mockSession
 import com.gemwallet.android.testkit.mockWallet
-import com.gemwallet.android.testkit.mockWalletId
 import com.gemwallet.android.testkit.mockChartValuePercentage
 import com.gemwallet.android.testkit.mockPrice
 import com.wallet.core.primitives.AssetBasic
@@ -63,7 +63,7 @@ import uniffi.gemstone.assetDefaultRank
 class AssetsRepositoryTest {
 
     private val assetsDao = mockk<AssetsDao>(relaxed = true)
-    private val assetsPriorityDao = mockk<AssetsPriorityDao>(relaxed = true)
+    private val searchDao = mockk<SearchDao>(relaxed = true)
     private val balancesDao = mockk<BalancesDao>(relaxed = true)
     private val pricesDao = mockk<PricesDao>(relaxed = true)
     private val sessionRepository = mockk<SessionRepository>()
@@ -84,7 +84,7 @@ class AssetsRepositoryTest {
         streamSubscriptionService = streamSubscriptionService,
         availabilityService = AssetsAvailabilityService(assetsDao),
         currencyRatesService = CurrencyRatesService(pricesDao),
-        searchService = AssetsSearchService(assetsDao, assetsPriorityDao, sessionRepository),
+        searchService = AssetsSearchService(assetsDao, searchDao, sessionRepository),
         recentAssetsService = RecentAssetsService(assetsDao, sessionRepository),
         updateBalances = updateBalances,
         scope = scope,
@@ -397,7 +397,7 @@ class AssetsRepositoryTest {
     @Test
     fun swapSearch_includesEnabledHiddenAndUnlinkedAssets() = runBlocking {
         every { sessionRepository.session() } returns sessionFlow
-        every { assetsPriorityDao.hasPriorities("") } returns flowOf(0)
+        every { searchDao.hasAssetPriorities("") } returns flowOf(0)
 
         val wallet = mockWallet(
             id = "wallet-1",
@@ -463,7 +463,7 @@ class AssetsRepositoryTest {
     @Test
     fun swapSearch_usesPriorityDaoAndPreservesOrderWhenPrioritiesExist() = runBlocking {
         every { sessionRepository.session() } returns sessionFlow
-        every { assetsPriorityDao.hasPriorities("usd") } returns flowOf(2)
+        every { searchDao.hasAssetPriorities("usd") } returns flowOf(2)
 
         val wallet = mockWallet(
             id = "wallet-1",
