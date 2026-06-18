@@ -8,13 +8,29 @@ import Store
 public struct SupportChatService: Sendable {
     private let store: SupportChatStore
     private let provider: any GemAPISupportService
+    public let typing: SupportTypingState
 
     public init(
         store: SupportChatStore,
         provider: any GemAPISupportService = GemAPIService.shared,
+        typing: SupportTypingState,
     ) {
         self.store = store
         self.provider = provider
+        self.typing = typing
+    }
+
+    public func receive(_ event: SupportStreamEvent) async throws {
+        switch event {
+        case let .message(message):
+            try store.addMessages([message])
+            switch message.sender {
+            case .user: break
+            case .agent: await typing.clear()
+            }
+        case let .typing(payload):
+            await typing.update(payload)
+        }
     }
 
     public func syncMessages(fromTimestamp: Int) async throws {

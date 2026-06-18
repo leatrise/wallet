@@ -7,6 +7,7 @@ import com.gemwallet.android.application.transactions.coordinators.SyncTransacti
 import com.gemwallet.android.cases.nft.SyncNfts
 import com.gemwallet.android.data.repositories.assets.UpdateBalances
 import com.gemwallet.android.data.repositories.session.SessionRepository
+import com.gemwallet.android.data.repositories.support.SupportTypingState
 import com.gemwallet.android.data.repositories.wallets.WalletsRepository
 import com.gemwallet.android.data.service.store.database.AssetsDao
 import com.gemwallet.android.data.service.store.database.InAppNotificationsDao
@@ -26,6 +27,7 @@ import com.wallet.core.primitives.StreamEvent
 import com.wallet.core.primitives.StreamNotificationUpdate
 import com.wallet.core.primitives.StreamTransactionsUpdate
 import com.wallet.core.primitives.StreamWalletUpdate
+import com.wallet.core.primitives.SupportMessageSender
 import com.wallet.core.primitives.SupportStreamEvent
 import com.wallet.core.primitives.WebSocketPricePayload
 import kotlinx.coroutines.flow.firstOrNull
@@ -42,6 +44,7 @@ class StreamEventHandler(
     private val updateBalances: UpdateBalances,
     private val inAppNotificationsDao: InAppNotificationsDao,
     private val supportMessagesDao: SupportMessagesDao,
+    private val supportTypingState: SupportTypingState,
 ) {
 
     suspend fun handle(event: StreamEvent) {
@@ -117,8 +120,14 @@ class StreamEventHandler(
 
     private suspend fun handleSupport(event: SupportStreamEvent) {
         when (event) {
-            is SupportStreamEvent.Message -> supportMessagesDao.addMessages(listOf(event.data.toRecord()))
-            is SupportStreamEvent.Typing -> {}
+            is SupportStreamEvent.Message -> {
+                supportMessagesDao.addMessages(listOf(event.data.toRecord()))
+                when (event.data.sender) {
+                    is SupportMessageSender.User -> { }
+                    is SupportMessageSender.Agent -> supportTypingState.clear()
+                }
+            }
+            is SupportStreamEvent.Typing -> supportTypingState.update(event.data)
         }
     }
 
