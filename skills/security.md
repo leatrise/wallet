@@ -33,6 +33,15 @@ Before editing any of the following, confirm the task explicitly intends to chan
 - If a security-sensitive behavior is shared through `core/`, regenerate bindings and verify both iOS and Android
 - If only one app changes a shared security or transaction flow, call out the parity risk explicitly
 
+## Optional External Security Skills
+
+For deeper security review, an agent may load external security skill packs when they are installed or available in its environment. These are optional aids, not substitutes for this repository's rules or platform verification.
+
+- [Trail of Bits Skills](https://github.com/trailofbits/skills): security research, vulnerability detection, audit workflows, static analysis, supply-chain review, constant-time analysis, zeroization audit, and related skills.
+- [NVIDIA SkillSpector](https://github.com/NVIDIA/SkillSpector): scanner for AI agent skills that can help detect malicious patterns, unsafe instructions, and security risks in skill definitions.
+
+Use external skills when the change touches wallet-critical flows, cryptography, signing, dependency or supply-chain risk, untrusted input handling, CI automation, or agent skill definitions. Do not install or run external tools in a way that uploads secrets, private code, wallet data, signing payloads, or credentials without explicit approval.
+
 ## Review Checklist
 
 Before finishing a security-sensitive change, check:

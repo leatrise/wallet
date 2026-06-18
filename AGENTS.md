@@ -10,7 +10,8 @@ Read this file first, then load only the skills relevant to your current task �
 - [Cross-Platform Awareness](skills/cross-platform-awareness.md) — Rules for changes that can affect both apps
 - [Development Commands](skills/development-commands.md) — Root build, generate, localization, and platform entrypoint commands
 - [Architecture](skills/architecture.md) — High-level iOS, Android, and shared-layer architecture
-- [Engineering Principles](skills/engineering-principles.md) — Clean-code rules and code review standards shared across the repo
+- [Engineering Principles](skills/engineering-principles.md) — Clean-code rules shared across the repo
+- [Code Review](skills/code-review.md) — Review checklist for correctness, conventions, parity, and adversarial security hardening
 - [Security](skills/security.md) — Wallet-critical security rules for key material, signing, auth, and transaction handling
 - [Quality Checks](skills/quality-checks.md) — Lint, format, and static-analysis commands for each platform
 - [Release Process](skills/release-process.md) — Branching, versioning, and commit expectations
