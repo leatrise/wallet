@@ -8,14 +8,17 @@ use num_bigint::BigInt;
 use gem_client::Client;
 use number_formatter::BigNumberFormatter;
 use primitives::{
-    AssetSubtype, FeePriority, FeeRate, GasPriceType, TransactionFee, TransactionInputType, TransactionLoadData, TransactionLoadInput, TransactionLoadMetadata,
-    TransactionPreloadInput, TransferDataOutputAction, TronStakeData,
+    Asset, AssetSubtype, FeePriority, FeeRate, GasPriceType, TransactionFee, TransactionInputType, TransactionLoadData, TransactionLoadInput, TransactionLoadMetadata,
+    TransactionPreloadInput, TransferDataOutputAction, TronStakeData, decode_hex,
+    swap::{SwapData, SwapQuoteData, SwapQuoteDataType},
 };
 
 use crate::{
     address::TronAddress,
     models::{ChainParameter, TriggerSmartContractData, account::TronAccountUsage},
-    provider::preload_mapper::{calculate_stake_fee_rate, calculate_transfer_fee_rate, calculate_transfer_token_fee_rate, map_stake_data},
+    provider::preload_mapper::{
+        FeeEstimateContext, calculate_stake_fee_rate, calculate_transfer_token_fee_rate, calculate_transfer_token_fee_rate_with_data, map_stake_data, native_transfer_fee,
+    },
     rpc::client::TronClient,
 };
 
@@ -45,10 +48,15 @@ impl<C: Client> ChainTransactionLoad for TronClient<C> {
             stake_data,
         };
 
+        let fee_context = FeeEstimateContext {
+            chain_parameters: &chain_parameters,
+            account_usage: &account_usage,
+            is_new_account,
+        };
         let has_memo = input.get_memo().is_some();
         let fee = match &input.input_type {
             TransactionInputType::Transfer(asset) | TransactionInputType::TransferNft(asset, _) | TransactionInputType::Account(asset, _) => match &asset.id.token_id {
-                None => TransactionFee::new_from_fee(calculate_transfer_fee_rate(&chain_parameters, &account_usage, is_new_account, has_memo)?),
+                None => native_transfer_fee(&fee_context, has_memo)?,
                 Some(token_id) => {
                     self.estimate_token_transfer_fee(
                         input.sender_address.clone(),
@@ -57,6 +65,7 @@ impl<C: Client> ChainTransactionLoad for TronClient<C> {
                         input.value.clone(),
                         &chain_parameters,
                         &account_usage,
+                        input.get_memo().map(|memo| memo.len() as u64),
                     )
                     .await?
                 }
@@ -67,26 +76,13 @@ impl<C: Client> ChainTransactionLoad for TronClient<C> {
                     .await?
                 {
                     Some(fee) => fee,
-                    None => TransactionFee::new_from_fee(calculate_transfer_fee_rate(&chain_parameters, &account_usage, is_new_account, has_memo)?),
+                    None => native_transfer_fee(&fee_context, has_memo)?,
                 },
-                TransferDataOutputAction::Sign => TransactionFee::new_from_fee(calculate_transfer_fee_rate(&chain_parameters, &account_usage, is_new_account, false)?),
+                TransferDataOutputAction::Sign => native_transfer_fee(&fee_context, false)?,
             },
             TransactionInputType::Stake(_asset, stake_type) => TransactionFee::new_from_fee(calculate_stake_fee_rate(&chain_parameters, &account_usage, stake_type)?),
-            TransactionInputType::Swap(from_asset, _, swap_data) => match &from_asset.id.token_id {
-                None => TransactionFee::new_from_fee(calculate_transfer_fee_rate(&chain_parameters, &account_usage, is_new_account, has_memo)?),
-                Some(token_id) => {
-                    self.estimate_token_transfer_fee(
-                        input.sender_address.clone(),
-                        swap_data.data.to.clone(),
-                        token_id.clone(),
-                        input.value.clone(),
-                        &chain_parameters,
-                        &account_usage,
-                    )
-                    .await?
-                }
-            },
-            _ => TransactionFee::new_from_fee(calculate_transfer_fee_rate(&chain_parameters, &account_usage, is_new_account, has_memo)?),
+            TransactionInputType::Swap(from_asset, _, swap_data) => self.estimate_swap_fee(&input, from_asset, swap_data, &fee_context, input.get_memo()).await?,
+            _ => native_transfer_fee(&fee_context, has_memo)?,
         };
 
         Ok(TransactionLoadData { fee, metadata })
@@ -97,7 +93,80 @@ impl<C: Client> ChainTransactionLoad for TronClient<C> {
     }
 }
 
+fn has_swap_quote_memo(input_memo: Option<&str>, data: &SwapQuoteData) -> bool {
+    input_memo.is_some() || data.memo.as_deref().is_some_and(|memo| !memo.is_empty())
+}
+
+fn swap_contract_memo_data_bytes(input_memo: Option<&str>, data: &SwapQuoteData) -> Result<Option<u64>, Box<dyn Error + Send + Sync>> {
+    if let Some(memo) = data.memo.as_deref().filter(|memo| !memo.is_empty()) {
+        let bytes = decode_hex(memo).map_err(|_| "invalid Tron swap memo")?;
+        return Ok(Some(bytes.len() as u64));
+    }
+
+    Ok(input_memo.map(|memo| memo.len() as u64))
+}
+
 impl<C: Client> TronClient<C> {
+    async fn estimate_swap_fee(
+        &self,
+        input: &TransactionLoadInput,
+        from_asset: &Asset,
+        swap_data: &SwapData,
+        fee_context: &FeeEstimateContext<'_>,
+        input_memo: Option<&str>,
+    ) -> Result<TransactionFee, Box<dyn Error + Send + Sync>> {
+        match &swap_data.data.data_type {
+            SwapQuoteDataType::Contract => self.estimate_contract_swap_fee(&input.sender_address, from_asset, swap_data, fee_context, input_memo).await,
+            SwapQuoteDataType::Transfer => self.estimate_transfer_swap_fee(input, from_asset, swap_data, fee_context, input_memo).await,
+        }
+    }
+
+    async fn estimate_contract_swap_fee(
+        &self,
+        sender_address: &str,
+        from_asset: &Asset,
+        swap_data: &SwapData,
+        fee_context: &FeeEstimateContext<'_>,
+        input_memo: Option<&str>,
+    ) -> Result<TransactionFee, Box<dyn Error + Send + Sync>> {
+        if !swap_data.data.data.is_empty() {
+            let memo_data_bytes = swap_contract_memo_data_bytes(input_memo, &swap_data.data)?;
+            return self
+                .estimate_contract_call_fee(sender_address, &swap_data.data, fee_context.chain_parameters, fee_context.account_usage, memo_data_bytes)
+                .await;
+        }
+        if from_asset.id.token_id.is_some() {
+            return Err("Tron token contract swap calldata is required".into());
+        }
+
+        native_transfer_fee(fee_context, has_swap_quote_memo(input_memo, &swap_data.data))
+    }
+
+    async fn estimate_transfer_swap_fee(
+        &self,
+        input: &TransactionLoadInput,
+        from_asset: &Asset,
+        swap_data: &SwapData,
+        fee_context: &FeeEstimateContext<'_>,
+        input_memo: Option<&str>,
+    ) -> Result<TransactionFee, Box<dyn Error + Send + Sync>> {
+        match &from_asset.id.token_id {
+            None => native_transfer_fee(fee_context, has_swap_quote_memo(input_memo, &swap_data.data)),
+            Some(token_id) => {
+                self.estimate_token_transfer_fee(
+                    input.sender_address.clone(),
+                    swap_data.data.to.clone(),
+                    token_id.clone(),
+                    input.value.clone(),
+                    fee_context.chain_parameters,
+                    fee_context.account_usage,
+                    input_memo.map(|memo| memo.len() as u64),
+                )
+                .await
+            }
+        }
+    }
+
     async fn estimate_token_transfer_fee(
         &self,
         sender_address: String,
@@ -106,10 +175,49 @@ impl<C: Client> TronClient<C> {
         value: String,
         chain_parameters: &[ChainParameter],
         account_usage: &TronAccountUsage,
+        memo_data_bytes: Option<u64>,
     ) -> Result<TransactionFee, Box<dyn Error + Send + Sync>> {
         let destination_parameter = TronAddress::parse(&destination_address)?.abi_address_parameter();
         let estimated_energy = self.estimate_trc20_transfer_gas(sender_address, token_id, destination_parameter, value).await?;
-        let token_fee = calculate_transfer_token_fee_rate(chain_parameters, account_usage, estimated_energy)?;
+        let token_fee = calculate_transfer_token_fee_rate_with_data(
+            chain_parameters,
+            account_usage,
+            estimated_energy,
+            memo_data_bytes.unwrap_or_default(),
+            memo_data_bytes.is_some(),
+        )?;
+
+        Ok(TransactionFee::new_gas_price_type(
+            GasPriceType::regular(BigInt::from(token_fee.energy_price)),
+            BigInt::from(token_fee.fee),
+            BigInt::from(token_fee.fee_limit),
+            HashMap::new(),
+        ))
+    }
+
+    async fn estimate_contract_call_fee(
+        &self,
+        sender_address: &str,
+        data: &SwapQuoteData,
+        chain_parameters: &[ChainParameter],
+        account_usage: &TronAccountUsage,
+        memo_data_bytes: Option<u64>,
+    ) -> Result<TransactionFee, Box<dyn Error + Send + Sync>> {
+        let contract_data = TriggerSmartContractData {
+            contract_address: data.to.clone(),
+            data: data.data.clone(),
+            owner_address: sender_address.to_string(),
+            fee_limit: None,
+            call_value: Some(data.value.parse::<u64>()?).filter(|value| *value > 0),
+        };
+        let estimated_energy = self.estimate_energy_with_data(&contract_data).await?;
+        let token_fee = calculate_transfer_token_fee_rate_with_data(
+            chain_parameters,
+            account_usage,
+            estimated_energy,
+            memo_data_bytes.unwrap_or_default(),
+            memo_data_bytes.is_some(),
+        )?;
 
         Ok(TransactionFee::new_gas_price_type(
             GasPriceType::regular(BigInt::from(token_fee.energy_price)),
@@ -164,6 +272,35 @@ impl<C: Client> TronClient<C> {
             }
             _ => Ok(TronStakeData::Votes(vec![])),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{has_swap_quote_memo, swap_contract_memo_data_bytes};
+    use primitives::swap::SwapQuoteData;
+
+    #[test]
+    fn test_swap_memo_fee_preload_uses_quote_memo_bytes() {
+        let mut data = SwapQuoteData::new_contract("TDMakP1fbWc7XXoSWZpujpjRAuePPEn4oi".to_string(), "0".to_string(), String::new(), None, None);
+
+        assert!(!has_swap_quote_memo(None, &data));
+        assert_eq!(swap_contract_memo_data_bytes(None, &data).unwrap(), None);
+
+        assert!(has_swap_quote_memo(Some("memo"), &data));
+        assert_eq!(swap_contract_memo_data_bytes(Some("memo"), &data).unwrap(), Some(4));
+
+        data.memo = Some(String::new());
+        assert!(!has_swap_quote_memo(None, &data));
+        assert_eq!(swap_contract_memo_data_bytes(None, &data).unwrap(), None);
+
+        data.memo = Some("0x010203".to_string());
+        assert!(has_swap_quote_memo(None, &data));
+        assert!(has_swap_quote_memo(Some("memo"), &data));
+        assert_eq!(swap_contract_memo_data_bytes(Some("memo"), &data).unwrap(), Some(3));
+
+        data.memo = Some("0xzz".to_string());
+        assert_eq!(swap_contract_memo_data_bytes(None, &data).unwrap_err().to_string(), "invalid Tron swap memo");
     }
 }
 

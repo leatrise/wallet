@@ -9,6 +9,9 @@ use serde_serializers::{deserialize_biguint_from_str, serialize_biguint};
 
 use crate::{SwapResult, SwapperChainAsset, SwapperProvider};
 
+const STATE_CHAIN_BLOCK_SECONDS: f64 = 6.0;
+const ORACLE_SLIPPAGE_DISABLE_BPS: u8 = 255;
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct QuoteRequest {
@@ -34,6 +37,10 @@ pub struct QuoteResponse {
     #[serde(deserialize_with = "deserialize_biguint_from_str", serialize_with = "serialize_biguint")]
     pub egress_amount: BigUint,
     pub recommended_slippage_tolerance_percent: f64,
+    #[serde(default)]
+    pub recommended_live_price_slippage_tolerance_percent: Option<f64>,
+    #[serde(default)]
+    pub recommended_retry_duration_minutes: Option<f64>,
     pub estimated_duration_seconds: f64,
     #[serde(rename = "type")]
     pub quote_type: String,
@@ -50,6 +57,10 @@ pub struct BoostQuote {
     #[serde(deserialize_with = "deserialize_biguint_from_str", serialize_with = "serialize_biguint")]
     pub egress_amount: BigUint,
     pub recommended_slippage_tolerance_percent: f64,
+    #[serde(default)]
+    pub recommended_live_price_slippage_tolerance_percent: Option<f64>,
+    #[serde(default)]
+    pub recommended_retry_duration_minutes: Option<f64>,
     pub estimated_duration_seconds: f64,
     pub estimated_boost_fee_bps: u32,
     pub max_boost_fee_bps: u32,
@@ -61,12 +72,47 @@ impl QuoteResponse {
     pub fn slippage_bps(&self) -> u32 {
         (self.recommended_slippage_tolerance_percent * 100.0) as u32
     }
+
+    pub fn live_price_slippage_bps(&self) -> Option<u8> {
+        recommended_live_price_slippage_bps(self.recommended_live_price_slippage_tolerance_percent)
+    }
+
+    pub fn retry_duration_blocks(&self) -> Option<u32> {
+        recommended_retry_duration_blocks(self.recommended_retry_duration_minutes)
+    }
 }
 
 impl BoostQuote {
     pub fn slippage_bps(&self) -> u32 {
         (self.recommended_slippage_tolerance_percent * 100.0) as u32
     }
+
+    pub fn live_price_slippage_bps(&self) -> Option<u8> {
+        recommended_live_price_slippage_bps(self.recommended_live_price_slippage_tolerance_percent)
+    }
+
+    pub fn retry_duration_blocks(&self) -> Option<u32> {
+        recommended_retry_duration_blocks(self.recommended_retry_duration_minutes)
+    }
+}
+
+fn recommended_live_price_slippage_bps(percent: Option<f64>) -> Option<u8> {
+    let percent = percent?;
+    if !percent.is_finite() || percent < 0.0 {
+        return None;
+    }
+
+    let bps = (percent * 100.0).round() as u32;
+    if bps < ORACLE_SLIPPAGE_DISABLE_BPS as u32 { Some(bps as u8) } else { None }
+}
+
+fn recommended_retry_duration_blocks(minutes: Option<f64>) -> Option<u32> {
+    let minutes = minutes?;
+    if !minutes.is_finite() || minutes <= 0.0 {
+        return None;
+    }
+
+    Some((minutes * 60.0 / STATE_CHAIN_BLOCK_SECONDS).ceil() as u32)
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -111,11 +157,12 @@ fn chainflip_chain_to_chain(chain: &str) -> Option<Chain> {
         "Bitcoin" => Some(Chain::Bitcoin),
         "Solana" => Some(Chain::Solana),
         "Arbitrum" => Some(Chain::Arbitrum),
+        "Tron" => Some(Chain::Tron),
         _ => None,
     }
 }
 
-static CHAINFLIP_ASSETS: LazyLock<Vec<(Chain, &'static str, AssetId)>> = LazyLock::new(|| {
+static ASSETS: LazyLock<Vec<(Chain, &'static str, AssetId)>> = LazyLock::new(|| {
     vec![
         (Chain::Bitcoin, "BTC", AssetId::from_chain(Chain::Bitcoin)),
         (Chain::Ethereum, "ETH", AssetId::from_chain(Chain::Ethereum)),
@@ -126,15 +173,17 @@ static CHAINFLIP_ASSETS: LazyLock<Vec<(Chain, &'static str, AssetId)>> = LazyLoc
         (Chain::Solana, "SOL", AssetId::from_chain(Chain::Solana)),
         (Chain::Solana, "USDC", SOLANA_USDC.id.clone()),
         (Chain::Solana, "USDT", SOLANA_USDT.id.clone()),
+        (Chain::Tron, "TRX", AssetId::from_chain(Chain::Tron)),
+        (Chain::Tron, "USDT", TRON_USDT.id.clone()),
         (Chain::Arbitrum, "ETH", AssetId::from_chain(Chain::Arbitrum)),
         (Chain::Arbitrum, "USDC", ARBITRUM_USDC.id.clone()),
         (Chain::Arbitrum, "USDT", ARBITRUM_USDT.id.clone()),
     ]
 });
 
-pub static CHAINFLIP_SUPPORTED_ASSETS: LazyLock<Vec<SwapperChainAsset>> = LazyLock::new(|| {
+pub static SUPPORTED_ASSETS: LazyLock<Vec<SwapperChainAsset>> = LazyLock::new(|| {
     let mut chains: BTreeMap<Chain, Vec<AssetId>> = BTreeMap::new();
-    for (chain, _, asset_id) in CHAINFLIP_ASSETS.iter() {
+    for (chain, _, asset_id) in ASSETS.iter() {
         let tokens = chains.entry(*chain).or_default();
         if asset_id.token_id.is_some() {
             tokens.push(asset_id.clone());
@@ -144,7 +193,7 @@ pub static CHAINFLIP_SUPPORTED_ASSETS: LazyLock<Vec<SwapperChainAsset>> = LazyLo
 });
 
 fn chainflip_asset_to_asset_id(chain: Chain, asset: &str) -> Option<AssetId> {
-    CHAINFLIP_ASSETS.iter().find(|(c, s, _)| *c == chain && *s == asset).map(|(_, _, id)| id.clone())
+    ASSETS.iter().find(|(c, s, _)| *c == chain && *s == asset).map(|(_, _, id)| id.clone())
 }
 
 pub fn map_swap_result(response: &SwapTxResponse) -> SwapResult {
@@ -191,6 +240,30 @@ pub mod test {
         let quote_response = serde_json::from_str::<Vec<QuoteResponse>>(include_str!("./test/btc_eth_quote.json")).unwrap();
 
         assert!(quote_response[0].boost_quote.is_some());
+    }
+
+    #[test]
+    fn test_quote_recommendations_convert_to_broker_units() {
+        let cases: [(f64, f64, Option<u8>, Option<u32>); 2] = [(1.0, 5.0, Some(100), Some(50)), (2.55, 0.0, None, None)];
+
+        for (live_price_slippage_percent, retry_duration_minutes, expected_live_price_slippage_bps, expected_retry_duration_blocks) in cases {
+            let quote_response = serde_json::from_value::<QuoteResponse>(serde_json::json!({
+                "egressAmount": "1000",
+                "recommendedSlippageTolerancePercent": 0.5,
+                "recommendedLivePriceSlippageTolerancePercent": live_price_slippage_percent,
+                "recommendedRetryDurationMinutes": retry_duration_minutes,
+                "estimatedDurationSeconds": 60,
+                "type": "REGULAR",
+                "depositAmount": "100",
+                "isVaultSwap": true,
+                "estimatedPrice": "10"
+            }))
+            .unwrap();
+
+            assert_eq!(quote_response.slippage_bps(), 50);
+            assert_eq!(quote_response.live_price_slippage_bps(), expected_live_price_slippage_bps);
+            assert_eq!(quote_response.retry_duration_blocks(), expected_retry_duration_blocks);
+        }
     }
 
     #[test]
