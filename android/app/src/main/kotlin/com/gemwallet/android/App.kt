@@ -1,8 +1,7 @@
 package com.gemwallet.android
 
-import android.app.Activity
 import android.app.Application
-import android.os.Bundle
+import androidx.lifecycle.ProcessLifecycleOwner
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
@@ -10,24 +9,16 @@ import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.svg.SvgDecoder
-import com.gemwallet.android.application.perpetual.coordinators.SyncPerpetualPositions
 import com.gemwallet.android.application.transactions.coordinators.GetTransactions
 import com.gemwallet.android.data.repositories.assets.TransactionPostProcessingService
-
-import com.gemwallet.android.data.repositories.perpetual.HyperliquidObserverService
-import com.gemwallet.android.data.repositories.stream.StreamObserverService
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class App : Application(), SingletonImageLoader.Factory, Application.ActivityLifecycleCallbacks {
+class App : Application(), SingletonImageLoader.Factory {
 
     @Inject
-    lateinit var streamObserver: StreamObserverService
-    @Inject
-    lateinit var hyperliquidObserver: HyperliquidObserverService
-    @Inject
-    lateinit var syncPerpetualPositions: SyncPerpetualPositions
+    lateinit var appLifecycleCoordinator: AppLifecycleCoordinator
     @Inject
     lateinit var getTransactions: GetTransactions
     @Inject
@@ -35,7 +26,7 @@ class App : Application(), SingletonImageLoader.Factory, Application.ActivityLif
 
     override fun onCreate() {
         super.onCreate()
-        registerActivityLifecycleCallbacks(this)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(appLifecycleCoordinator)
     }
 
     override fun newImageLoader(context: PlatformContext): ImageLoader {
@@ -56,26 +47,6 @@ class App : Application(), SingletonImageLoader.Factory, Application.ActivityLif
             }
             .build()
     }
-
-    override fun onActivityResumed(activity: Activity) {
-        streamObserver.start()
-        hyperliquidObserver.start()
-    }
-
-    override fun onActivityStopped(activity: Activity) {
-        streamObserver.stop()
-        hyperliquidObserver.stop()
-    }
-
-    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) { }
-
-    override fun onActivityStarted(activity: Activity) { }
-
-    override fun onActivityPaused(activity: Activity) { }
-
-    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) { }
-
-    override fun onActivityDestroyed(activity: Activity) { }
 
     companion object {
         init {
