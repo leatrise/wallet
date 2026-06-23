@@ -15,7 +15,7 @@ public struct SearchStore: Sendable {
         switch type {
         case .asset: try addAssets(query: query, ids: ids)
         case .perpetual: try addPerpetuals(query: query, ids: ids)
-        case .nft: break
+        case .nft, .list: break
         }
     }
 

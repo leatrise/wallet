@@ -3,6 +3,10 @@ list:
 
 bootstrap: install-rust install-toolchains install-ndk
 
+install-java:
+    @echo "==> Install Temurin JDK 17"
+    @brew install --cask temurin@17
+
 install-rust:
     @echo Install Rust
     @cd ../core && just install-rust

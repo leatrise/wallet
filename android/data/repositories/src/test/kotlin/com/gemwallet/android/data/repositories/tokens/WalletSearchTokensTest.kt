@@ -39,6 +39,7 @@ class WalletSearchTokensTest {
             assets = listOf(mockAssetBasic()),
             perpetuals = listOf(PerpetualSearchData(perpetual = mockPerpetual(), asset = mockAsset())),
             nfts = emptyList(),
+            lists = emptyList(),
         )
 
         val result = subject.search(

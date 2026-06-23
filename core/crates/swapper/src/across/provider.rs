@@ -1,6 +1,6 @@
 use super::{
-    DEFAULT_FILL_TIMEOUT, FILL_LOOKBACK_BLOCKS,
-    api::{ParsedDeposit, filled_relay_topic, parse_deposit_from_logs},
+    DEFAULT_FILL_TIMEOUT,
+    api::{FillStatusRelayData, ParsedDeposit, parse_deposit_from_logs},
     config_store::{ConfigStoreClient, TokenConfig},
     hubpool::HubPoolClient,
 };
@@ -17,8 +17,9 @@ use crate::{
     models::*,
 };
 use alloy_primitives::{
-    Address, Bytes, U256,
+    Address, B256, Bytes, U256,
     hex::{decode as HexDecode, encode_prefixed as HexEncode},
+    keccak256,
 };
 use alloy_sol_types::{SolCall, SolValue};
 use async_trait::async_trait;
@@ -37,9 +38,15 @@ use gem_evm::{
     weth::WETH9,
 };
 use num_bigint::{BigInt, Sign};
-use primitives::{AssetId, Chain, EVMChain, TransactionSwapMetadata, known_assets::*, swap::ApprovalData};
+use primitives::{
+    AssetId, Chain, EVMChain, TransactionSwapMetadata,
+    known_assets::*,
+    swap::{ApprovalData, SwapStatus},
+};
 use serde_serializers::biguint_from_hex_str;
 use std::{fmt::Debug, str::FromStr, sync::Arc};
+
+const ACROSS_FILL_STATUS_FILLED: u8 = 2;
 
 fn resolve_token_asset(chain: Chain, token_address: &str) -> Option<AssetId> {
     let evm_chain = EVMChain::from_chain(chain)?;
@@ -48,6 +55,10 @@ fn resolve_token_asset(chain: Chain, token_address: &str) -> Option<AssetId> {
         return Some(AssetId::from_chain(chain));
     }
     Some(AssetId::from_token(chain, &address))
+}
+
+fn token_id(word: B256) -> String {
+    format!("{:#x}", Address::from_word(word))
 }
 
 #[derive(Debug)]
@@ -77,39 +88,51 @@ impl Across {
         Box::new(Self::new(rpc_provider))
     }
 
-    fn build_swap_metadata(deposit: &ParsedDeposit, destination_chain_id: u64) -> Option<TransactionSwapMetadata> {
-        let origin_chain = Chain::from_chain_id(deposit.origin_chain_id)?;
-        let from_asset = resolve_token_asset(origin_chain, deposit.input_token.as_ref()?)?;
-        let to_chain = Chain::from_chain_id(destination_chain_id)?;
-        let to_asset = resolve_token_asset(to_chain, deposit.output_token.as_ref()?)?;
+    fn build_swap_metadata(deposit: &ParsedDeposit) -> Option<TransactionSwapMetadata> {
+        let relay_data = &deposit.relay_data;
+        let origin_chain = Chain::from_chain_id(relay_data.origin_chain_id.to::<u64>())?;
+        let from_asset = resolve_token_asset(origin_chain, &token_id(relay_data.input_token))?;
+        let to_chain = Chain::from_chain_id(deposit.destination_chain_id)?;
+        let to_asset = resolve_token_asset(to_chain, &token_id(relay_data.output_token))?;
         Some(TransactionSwapMetadata {
             from_asset,
-            from_value: deposit.input_amount.clone()?,
+            from_value: relay_data.input_amount.to_string(),
             to_asset,
-            to_value: deposit.output_amount.clone()?,
+            to_value: relay_data.output_amount.to_string(),
             provider: Some(SwapperProvider::Across.as_ref().to_string()),
         })
     }
 
-    async fn check_fill_on_chain(&self, origin_chain_id: u64, deposit_id: u64, destination_chain: Chain) -> Result<Option<String>, SwapperError> {
+    fn relay_hash(relay_data: &FillStatusRelayData, destination_chain_id: u64) -> B256 {
+        let relay_data = (
+            relay_data.depositor,
+            relay_data.recipient,
+            relay_data.exclusive_relayer,
+            relay_data.input_token,
+            relay_data.output_token,
+            relay_data.input_amount,
+            relay_data.output_amount,
+            relay_data.origin_chain_id,
+            relay_data.deposit_id,
+            relay_data.fill_deadline,
+            relay_data.exclusivity_deadline,
+            relay_data.message.clone(),
+        );
+        keccak256((relay_data, U256::from(destination_chain_id)).abi_encode_sequence())
+    }
+
+    async fn is_filled(&self, deposit: &ParsedDeposit) -> Result<bool, SwapperError> {
+        let destination_chain = Chain::from_chain_id(deposit.destination_chain_id).ok_or(SwapperError::NotSupportedChain)?;
         let deployment = AcrossDeployment::deployment_by_chain(&destination_chain).ok_or(SwapperError::NotSupportedChain)?;
         let client = create_eth_client(self.rpc_provider.clone(), destination_chain)?;
-
-        let topic0 = filled_relay_topic();
-        let topic1 = format!("{:#066x}", U256::from(origin_chain_id));
-        let topic2 = format!("{:#066x}", U256::from(deposit_id));
-        let topics = vec![Some(topic0), Some(topic1), Some(topic2)];
-
-        let current_block = client.get_latest_block().await.map_err(SwapperError::transaction_error)?;
-        let from_block = current_block.saturating_sub(FILL_LOOKBACK_BLOCKS);
-        let from_block_hex = format!("0x{:x}", from_block);
-
-        let logs = client
-            .get_logs(deployment.spoke_pool, &topics, &from_block_hex, "latest")
+        let spoke_pool = Address::from_str(deployment.spoke_pool).map_err(SwapperError::transaction_error)?;
+        let relay_hash = Self::relay_hash(&deposit.relay_data, deposit.destination_chain_id);
+        let fill_status: u8 = client
+            .call_contract(spoke_pool, V3SpokePoolInterface::fillStatusesCall { relayHash: relay_hash })
             .await
-            .map_err(SwapperError::from)?;
+            .map_err(SwapperError::transaction_error)?;
 
-        Ok(logs.first().and_then(|l| l.transaction_hash.clone()))
+        Ok(fill_status == ACROSS_FILL_STATUS_FILLED)
     }
 
     pub fn is_supported_pair(from_asset: &AssetId, to_asset: &AssetId) -> bool {
@@ -578,45 +601,49 @@ impl Swapper for Across {
     }
 
     async fn get_swap_result(&self, chain: Chain, transaction_hash: &str) -> Result<SwapResult, SwapperError> {
-        let receipt = create_eth_client(self.rpc_provider.clone(), chain)?
+        let Some(receipt) = create_eth_client(self.rpc_provider.clone(), chain)?
             .get_transaction_receipt(transaction_hash)
             .await
-            .map_err(SwapperError::from)?;
+            .map_err(SwapperError::from)?
+        else {
+            return Ok(SwapResult {
+                status: SwapStatus::Pending,
+                metadata: None,
+            });
+        };
 
         let origin_chain_id: u64 = chain.network_id().parse().map_err(|_| SwapperError::NotSupportedChain)?;
-        let deposit = parse_deposit_from_logs(&receipt.logs, origin_chain_id)?;
-
-        if let Some(destination_chain_id) = deposit.destination_chain_id {
-            let destination_chain = Chain::from_chain_id(destination_chain_id).ok_or(SwapperError::NotSupportedChain)?;
-            let fill_tx = self.check_fill_on_chain(deposit.origin_chain_id, deposit.deposit_id, destination_chain).await?;
-
-            if fill_tx.is_some() {
-                let metadata = Self::build_swap_metadata(&deposit, destination_chain_id);
-                Ok(SwapResult {
-                    status: primitives::swap::SwapStatus::Completed,
-                    metadata,
-                })
-            } else {
-                Ok(SwapResult {
-                    status: primitives::swap::SwapStatus::Pending,
-                    metadata: None,
-                })
-            }
-        } else {
-            Ok(SwapResult {
-                status: primitives::swap::SwapStatus::Pending,
+        let Some(deposit) = parse_deposit_from_logs(&receipt.logs, origin_chain_id)? else {
+            return Ok(SwapResult {
+                status: SwapStatus::Pending,
                 metadata: None,
-            })
+            });
+        };
+
+        if !self.is_filled(&deposit).await? {
+            return Ok(SwapResult {
+                status: SwapStatus::Pending,
+                metadata: None,
+            });
         }
+
+        Ok(SwapResult {
+            status: SwapStatus::Completed,
+            metadata: Self::build_swap_metadata(&deposit),
+        })
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloy_primitives::B256;
     use alloy_sol_types::SolEvent;
     use gem_evm::{multicall3::IMulticall3, rpc::model::Log};
     use primitives::asset_constants::*;
+
+    const TEST_QUOTE_TIMESTAMP: u32 = 1_700_000_000;
+    const TEST_FILL_DEADLINE: u32 = TEST_QUOTE_TIMESTAMP + DEFAULT_FILL_TIMEOUT;
 
     #[test]
     fn test_is_supported_pair() {
@@ -706,14 +733,16 @@ mod tests {
             output_amount,
         );
 
-        let result = parse_deposit_from_logs(&[log], 1).unwrap();
-        assert_eq!(result.deposit_id, 12345);
-        assert_eq!(result.origin_chain_id, 1);
-        assert_eq!(result.destination_chain_id.unwrap(), 42161);
-        assert_eq!(result.input_token.unwrap(), ETHEREUM_WETH_TOKEN_ID.to_ascii_lowercase());
-        assert_eq!(result.output_token.unwrap(), ARBITRUM_WETH_TOKEN_ID.to_ascii_lowercase());
-        assert_eq!(result.input_amount.unwrap(), input_amount.to_string());
-        assert_eq!(result.output_amount.unwrap(), output_amount.to_string());
+        let result = parse_deposit_from_logs(&[log], 1).unwrap().unwrap();
+        assert_eq!(result.destination_chain_id, 42161);
+        let relay_data = result.relay_data;
+        assert_eq!(relay_data.origin_chain_id, U256::from(1));
+        assert_eq!(relay_data.deposit_id, U256::from(12345));
+        assert_eq!(token_id(relay_data.input_token), ETHEREUM_WETH_TOKEN_ID.to_ascii_lowercase());
+        assert_eq!(token_id(relay_data.output_token), ARBITRUM_WETH_TOKEN_ID.to_ascii_lowercase());
+        assert_eq!(relay_data.input_amount, input_amount);
+        assert_eq!(relay_data.output_amount, output_amount);
+        assert_eq!(relay_data.fill_deadline, TEST_FILL_DEADLINE);
     }
 
     #[test]
@@ -729,71 +758,74 @@ mod tests {
             output_amount,
         );
 
-        let result = parse_deposit_from_logs(&[log], 1).unwrap();
-        assert_eq!(result.deposit_id, 5452553);
-        assert_eq!(result.destination_chain_id.unwrap(), 8453);
-        assert_eq!(result.input_token.unwrap(), ETHEREUM_WETH_TOKEN_ID.to_ascii_lowercase());
-        assert_eq!(result.output_token.unwrap(), BASE_WETH_TOKEN_ID.to_ascii_lowercase());
-        assert_eq!(result.input_amount.unwrap(), input_amount.to_string());
-        assert_eq!(result.output_amount.unwrap(), output_amount.to_string());
-    }
-
-    #[test]
-    fn test_parse_filled_relay() {
-        let input_amount = U256::from(20_200_000_000_000_000u64);
-        let output_amount = U256::from(20_197_000_000_000_000u64);
-        let log = build_event_log(
-            V3SpokePoolInterface::FilledRelay::SIGNATURE_HASH,
-            &[1, 3708468, 0],
-            ETHEREUM_WETH_TOKEN_ID,
-            BASE_WETH_TOKEN_ID,
-            input_amount,
-            output_amount,
-        );
-
-        let result = parse_deposit_from_logs(&[log], 8453).unwrap();
-        assert_eq!(result.deposit_id, 3708468);
-        assert_eq!(result.origin_chain_id, 1);
-        assert!(result.destination_chain_id.is_none());
-        assert_eq!(result.input_token.unwrap(), ETHEREUM_WETH_TOKEN_ID.to_ascii_lowercase());
-        assert_eq!(result.output_token.unwrap(), BASE_WETH_TOKEN_ID.to_ascii_lowercase());
+        let result = parse_deposit_from_logs(&[log], 1).unwrap().unwrap();
+        assert_eq!(result.relay_data.deposit_id, U256::from(5452553));
+        assert_eq!(result.destination_chain_id, 8453);
+        assert_eq!(token_id(result.relay_data.input_token), ETHEREUM_WETH_TOKEN_ID.to_ascii_lowercase());
+        assert_eq!(token_id(result.relay_data.output_token), BASE_WETH_TOKEN_ID.to_ascii_lowercase());
+        assert_eq!(result.relay_data.input_amount, input_amount);
+        assert_eq!(result.relay_data.output_amount, output_amount);
     }
 
     #[test]
     fn test_parse_no_matching_event() {
         let log = Log {
             address: String::new(),
-            topics: vec!["0xdeadbeef".into()],
+            topics: vec![format!("{:#x}", B256::ZERO)],
             data: "0x".into(),
             transaction_hash: None,
         };
-        assert!(parse_deposit_from_logs(&[log], 1).is_err());
-        assert!(parse_deposit_from_logs(&[], 1).is_err());
+        assert!(parse_deposit_from_logs(&[log], 1).unwrap().is_none());
+        assert!(parse_deposit_from_logs(&[], 1).unwrap().is_none());
     }
 
     fn build_event_log(signature: alloy_primitives::FixedBytes<32>, indexed: &[u64], input_token: &str, output_token: &str, input_amount: U256, output_amount: U256) -> Log {
-        let mut data = Vec::new();
-        let mut buf = [0u8; 32];
-        let input_bytes = alloy_primitives::hex::decode(input_token.strip_prefix("0x").unwrap_or(input_token)).unwrap();
-        buf[32 - input_bytes.len()..].copy_from_slice(&input_bytes);
-        data.extend_from_slice(&buf);
-        buf = [0u8; 32];
-        let output_bytes = alloy_primitives::hex::decode(output_token.strip_prefix("0x").unwrap_or(output_token)).unwrap();
-        buf[32 - output_bytes.len()..].copy_from_slice(&output_bytes);
-        data.extend_from_slice(&buf);
-        data.extend_from_slice(&input_amount.to_be_bytes::<32>());
-        data.extend_from_slice(&output_amount.to_be_bytes::<32>());
-        data.extend_from_slice(&[0u8; 512]);
+        let input_token = Address::from_str(input_token).unwrap();
+        let output_token = Address::from_str(output_token).unwrap();
 
-        let mut topics = vec![format!("{:#x}", signature)];
-        for t in indexed {
-            topics.push(format!("{:#066x}", t));
+        if signature == V3SpokePoolInterface::V3FundsDeposited::SIGNATURE_HASH {
+            return rpc_log(V3SpokePoolInterface::V3FundsDeposited {
+                inputToken: input_token,
+                outputToken: output_token,
+                inputAmount: input_amount,
+                outputAmount: output_amount,
+                destinationChainId: U256::from(indexed[0]),
+                depositId: indexed[1] as u32,
+                quoteTimestamp: TEST_QUOTE_TIMESTAMP,
+                fillDeadline: TEST_FILL_DEADLINE,
+                exclusivityDeadline: 0,
+                depositor: Address::ZERO,
+                recipient: Address::ZERO,
+                exclusiveRelayer: Address::ZERO,
+                message: Bytes::new(),
+            });
         }
+
+        rpc_log(V3SpokePoolInterface::FundsDeposited {
+            inputToken: input_token.into_word(),
+            outputToken: output_token.into_word(),
+            inputAmount: input_amount,
+            outputAmount: output_amount,
+            destinationChainId: U256::from(indexed[0]),
+            depositId: U256::from(indexed[1]),
+            quoteTimestamp: TEST_QUOTE_TIMESTAMP,
+            fillDeadline: TEST_FILL_DEADLINE,
+            exclusivityDeadline: 0,
+            depositor: B256::ZERO,
+            recipient: B256::ZERO,
+            exclusiveRelayer: B256::ZERO,
+            message: Bytes::new(),
+        })
+    }
+
+    fn rpc_log<E: SolEvent>(event: E) -> Log {
+        let data = event.encode_log_data();
+        let (topics, data) = data.split();
 
         Log {
             address: String::new(),
-            topics,
-            data: HexEncode(&data),
+            topics: topics.into_iter().map(|topic| format!("{topic:#x}")).collect(),
+            data: HexEncode(data.as_ref()),
             transaction_hash: None,
         }
     }
@@ -877,8 +909,8 @@ mod tests {
             let network_provider = Arc::new(NativeProvider::default());
             let swap_provider = Across::new(network_provider.clone());
 
-            let tx_hash = "0x2ed43336441c830e859dada09e6eee6b5ee5b160e0e420fdf17f6e46dc240e88";
-            let chain = Chain::Base;
+            let tx_hash = "0x0a970040a9885cf2c8a42df6fcdf02a1f3fe7db12079a35613a665a2ee64df49";
+            let chain = Chain::Arbitrum;
 
             let result = swap_provider.get_swap_result(chain, tx_hash).await?;
 

@@ -23,7 +23,7 @@ class SearchAssetsImplTest {
     @Test
     fun search_formatsChainsAndTagsForGemApi() = runTest {
         val asset = mockAssetBasic()
-        val response = SearchResponse(assets = listOf(asset), perpetuals = emptyList(), nfts = emptyList())
+        val response = SearchResponse(assets = listOf(asset), perpetuals = emptyList(), nfts = emptyList(), lists = emptyList())
         coEvery {
             gemApiClient.search(
                 query = "usd",
