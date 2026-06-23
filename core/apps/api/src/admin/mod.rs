@@ -21,45 +21,11 @@ fn error_outcome<T>(req: &Request<'_>, status: Status, message: &str) -> Outcome
     Error((status, message.to_string()))
 }
 
-#[derive(Debug, Clone)]
-pub struct AdminConfig {
-    pub token: String,
-}
-
-pub struct AdminAuthorized;
-
-pub struct DeviceRead;
-pub struct DeviceSubscriptionsRead;
-pub struct DeviceTransactionsRead;
-
-#[rocket::async_trait]
-impl<'r> FromRequest<'r> for AdminAuthorized {
-    type Error = String;
-
-    async fn from_request(req: &'r Request<'_>) -> Outcome<Self, String> {
-        let Success(config) = req.guard::<&rocket::State<AdminConfig>>().await else {
-            return error_outcome(req, Status::InternalServerError, "Admin config not available");
-        };
-
-        if config.token.is_empty() {
-            return error_outcome(req, Status::InternalServerError, "Admin token is not configured");
-        }
-
-        let Some(auth_value) = req.headers().get_one(AUTHORIZATION_HEADER) else {
-            return error_outcome(req, Status::Unauthorized, "Missing Authorization header");
-        };
-
-        if !auth_value.starts_with(BEARER_PREFIX) {
-            return error_outcome(req, Status::Unauthorized, "Invalid authorization format");
-        }
-
-        if auth_value[BEARER_PREFIX.len()..] != config.token {
-            return error_outcome(req, Status::Unauthorized, "Invalid admin token");
-        }
-
-        Success(AdminAuthorized)
-    }
-}
+pub struct PermissionAdminWrite;
+pub struct PermissionDeviceRead;
+pub struct PermissionDeviceSubscriptionsRead;
+pub struct PermissionDeviceTransactionsRead;
+pub struct PermissionFiatQuotesRead;
 
 fn api_client_secret<'r>(req: &'r Request<'_>) -> Result<&'r str, Outcome<(), String>> {
     let Some(auth_value) = req.headers().get_one(AUTHORIZATION_HEADER) else {
@@ -114,9 +80,11 @@ macro_rules! api_client_guard {
     };
 }
 
-api_client_guard!(DeviceRead, ApiClientScope::DevicesRead);
-api_client_guard!(DeviceSubscriptionsRead, ApiClientScope::DevicesSubscriptionsRead);
-api_client_guard!(DeviceTransactionsRead, ApiClientScope::DevicesTransactionsRead);
+api_client_guard!(PermissionAdminWrite, ApiClientScope::AdminWrite);
+api_client_guard!(PermissionDeviceRead, ApiClientScope::DevicesRead);
+api_client_guard!(PermissionDeviceSubscriptionsRead, ApiClientScope::DevicesSubscriptionsRead);
+api_client_guard!(PermissionDeviceTransactionsRead, ApiClientScope::DevicesTransactionsRead);
+api_client_guard!(PermissionFiatQuotesRead, ApiClientScope::FiatQuotesRead);
 
 #[cfg(test)]
 mod tests {
@@ -124,59 +92,41 @@ mod tests {
     use rocket::local::asynchronous::Client;
     use rocket::{Build, Rocket, get, routes};
 
-    use super::{AdminAuthorized, AdminConfig, DeviceRead};
-
-    #[get("/protected")]
-    async fn protected(_admin: AdminAuthorized) -> &'static str {
-        "ok"
-    }
+    use super::PermissionDeviceRead;
 
     #[get("/protected-client")]
-    async fn protected_client(_admin: DeviceRead) -> &'static str {
+    async fn protected_client(_permission: PermissionDeviceRead) -> &'static str {
         "ok"
     }
 
-    fn rocket(config: AdminConfig) -> Rocket<Build> {
-        rocket::build().manage(config).mount("/", routes![protected, protected_client])
-    }
-
-    fn bearer_header(token: &str) -> Header<'static> {
-        Header::new("Authorization", format!("Bearer {token}"))
-    }
-
-    #[rocket::async_test]
-    async fn test_invalid_token_returns_unauthorized() {
-        let client = Client::tracked(rocket(AdminConfig { token: "secret".to_string() })).await.unwrap();
-
-        let response = client.get("/protected").header(bearer_header("wrong")).dispatch().await;
-
-        assert_eq!(response.status(), Status::Unauthorized);
-    }
-
-    #[rocket::async_test]
-    async fn test_correct_token_returns_ok() {
-        let client = Client::tracked(rocket(AdminConfig { token: "secret".to_string() })).await.unwrap();
-
-        let response = client.get("/protected").header(bearer_header("secret")).dispatch().await;
-
-        assert_eq!(response.status(), Status::Ok);
-    }
-
-    #[rocket::async_test]
-    async fn test_enabled_with_empty_token_returns_internal_server_error() {
-        let client = Client::tracked(rocket(AdminConfig { token: String::new() })).await.unwrap();
-
-        let response = client.get("/protected").dispatch().await;
-
-        assert_eq!(response.status(), Status::InternalServerError);
+    fn rocket() -> Rocket<Build> {
+        rocket::build().mount("/", routes![protected_client])
     }
 
     #[rocket::async_test]
     async fn test_api_client_missing_authorization_returns_unauthorized() {
-        let client = Client::tracked(rocket(AdminConfig { token: "secret".to_string() })).await.unwrap();
+        let client = Client::tracked(rocket()).await.unwrap();
 
         let response = client.get("/protected-client").dispatch().await;
 
         assert_eq!(response.status(), Status::Unauthorized);
+    }
+
+    #[rocket::async_test]
+    async fn test_api_client_invalid_authorization_format_returns_unauthorized() {
+        let client = Client::tracked(rocket()).await.unwrap();
+
+        let response = client.get("/protected-client").header(Header::new("Authorization", "Basic secret")).dispatch().await;
+
+        assert_eq!(response.status(), Status::Unauthorized);
+    }
+
+    #[rocket::async_test]
+    async fn test_api_client_without_database_returns_internal_server_error() {
+        let client = Client::tracked(rocket()).await.unwrap();
+
+        let response = client.get("/protected-client").header(Header::new("Authorization", "Bearer secret")).dispatch().await;
+
+        assert_eq!(response.status(), Status::InternalServerError);
     }
 }

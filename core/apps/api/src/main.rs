@@ -29,7 +29,6 @@ use strum::IntoEnumIterator;
 use ::fiat::FiatClient;
 use ::fiat::FiatProviderFactory;
 use ::nft::{NFTClient, NFTProviderClient, NFTProviderConfig};
-use admin::AdminConfig;
 use api_connector::PusherClient;
 use assets::{AssetsClient, SearchClient};
 use cacher::CacherClient;
@@ -263,7 +262,7 @@ async fn rocket_api(settings: Settings) -> Result<Rocket<Build>, Box<dyn std::er
         expiry: settings.api.auth.jwt.expiry,
     };
     let auth_config = devices::auth_config::AuthConfig::new(settings.api.auth.tolerance, jwt_config);
-    let mut rocket = rocket::build()
+    let rocket = rocket::build()
         .manage(auth_config)
         .manage(database)
         .manage(Mutex::new(fiat_quotes_client))
@@ -296,12 +295,6 @@ async fn rocket_api(settings: Settings) -> Result<Rocket<Build>, Box<dyn std::er
         .manage(Mutex::new(portfolio_client))
         .manage(auth_client)
         .manage(stream_producer);
-
-    if settings.api.admin.enabled {
-        rocket = rocket.manage(AdminConfig {
-            token: settings.api.admin.token.clone(),
-        });
-    }
 
     Ok(mount_routes(rocket, settings.api.admin.enabled))
 }

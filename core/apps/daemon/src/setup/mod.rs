@@ -113,14 +113,16 @@ fn setup_database(database: &Database) -> Result<(), Box<dyn std::error::Error +
 }
 
 fn api_client_grants() -> Vec<ApiClientGrant> {
-    let agent = [
+    let admin = [
+        ApiClientScope::AdminWrite,
         ApiClientScope::DevicesRead,
         ApiClientScope::DevicesSubscriptionsRead,
         ApiClientScope::DevicesTransactionsRead,
+        ApiClientScope::FiatQuotesRead,
     ]
     .into_iter()
     .map(|scope| ApiClientGrant {
-        client_name: "agent".to_string(),
+        client_name: "admin".to_string(),
         scope,
         resource: ApiClientResource::Global,
     });
@@ -134,7 +136,7 @@ fn api_client_grants() -> Vec<ApiClientGrant> {
             resource: ApiClientResource::WebhookSender(sender),
         });
 
-    agent.chain(webhooks).collect()
+    admin.chain(webhooks).collect()
 }
 
 async fn setup_search_index(settings: &Settings) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
