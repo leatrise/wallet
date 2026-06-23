@@ -5,6 +5,7 @@ const MAX_LIMIT: usize = 500;
 const MAX_OFFSET: usize = 10_000;
 const DEFAULT_LIMIT: usize = 50;
 const MIN_LIST_SEARCH_QUERY_LENGTH: usize = 3;
+const STRICT_RANK_QUERY_LENGTH: usize = 16;
 
 pub struct SearchRequest {
     pub query: String,
@@ -40,7 +41,7 @@ impl SearchRequest {
     }
 
     pub fn rank_threshold(&self) -> u32 {
-        if self.query.len() < 8 { 15 } else { 5 }
+        if self.query.len() < STRICT_RANK_QUERY_LENGTH { 15 } else { 5 }
     }
 
     pub fn should_search_lists(&self) -> bool {
@@ -60,7 +61,9 @@ mod tests {
     fn rank_threshold() {
         assert_eq!(SearchRequest::new("BTC", None, None, None, None).rank_threshold(), 15);
         assert_eq!(SearchRequest::new("USDT", None, None, None, None).rank_threshold(), 15);
-        assert_eq!(SearchRequest::new("ethereum", None, None, None, None).rank_threshold(), 5);
+        assert_eq!(SearchRequest::new("USDT TRC20", None, None, None, None).rank_threshold(), 15);
+        assert_eq!(SearchRequest::new("ethereum chain", None, None, None, None).rank_threshold(), 15);
+        assert_eq!(SearchRequest::new("ethereum contract", None, None, None, None).rank_threshold(), 5);
     }
 
     #[test]
