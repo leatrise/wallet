@@ -214,9 +214,6 @@ open class BaseAssetSelectViewModel(
         if (remoteSearch) {
             viewModelScope.launch(Dispatchers.IO) {
                 searchRequests.collectLatest { (query, tag, currency, chains) ->
-                    if (!isNetworkSearchEnabled()) {
-                        return@collectLatest
-                    }
                     isSearching.value = query.isNotEmpty()
                     try {
                         delay(SEARCH_DEBOUNCE_MS)
@@ -247,8 +244,6 @@ open class BaseAssetSelectViewModel(
     open fun assetFilters(): Set<AssetFilter> = emptySet()
 
     open fun assetsSearchLimit(query: String, tag: AssetTag?): Int = NO_QUERY_LIMIT
-
-    protected open fun isNetworkSearchEnabled(): Boolean = true
 
     private data class SearchRequest(
         val query: String,
