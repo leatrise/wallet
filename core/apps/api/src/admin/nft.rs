@@ -2,7 +2,7 @@ use ::nft::NFTClient;
 use rocket::{State, put};
 use streamer::{StreamProducer, StreamProducerQueue};
 
-use crate::admin::PermissionAdminWrite;
+use crate::api_clients::PermissionAdminWrite;
 use crate::params::{NftAssetIdParam, NftCollectionIdParam};
 use crate::responders::{ApiError, ApiResponse};
 

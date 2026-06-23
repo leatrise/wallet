@@ -2,7 +2,7 @@ use primitives::AssetId;
 use rocket::{State, post, serde::json::Json};
 use streamer::{StreamProducer, StreamProducerQueue};
 
-use crate::admin::PermissionAdminWrite;
+use crate::api_clients::PermissionAdminWrite;
 use crate::responders::{ApiError, ApiResponse};
 
 #[post("/assets/add", format = "json", data = "<asset_id>")]

@@ -115,6 +115,7 @@ fn setup_database(database: &Database) -> Result<(), Box<dyn std::error::Error +
 fn api_client_grants() -> Vec<ApiClientGrant> {
     let admin = [
         ApiClientScope::AdminWrite,
+        ApiClientScope::ChainRead,
         ApiClientScope::DevicesRead,
         ApiClientScope::DevicesSubscriptionsRead,
         ApiClientScope::DevicesTransactionsRead,

@@ -16,6 +16,7 @@ use strum::{AsRefStr, EnumString};
 #[diesel(sql_type = crate::schema::sql_types::ApiClientScope)]
 pub enum ApiClientScope {
     AdminWrite,
+    ChainRead,
     DevicesRead,
     DevicesSubscriptionsRead,
     DevicesTransactionsRead,

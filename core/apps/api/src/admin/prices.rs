@@ -1,7 +1,7 @@
 use rocket::{State, post, serde::json::Json};
 use streamer::{FetchPricesPayload, StreamProducer, StreamProducerQueue};
 
-use crate::admin::PermissionAdminWrite;
+use crate::api_clients::PermissionAdminWrite;
 use crate::responders::{ApiError, ApiResponse};
 
 #[post("/prices/add", format = "json", data = "<payload>")]

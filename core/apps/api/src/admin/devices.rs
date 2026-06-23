@@ -1,7 +1,7 @@
 use primitives::{Device, TransactionsResponse, WalletSubscription};
 use rocket::{State, get, tokio::sync::Mutex};
 
-use crate::admin::{PermissionDeviceRead, PermissionDeviceSubscriptionsRead, PermissionDeviceTransactionsRead};
+use crate::api_clients::{PermissionDeviceRead, PermissionDeviceSubscriptionsRead, PermissionDeviceTransactionsRead};
 use crate::devices::{DevicesClient, TransactionsClient, WalletsClient};
 use crate::responders::{ApiError, ApiResponse};
 

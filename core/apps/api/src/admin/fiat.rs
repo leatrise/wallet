@@ -1,6 +1,6 @@
 use rocket::{State, get, tokio::sync::Mutex};
 
-use crate::admin::PermissionFiatQuotesRead;
+use crate::api_clients::PermissionFiatQuotesRead;
 use crate::devices::FiatQuotesClient;
 use crate::params::{AssetIdParam, CurrencyParam, FiatProviderIdParam, FiatQuoteTypeParam};
 use crate::responders::{ApiError, ApiResponse};

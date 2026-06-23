@@ -3,7 +3,7 @@ use rocket::serde::json::Json;
 use rocket::{State, post, tokio::sync::Mutex};
 use streamer::{StreamProducer, StreamProducerQueue, TransactionsPayload};
 
-use crate::admin::PermissionAdminWrite;
+use crate::api_clients::PermissionAdminWrite;
 use crate::chain::ChainClient;
 use crate::responders::{ApiError, ApiResponse};
 
