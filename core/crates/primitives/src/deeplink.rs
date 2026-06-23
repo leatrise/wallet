@@ -33,6 +33,10 @@ impl Deeplink {
     pub fn from_url(url: &str) -> Option<Self> {
         let url = Url::parse(url).ok()?;
         let segments = url_segments(&url)?;
+        Self::from_segments(&url, &segments).or_else(|| segments.get(1..).and_then(|segments| Self::from_segments(&url, segments)))
+    }
+
+    fn from_segments(url: &Url, segments: &[String]) -> Option<Self> {
         let (component, params) = segments.split_first()?;
 
         let deeplink = match component.as_str() {
@@ -41,7 +45,7 @@ impl Deeplink {
             },
             PATH_PERPETUALS => Deeplink::Perpetuals,
             PATH_REWARDS | PATH_JOIN => Deeplink::Rewards {
-                code: params.first().cloned().or_else(|| query_value(&url, QUERY_CODE)),
+                code: params.first().cloned().or_else(|| query_value(url, QUERY_CODE)),
             },
             _ => return None,
         };
@@ -149,9 +153,21 @@ mod tests {
             })
         );
         assert_eq!(
+            Deeplink::from_url("https://gemwallet.com/zh-cn/tokens/optimism/0x58538e6A46E07434d7E7375Bc268D3cb839C0133/"),
+            Some(Deeplink::Asset {
+                asset_id: AssetId::token(Chain::Optimism, "0x58538e6A46E07434d7E7375Bc268D3cb839C0133"),
+            })
+        );
+        assert_eq!(
             Deeplink::from_url("gem://tokens/bitcoin"),
             Some(Deeplink::Asset {
                 asset_id: AssetId::from_chain(Chain::Bitcoin)
+            })
+        );
+        assert_eq!(
+            Deeplink::from_url("gem://zh-cn/tokens/optimism/0x58538e6A46E07434d7E7375Bc268D3cb839C0133"),
+            Some(Deeplink::Asset {
+                asset_id: AssetId::token(Chain::Optimism, "0x58538e6A46E07434d7E7375Bc268D3cb839C0133"),
             })
         );
         assert_eq!(Deeplink::from_url("https://gemwallet.com/perpetuals"), Some(Deeplink::Perpetuals));
@@ -167,6 +183,10 @@ mod tests {
             Some(Deeplink::Rewards {
                 code: Some("gemcoder".to_string()),
             })
+        );
+        assert_eq!(
+            Deeplink::from_url("https://gemwallet.com/en/join?code=test"),
+            Some(Deeplink::Rewards { code: Some("test".to_string()) })
         );
         assert_eq!(Deeplink::from_url("https://gemwallet.com/join"), Some(Deeplink::Rewards { code: None }));
         assert_eq!(Deeplink::from_url("https://gemwallet.com/tokens"), None);
