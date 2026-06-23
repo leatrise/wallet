@@ -1,3 +1,4 @@
+use gem_auth::{AUTHORIZATION_HEADER, BEARER_PREFIX};
 use gem_tracing::info_with_fields;
 use primitives::{TransactionId, WebhookKind};
 use rocket::http::Status;
@@ -10,9 +11,6 @@ use streamer::{QueueName, StreamProducer, SupportWebhookPayload};
 
 use crate::devices::FiatQuotesClient;
 use crate::responders::{ApiError, ApiResponse};
-
-const AUTHORIZATION_HEADER: &str = "Authorization";
-const BEARER_PREFIX: &str = "Bearer ";
 
 pub struct WebhooksClient {
     stream_producer: StreamProducer,

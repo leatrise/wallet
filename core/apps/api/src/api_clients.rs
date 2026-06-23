@@ -1,3 +1,4 @@
+use gem_auth::{AUTHORIZATION_HEADER, BEARER_PREFIX};
 use rocket::Request;
 use rocket::http::Status;
 use rocket::outcome::Outcome::{Error, Success};
@@ -5,9 +6,6 @@ use rocket::request::{FromRequest, Outcome};
 use storage::{ApiClientResource, ApiClientScope, ApiClientsRepository, Database};
 
 use crate::responders::cache_error;
-
-const AUTHORIZATION_HEADER: &str = "Authorization";
-const BEARER_PREFIX: &str = "Bearer ";
 
 fn error_outcome<T>(req: &Request<'_>, status: Status, message: &str) -> Outcome<T, String> {
     cache_error(req, message);
@@ -87,6 +85,8 @@ mod tests {
     use rocket::local::asynchronous::Client;
     use rocket::{Build, Rocket, get, routes};
 
+    use gem_auth::{AUTHORIZATION_HEADER, BEARER_PREFIX};
+
     use super::PermissionDeviceRead;
 
     #[get("/protected-client")]
@@ -111,7 +111,7 @@ mod tests {
     async fn test_api_client_invalid_authorization_format_returns_unauthorized() {
         let client = Client::tracked(rocket()).await.unwrap();
 
-        let response = client.get("/protected-client").header(Header::new("Authorization", "Basic secret")).dispatch().await;
+        let response = client.get("/protected-client").header(Header::new(AUTHORIZATION_HEADER, "Basic secret")).dispatch().await;
 
         assert_eq!(response.status(), Status::Unauthorized);
     }
@@ -120,7 +120,11 @@ mod tests {
     async fn test_api_client_without_database_returns_internal_server_error() {
         let client = Client::tracked(rocket()).await.unwrap();
 
-        let response = client.get("/protected-client").header(Header::new("Authorization", "Bearer secret")).dispatch().await;
+        let response = client
+            .get("/protected-client")
+            .header(Header::new(AUTHORIZATION_HEADER, format!("{BEARER_PREFIX}secret")))
+            .dispatch()
+            .await;
 
         assert_eq!(response.status(), Status::InternalServerError);
     }
