@@ -1,43 +1,35 @@
 use crate::SwapperError;
-use alloy_primitives::{B256, U256};
+use alloy_primitives::{B256, Bytes, LogData, U256};
 use alloy_sol_types::SolEvent;
 use gem_evm::{
     across::contracts::V3SpokePoolInterface::{FundsDeposited, V3FundsDeposited},
     rpc::model::Log,
 };
 
-pub(crate) struct FillStatusRelayData {
-    pub depositor: B256,
-    pub recipient: B256,
-    pub exclusive_relayer: B256,
-    pub input_token: B256,
-    pub output_token: B256,
-    pub input_amount: U256,
-    pub output_amount: U256,
-    pub origin_chain_id: U256,
-    pub deposit_id: U256,
-    pub fill_deadline: u32,
-    pub exclusivity_deadline: u32,
-    pub message: alloy_primitives::Bytes,
+pub(super) struct FillStatusRelayData {
+    pub(super) depositor: B256,
+    pub(super) recipient: B256,
+    pub(super) exclusive_relayer: B256,
+    pub(super) input_token: B256,
+    pub(super) output_token: B256,
+    pub(super) input_amount: U256,
+    pub(super) output_amount: U256,
+    pub(super) origin_chain_id: U256,
+    pub(super) deposit_id: U256,
+    pub(super) fill_deadline: u32,
+    pub(super) exclusivity_deadline: u32,
+    pub(super) message: Bytes,
 }
 
-pub(crate) struct ParsedDeposit {
-    pub destination_chain_id: u64,
-    pub relay_data: FillStatusRelayData,
+pub(super) struct ParsedDeposit {
+    pub(super) destination_chain_id: u64,
+    pub(super) relay_data: FillStatusRelayData,
 }
 
-fn decode_event<E: SolEvent>(log: &Log) -> Result<E, SwapperError> {
-    let topics = log.topics.iter().map(|topic| decode_topic(topic)).collect::<Result<Vec<_>, _>>()?;
-    let data = alloy_primitives::hex::decode(&log.data)?;
-    E::decode_raw_log(topics, &data).map_err(SwapperError::from)
-}
-
-fn decode_topic(topic: &str) -> Result<B256, SwapperError> {
-    let bytes = alloy_primitives::hex::decode(topic).map_err(|_| SwapperError::TransactionError("invalid event topic".into()))?;
-    if bytes.len() != 32 {
-        return Err(SwapperError::TransactionError("invalid event topic".into()));
-    }
-    Ok(B256::from_slice(&bytes))
+fn alloy_log_data(log: &Log) -> Result<LogData, SwapperError> {
+    let topics = log.topics.iter().map(|topic| topic.parse()).collect::<Result<Vec<B256>, _>>()?;
+    let data = Bytes::from(alloy_primitives::hex::decode(&log.data)?);
+    LogData::new(topics, data).ok_or_else(|| SwapperError::TransactionError("invalid event topics".into()))
 }
 
 fn relay_data_from_v3(event: &V3FundsDeposited, origin_chain_id: u64) -> FillStatusRelayData {
@@ -74,15 +66,15 @@ fn relay_data_from_funds(event: &FundsDeposited, origin_chain_id: u64) -> FillSt
     }
 }
 
-pub(crate) fn parse_deposit_from_logs(logs: &[Log], receipt_chain_id: u64) -> Result<Option<ParsedDeposit>, SwapperError> {
+pub(super) fn parse_deposit_from_logs(logs: &[Log], receipt_chain_id: u64) -> Result<Option<ParsedDeposit>, SwapperError> {
     for log in logs {
-        let Some(topic) = log.topics.first() else {
+        let Some(topic) = log.topics.first().map(|topic| topic.parse::<B256>()).transpose()? else {
             continue;
         };
-        let topic = decode_topic(topic)?;
 
         if topic == V3FundsDeposited::SIGNATURE_HASH {
-            let event = decode_event::<V3FundsDeposited>(log)?;
+            let log_data = alloy_log_data(log)?;
+            let event = V3FundsDeposited::decode_log_data(&log_data)?;
             return Ok(Some(ParsedDeposit {
                 destination_chain_id: event.destinationChainId.to::<u64>(),
                 relay_data: relay_data_from_v3(&event, receipt_chain_id),
@@ -90,7 +82,8 @@ pub(crate) fn parse_deposit_from_logs(logs: &[Log], receipt_chain_id: u64) -> Re
         }
 
         if topic == FundsDeposited::SIGNATURE_HASH {
-            let event = decode_event::<FundsDeposited>(log)?;
+            let log_data = alloy_log_data(log)?;
+            let event = FundsDeposited::decode_log_data(&log_data)?;
             return Ok(Some(ParsedDeposit {
                 destination_chain_id: event.destinationChainId.to::<u64>(),
                 relay_data: relay_data_from_funds(&event, receipt_chain_id),

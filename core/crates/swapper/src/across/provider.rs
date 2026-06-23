@@ -57,13 +57,9 @@ fn resolve_token_asset(chain: Chain, token_address: &str) -> Option<AssetId> {
     Some(AssetId::from_token(chain, &address))
 }
 
-fn token_id(word: B256) -> String {
-    format!("{:#x}", Address::from_word(word))
-}
-
 #[derive(Debug)]
 pub struct Across {
-    pub provider: ProviderType,
+    provider: ProviderType,
     rpc_provider: Arc<dyn RpcProvider>,
 }
 
@@ -91,9 +87,9 @@ impl Across {
     fn build_swap_metadata(deposit: &ParsedDeposit) -> Option<TransactionSwapMetadata> {
         let relay_data = &deposit.relay_data;
         let origin_chain = Chain::from_chain_id(relay_data.origin_chain_id.to::<u64>())?;
-        let from_asset = resolve_token_asset(origin_chain, &token_id(relay_data.input_token))?;
+        let from_asset = resolve_token_asset(origin_chain, &format!("{:#x}", Address::from_word(relay_data.input_token)))?;
         let to_chain = Chain::from_chain_id(deposit.destination_chain_id)?;
-        let to_asset = resolve_token_asset(to_chain, &token_id(relay_data.output_token))?;
+        let to_asset = resolve_token_asset(to_chain, &format!("{:#x}", Address::from_word(relay_data.output_token)))?;
         Some(TransactionSwapMetadata {
             from_asset,
             from_value: relay_data.input_amount.to_string(),
@@ -135,7 +131,7 @@ impl Across {
         Ok(fill_status == ACROSS_FILL_STATUS_FILLED)
     }
 
-    pub fn is_supported_pair(from_asset: &AssetId, to_asset: &AssetId) -> bool {
+    fn is_supported_pair(from_asset: &AssetId, to_asset: &AssetId) -> bool {
         let Some(from) = eth_address::convert_native_to_weth(from_asset) else {
             return false;
         };
@@ -146,7 +142,7 @@ impl Across {
         AcrossDeployment::asset_mappings().into_iter().any(|x| x.set.contains(&from) && x.set.contains(&to))
     }
 
-    pub fn get_rate_model(from_asset: &AssetId, to_asset: &AssetId, token_config: &TokenConfig) -> RateModel {
+    fn get_rate_model(from_asset: &AssetId, to_asset: &AssetId, token_config: &TokenConfig) -> RateModel {
         let key = format!("{}-{}", from_asset.chain.network_id(), to_asset.chain.network_id());
         let rate_model = token_config.route_rate_model.get(&key).unwrap_or(&token_config.rate_model);
         rate_model.clone().into()
@@ -174,7 +170,7 @@ impl Across {
     }
 
     /// Return (message, referral_fee)
-    pub fn message_for_multicall_handler(
+    fn message_for_multicall_handler(
         &self,
         amount: &U256,
         original_output_asset: &AssetId,
@@ -256,7 +252,7 @@ impl Across {
         ]
     }
 
-    pub async fn estimate_gas_limit(
+    async fn estimate_gas_limit(
         &self,
         amount: &U256,
         is_native: bool,
@@ -320,7 +316,7 @@ impl Across {
         }
     }
 
-    pub fn update_v3_relay_data(
+    fn update_v3_relay_data(
         &self,
         v3_relay_data: &mut V3RelayData,
         user_address: &Address,
@@ -329,23 +325,21 @@ impl Across {
         output_token: &Address,
         timestamp: u32,
         referral_fee: &ReferralFee,
-    ) -> Result<(), SwapperError> {
+    ) {
         let (message, _) = self.message_for_multicall_handler(output_amount, original_output_asset, output_token, user_address, referral_fee);
 
         v3_relay_data.outputAmount = *output_amount;
         v3_relay_data.fillDeadline = timestamp + DEFAULT_FILL_TIMEOUT;
         v3_relay_data.message = message.into();
-
-        Ok(())
     }
 
-    pub fn calculate_fee_in_token(fee_in_wei: &U256, token_price: &BigInt, token_decimals: u32) -> U256 {
+    fn calculate_fee_in_token(fee_in_wei: &U256, token_price: &BigInt, token_decimals: u32) -> U256 {
         let fee = BigInt::from_bytes_le(Sign::Plus, &fee_in_wei.to_le_bytes::<32>());
         let fee_in_token = fee * token_price * BigInt::from(10_u64.pow(token_decimals)) / BigInt::from(10_u64.pow(8)) / BigInt::from(10_u64.pow(18));
         U256::from_le_slice(&fee_in_token.to_bytes_le().1)
     }
 
-    pub fn get_eta_in_seconds(&self, from_chain: &Chain, to_chain: &Chain) -> Option<u32> {
+    fn get_eta_in_seconds(&self, from_chain: &Chain, to_chain: &Chain) -> Option<u32> {
         let from_chain = EVMChain::from_chain(*from_chain)?;
         let to_chain = EVMChain::from_chain(*to_chain)?;
         let from_chain_l2 = from_chain.is_ethereum_layer2();
@@ -415,15 +409,15 @@ impl Swapper for Across {
         let asset_mainnet = asset_mapping.set.iter().find(|x| x.chain == Chain::Ethereum).unwrap();
         let mainnet_token = eth_address::parse_or_weth_address(asset_mainnet, from_chain)?;
 
-        let hubpool_client = HubPoolClient::new(self.rpc_provider.clone(), Chain::Ethereum);
-        let config_client = ConfigStoreClient::new(self.rpc_provider.clone(), Chain::Ethereum);
+        let hubpool_client = HubPoolClient::new();
+        let config_client = ConfigStoreClient::new(self.rpc_provider.clone());
 
         let calls = vec![
             hubpool_client.paused_call3(),
             hubpool_client.sync_call3(&mainnet_token),
             hubpool_client.pooled_token_call3(&mainnet_token),
         ];
-        let results = self.multicall3(hubpool_client.chain, calls).await?;
+        let results = self.multicall3(Chain::Ethereum, calls).await?;
 
         // Check if protocol is paused
         let is_paused = hubpool_client.decoded_paused_call3(&results[0])?;
@@ -449,7 +443,7 @@ impl Swapper for Across {
             calls.push(gas_price_feed.latest_round_call3());
         }
 
-        let multicall_results = self.multicall3(hubpool_client.chain, calls).await?;
+        let multicall_results = self.multicall3(Chain::Ethereum, calls).await?;
         let token_config = token_config_req.await?;
 
         let util_before = hubpool_client.decoded_utilization_call3(&multicall_results[0])?;
@@ -511,7 +505,7 @@ impl Swapper for Across {
             &output_token,
             timestamp,
             &referral_config,
-        )?;
+        );
         let route_data = HexEncode(v3_relay_data.abi_encode());
 
         Ok(Quote {
@@ -726,7 +720,7 @@ mod tests {
         let output_amount = U256::from(999_000_000_000_000_000u64);
         let log = build_event_log(
             V3SpokePoolInterface::V3FundsDeposited::SIGNATURE_HASH,
-            &[42161, 12345, 0],
+            &[42161, 12345],
             ETHEREUM_WETH_TOKEN_ID,
             ARBITRUM_WETH_TOKEN_ID,
             input_amount,
@@ -738,8 +732,8 @@ mod tests {
         let relay_data = result.relay_data;
         assert_eq!(relay_data.origin_chain_id, U256::from(1));
         assert_eq!(relay_data.deposit_id, U256::from(12345));
-        assert_eq!(token_id(relay_data.input_token), ETHEREUM_WETH_TOKEN_ID.to_ascii_lowercase());
-        assert_eq!(token_id(relay_data.output_token), ARBITRUM_WETH_TOKEN_ID.to_ascii_lowercase());
+        assert_eq!(format!("{:#x}", Address::from_word(relay_data.input_token)), ETHEREUM_WETH_TOKEN_ID.to_ascii_lowercase());
+        assert_eq!(format!("{:#x}", Address::from_word(relay_data.output_token)), ARBITRUM_WETH_TOKEN_ID.to_ascii_lowercase());
         assert_eq!(relay_data.input_amount, input_amount);
         assert_eq!(relay_data.output_amount, output_amount);
         assert_eq!(relay_data.fill_deadline, TEST_FILL_DEADLINE);
@@ -751,7 +745,7 @@ mod tests {
         let output_amount = U256::from(19_900_000_000_000_000u64);
         let log = build_event_log(
             V3SpokePoolInterface::FundsDeposited::SIGNATURE_HASH,
-            &[8453, 5452553, 0],
+            &[8453, 5452553],
             ETHEREUM_WETH_TOKEN_ID,
             BASE_WETH_TOKEN_ID,
             input_amount,
@@ -761,8 +755,14 @@ mod tests {
         let result = parse_deposit_from_logs(&[log], 1).unwrap().unwrap();
         assert_eq!(result.relay_data.deposit_id, U256::from(5452553));
         assert_eq!(result.destination_chain_id, 8453);
-        assert_eq!(token_id(result.relay_data.input_token), ETHEREUM_WETH_TOKEN_ID.to_ascii_lowercase());
-        assert_eq!(token_id(result.relay_data.output_token), BASE_WETH_TOKEN_ID.to_ascii_lowercase());
+        assert_eq!(
+            format!("{:#x}", Address::from_word(result.relay_data.input_token)),
+            ETHEREUM_WETH_TOKEN_ID.to_ascii_lowercase()
+        );
+        assert_eq!(
+            format!("{:#x}", Address::from_word(result.relay_data.output_token)),
+            BASE_WETH_TOKEN_ID.to_ascii_lowercase()
+        );
         assert_eq!(result.relay_data.input_amount, input_amount);
         assert_eq!(result.relay_data.output_amount, output_amount);
     }
