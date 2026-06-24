@@ -84,28 +84,49 @@ internal class TinkAeadProvider(
         }
     }
 
-    // Building the Aead touches the Android Keystore, which can fail transiently (e.g. KeyMint -41); retry briefly.
     private fun buildAead(): Aead {
         AeadConfig.register()
         var lastError: GeneralSecurityException? = null
         repeat(MAX_BUILD_ATTEMPTS) { attempt ->
-            try {
-                val keysetHandle = AndroidKeysetManager.Builder()
-                    .withSharedPref(context, config.keysetName, config.keysetPreferencesFileName)
-                    .withKeyTemplate(AesGcmKeyManager.aes256GcmTemplate())
-                    .withMasterKeyUri("android-keystore://${config.masterKeyAlias}")
-                    .build()
-                    .keysetHandle
-                return keysetHandle.getPrimitive(RegistryConfiguration.get(), Aead::class.java)
+            val keysetExisted = keysetExists()
+            val manager = try {
+                buildKeysetManager()
             } catch (error: GeneralSecurityException) {
                 lastError = error
-                if (attempt < MAX_BUILD_ATTEMPTS - 1) {
-                    Thread.sleep(BUILD_RETRY_DELAY_MS * (attempt + 1))
+                null
+            }
+            if (manager != null) {
+                if (manager.isUsingKeystore) {
+                    return manager.keysetHandle.getPrimitive(RegistryConfiguration.get(), Aead::class.java)
                 }
+                if (keysetExisted) {
+                    throw SecurityException("Refusing cleartext keyset for ${config.namespace}: existing keyset is not Keystore-backed")
+                }
+                if (!clearKeyset()) {
+                    throw SecurityException("Refusing cleartext keyset for ${config.namespace}: failed to remove fallback keyset")
+                }
+                lastError = GeneralSecurityException("Keystore unavailable for ${config.namespace}; removed cleartext fallback keyset")
+            }
+            if (attempt < MAX_BUILD_ATTEMPTS - 1) {
+                Thread.sleep(BUILD_RETRY_DELAY_MS * (attempt + 1))
             }
         }
         throw lastError ?: GeneralSecurityException("Unable to build Aead for ${config.namespace}")
     }
+
+    private fun buildKeysetManager(): AndroidKeysetManager =
+        AndroidKeysetManager.Builder()
+            .withSharedPref(context, config.keysetName, config.keysetPreferencesFileName)
+            .withKeyTemplate(AesGcmKeyManager.aes256GcmTemplate())
+            .withMasterKeyUri("android-keystore://${config.masterKeyAlias}")
+            .build()
+
+    private fun keysetExists(): Boolean = keysetPreferences().contains(config.keysetName)
+
+    private fun clearKeyset(): Boolean = keysetPreferences().edit().remove(config.keysetName).commit()
+
+    private fun keysetPreferences() =
+        context.getSharedPreferences(config.keysetPreferencesFileName, Context.MODE_PRIVATE)
 
     private companion object {
         const val MAX_BUILD_ATTEMPTS = 3

@@ -5,6 +5,7 @@ import com.wallet.core.primitives.WalletId
 import okhttp3.Interceptor
 import okhttp3.Protocol
 import okhttp3.Response
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
 
 class SecurityInterceptor internal constructor(
@@ -36,6 +37,7 @@ class SecurityInterceptor internal constructor(
                 .message("HTTP Exception: ${error.message}")
                 .request(request)
                 .protocol(Protocol.HTTP_2)
+                .body(ByteArray(0).toResponseBody(null))
                 .build()
         }
     }

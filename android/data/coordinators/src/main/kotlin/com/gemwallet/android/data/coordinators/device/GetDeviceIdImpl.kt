@@ -26,7 +26,6 @@ class GetDeviceIdImpl(
     }
 
     private suspend fun initDeviceKeys(): DeviceKeys {
-        // If keys exist, let read failures propagate rather than overwrite (and rotate) the device identity.
         if (store.contains(Keys.PrivateKey) && store.contains(Keys.PublicKey)) {
             return DeviceKeys(
                 privateKey = store.getValue(Keys.PrivateKey),
