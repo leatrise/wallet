@@ -3404,7 +3404,6 @@ name = "gem_encoding"
 version = "1.0.0"
 dependencies = [
  "base64",
- "bs58",
  "data-encoding",
 ]
 
