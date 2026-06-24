@@ -213,6 +213,33 @@ struct TransactionStateServiceTests {
         #expect(swapRequests.map(\.transaction.id) == ["hash", "new-hash"])
         #expect(swapRequests.map(\.state) == [TransactionState.pending, .inTransit])
     }
+
+    @Test
+    func postProcessingRefreshesSwapBalances() async throws {
+        let fromAsset = AssetId.mock(.bitcoin)
+        let toAsset = AssetId.mock(.ethereum)
+        let wallet = Wallet.mock()
+        let transaction = try makeSwapTransaction(
+            fromAsset: fromAsset,
+            toAsset: toAsset,
+            state: .confirmed,
+        )
+        try await confirmation("updates balances") { updatedBalances in
+            let postProcessingService = TransactionPostProcessingService(
+                transactionStore: .mock(),
+                balanceUpdater: BalanceUpdaterMock { updatedWallet, assetIds in
+                    #expect(updatedWallet.id == wallet.id)
+                    #expect(assetIds == [fromAsset, toAsset])
+                    updatedBalances()
+                },
+                stakeService: .mock(),
+                earnService: .mock(),
+                nftService: .mock(),
+            )
+
+            try await postProcessingService.process(wallet: wallet, transaction: transaction)
+        }
+    }
 }
 
 // MARK: - Private
