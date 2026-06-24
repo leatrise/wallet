@@ -2,16 +2,16 @@ use std::collections::HashSet;
 use std::{collections::HashMap, error::Error};
 
 use async_trait::async_trait;
-use primitives::{AssetAddress, DeviceSubscription, NFTAssetId, Transaction, TransactionId, TransactionState, TransactionType};
-use storage::{AssetsAddressesRepository, AssetsRepository, Database, NftAssetFilter, NftRepository, TransactionsRepository, WalletsRepository};
+use primitives::{AssetAddress, AssetIdVecExt, DeviceSubscription, NFTAssetId, Transaction, TransactionId, TransactionState, TransactionType};
+use storage::{AssetFilter, AssetsAddressesRepository, AssetsRepository, Database, NftAssetFilter, NftRepository, TransactionsRepository, WalletsRepository};
 use streamer::{
-    AssetId, NotificationsPayload, StreamProducer, StreamProducerQueue, TransactionNotificationType, TransactionsPayload, WalletStreamEvent, WalletStreamPayload,
-    consumer::MessageConsumer,
+    AssetId, NotificationsPayload, StreamProducer, StreamProducerQueue, TransactionNotificationType, TransactionsPayload, WalletStreamPayload, consumer::MessageConsumer,
 };
 use swapper::cross_chain::{self, DepositAddressMap, SendAddressMap};
 
 use crate::client::SwapVaultAddressClient;
 use crate::consumers::store::StoreTransactionsConsumerConfig;
+use crate::consumers::store::wallet_stream_payload::{TransactionWalletStreamChange, transaction_wallet_stream_payloads};
 use crate::pusher::Pusher;
 
 const TRANSACTION_BATCH_SIZE: usize = 100;
@@ -87,7 +87,7 @@ impl MessageConsumer<TransactionsPayload, usize> for StoreTransactionsConsumer {
         let mut transactions_map: HashMap<TransactionId, Transaction> = HashMap::new();
         let mut assets_addresses = HashSet::new();
         let mut notifications: Vec<NotificationsPayload> = Vec::new();
-        let mut wallet_events_map: HashMap<i32, (HashSet<TransactionId>, HashSet<AssetId>)> = HashMap::new();
+        let mut wallet_stream_changes: Vec<TransactionWalletStreamChange> = Vec::new();
 
         for subscription in &subscriptions {
             for transaction in &transactions {
@@ -124,9 +124,11 @@ impl MessageConsumer<TransactionsPayload, usize> for StoreTransactionsConsumer {
 
                 transactions_map.entry(transaction.id.clone()).or_insert_with(|| transaction.clone());
 
-                let (txn_ids, asset_ids) = wallet_events_map.entry(subscription.wallet_row_id).or_default();
-                txn_ids.insert(transaction.id.clone());
-                asset_ids.extend(transaction_asset_ids.iter().cloned());
+                wallet_stream_changes.push(TransactionWalletStreamChange {
+                    wallet_id: subscription.wallet_row_id,
+                    transaction_id: transaction.id.clone(),
+                    asset_ids: transaction_asset_ids,
+                });
             }
         }
 
@@ -157,23 +159,12 @@ impl MessageConsumer<TransactionsPayload, usize> for StoreTransactionsConsumer {
             }
         }
 
-        let wallet_events = wallet_events_map
-            .into_iter()
-            .map(|(wallet_id, (transaction_ids, asset_ids))| WalletStreamPayload {
-                wallet_id,
-                event: WalletStreamEvent::Transactions {
-                    transaction_ids: transaction_ids.into_iter().collect(),
-                    asset_ids: asset_ids.into_iter().collect(),
-                },
-            })
-            .collect();
-
         let transactions: Vec<_> = transactions_map.into_values().collect();
         let result = ProcessingResult {
             transactions,
             assets_addresses: assets_addresses.into_iter().collect(),
             notifications,
-            wallet_events,
+            wallet_events: transaction_wallet_stream_payloads(wallet_stream_changes),
         };
         self.publish_results(result).await
     }
@@ -239,7 +230,10 @@ impl StoreTransactionsConsumer {
     }
 
     async fn get_existing_and_missing_assets(&self, assets_ids: Vec<AssetId>) -> Result<(Vec<primitives::AssetPriceMetadata>, Vec<AssetId>), Box<dyn Error + Send + Sync>> {
-        let assets_with_prices = self.database.assets()?.get_assets_with_prices(assets_ids.clone(), self.config.primary_price_max_age)?;
+        let assets_with_prices = self
+            .database
+            .assets()?
+            .get_assets_with_prices(vec![AssetFilter::Ids(assets_ids.clone().ids())], self.config.primary_price_max_age)?;
 
         let missing_assets_ids = assets_ids
             .into_iter()
