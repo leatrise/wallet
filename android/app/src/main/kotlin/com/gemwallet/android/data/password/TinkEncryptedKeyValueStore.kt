@@ -8,6 +8,7 @@ import com.google.crypto.tink.aead.AeadConfig
 import com.google.crypto.tink.aead.AesGcmKeyManager
 import com.google.crypto.tink.integration.android.AndroidKeysetManager
 import java.nio.charset.StandardCharsets.UTF_8
+import java.security.GeneralSecurityException
 import java.security.MessageDigest
 import java.util.Base64
 
@@ -83,14 +84,31 @@ internal class TinkAeadProvider(
         }
     }
 
+    // Building the Aead touches the Android Keystore, which can fail transiently (e.g. KeyMint -41); retry briefly.
     private fun buildAead(): Aead {
         AeadConfig.register()
-        val keysetHandle = AndroidKeysetManager.Builder()
-            .withSharedPref(context, config.keysetName, config.keysetPreferencesFileName)
-            .withKeyTemplate(AesGcmKeyManager.aes256GcmTemplate())
-            .withMasterKeyUri("android-keystore://${config.masterKeyAlias}")
-            .build()
-            .keysetHandle
-        return keysetHandle.getPrimitive(RegistryConfiguration.get(), Aead::class.java)
+        var lastError: GeneralSecurityException? = null
+        repeat(MAX_BUILD_ATTEMPTS) { attempt ->
+            try {
+                val keysetHandle = AndroidKeysetManager.Builder()
+                    .withSharedPref(context, config.keysetName, config.keysetPreferencesFileName)
+                    .withKeyTemplate(AesGcmKeyManager.aes256GcmTemplate())
+                    .withMasterKeyUri("android-keystore://${config.masterKeyAlias}")
+                    .build()
+                    .keysetHandle
+                return keysetHandle.getPrimitive(RegistryConfiguration.get(), Aead::class.java)
+            } catch (error: GeneralSecurityException) {
+                lastError = error
+                if (attempt < MAX_BUILD_ATTEMPTS - 1) {
+                    Thread.sleep(BUILD_RETRY_DELAY_MS * (attempt + 1))
+                }
+            }
+        }
+        throw lastError ?: GeneralSecurityException("Unable to build Aead for ${config.namespace}")
+    }
+
+    private companion object {
+        const val MAX_BUILD_ATTEMPTS = 3
+        const val BUILD_RETRY_DELAY_MS = 50L
     }
 }

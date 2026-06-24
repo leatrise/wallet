@@ -42,6 +42,11 @@ class TinkSecurityStore(
         aeadProvider = aeadProvider,
     )
 
+    override suspend fun contains(key: Any): Boolean = withContext(Dispatchers.IO) {
+        val keyValue = key.toString()
+        encryptedStore.contains(keyValue) || hasLegacyValue(keyValue)
+    }
+
     override suspend fun getValue(key: Any): String = withContext(Dispatchers.IO) {
         val keyValue = key.toString()
         val currentValue = encryptedStore.getString(keyValue)
@@ -59,6 +64,11 @@ class TinkSecurityStore(
         val keyValue = key.toString()
         encryptedStore.putString(keyValue, value)
         removeLegacyValue(keyValue)
+    }
+
+    private suspend fun hasLegacyValue(key: String): Boolean {
+        return context.dataStore.data.map { preferences -> preferences.contains(stringPreferencesKey(key)) }
+            .firstOrNull() == true
     }
 
     private suspend fun getLegacyValue(key: String): String? {
