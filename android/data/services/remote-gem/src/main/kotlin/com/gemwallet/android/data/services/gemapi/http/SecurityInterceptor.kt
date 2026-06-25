@@ -37,7 +37,7 @@ class SecurityInterceptor internal constructor(
                 .message("HTTP Exception: ${error.message}")
                 .request(request)
                 .protocol(Protocol.HTTP_2)
-                .body(ByteArray(0).toResponseBody(null))
+                .body("".toResponseBody())
                 .build()
         }
     }

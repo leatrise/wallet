@@ -89,27 +89,16 @@ internal class TinkAeadProvider(
         var lastError: GeneralSecurityException? = null
         repeat(MAX_BUILD_ATTEMPTS) { attempt ->
             val keysetExisted = keysetExists()
-            val manager = try {
-                buildKeysetManager()
-            } catch (error: GeneralSecurityException) {
-                lastError = error
-                null
-            }
-            if (manager != null) {
+            try {
+                val manager = buildKeysetManager()
                 if (manager.isUsingKeystore) {
                     return manager.keysetHandle.getPrimitive(RegistryConfiguration.get(), Aead::class.java)
                 }
-                if (keysetExisted) {
-                    throw SecurityException("Refusing cleartext keyset for ${config.namespace}: existing keyset is not Keystore-backed")
-                }
-                if (!clearKeyset()) {
-                    throw SecurityException("Refusing cleartext keyset for ${config.namespace}: failed to remove fallback keyset")
-                }
-                lastError = GeneralSecurityException("Keystore unavailable for ${config.namespace}; removed cleartext fallback keyset")
+                lastError = handleCleartextFallback(keysetExisted)
+            } catch (error: GeneralSecurityException) {
+                lastError = error
             }
-            if (attempt < MAX_BUILD_ATTEMPTS - 1) {
-                Thread.sleep(BUILD_RETRY_DELAY_MS * (attempt + 1))
-            }
+            delayBeforeRetry(attempt)
         }
         throw lastError ?: GeneralSecurityException("Unable to build Aead for ${config.namespace}")
     }
@@ -127,6 +116,22 @@ internal class TinkAeadProvider(
 
     private fun keysetPreferences() =
         context.getSharedPreferences(config.keysetPreferencesFileName, Context.MODE_PRIVATE)
+
+    private fun handleCleartextFallback(keysetExisted: Boolean): GeneralSecurityException {
+        if (keysetExisted) {
+            throw SecurityException("Refusing cleartext keyset for ${config.namespace}: existing keyset is not Keystore-backed")
+        }
+        if (!clearKeyset()) {
+            throw SecurityException("Refusing cleartext keyset for ${config.namespace}: failed to remove fallback keyset")
+        }
+        return GeneralSecurityException("Keystore unavailable for ${config.namespace}; removed cleartext fallback keyset")
+    }
+
+    private fun delayBeforeRetry(attempt: Int) {
+        if (attempt < MAX_BUILD_ATTEMPTS - 1) {
+            Thread.sleep(BUILD_RETRY_DELAY_MS * (attempt + 1))
+        }
+    }
 
     private companion object {
         const val MAX_BUILD_ATTEMPTS = 3

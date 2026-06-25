@@ -8,7 +8,6 @@ import com.gemwallet.android.application.SecurityStore
 import com.gemwallet.android.math.fromHex
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.nio.charset.StandardCharsets.UTF_8
 
@@ -66,17 +65,13 @@ class TinkSecurityStore(
         removeLegacyValue(keyValue)
     }
 
-    private suspend fun hasLegacyValue(key: String): Boolean {
-        return context.dataStore.data.map { preferences -> preferences.contains(stringPreferencesKey(key)) }
-            .firstOrNull() == true
-    }
+    private suspend fun hasLegacyValue(key: String): Boolean =
+        context.dataStore.data.firstOrNull()?.contains(stringPreferencesKey(key)) == true
 
-    private suspend fun getLegacyValue(key: String): String? {
-        return context.dataStore.data.map { preferences -> preferences[stringPreferencesKey(key)] }
-            .firstOrNull()?.let {
-                String(aeadProvider.get().decrypt(it.fromHex(), null), UTF_8)
-            }
-    }
+    private suspend fun getLegacyValue(key: String): String? =
+        context.dataStore.data.firstOrNull()?.get(stringPreferencesKey(key))?.let {
+            String(aeadProvider.get().decrypt(it.fromHex(), null), UTF_8)
+        }
 
     private suspend fun removeLegacyValue(key: String) {
         context.dataStore.edit { preferences ->

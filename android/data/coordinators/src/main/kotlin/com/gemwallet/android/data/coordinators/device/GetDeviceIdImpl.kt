@@ -25,15 +25,16 @@ class GetDeviceIdImpl(
         }
     }
 
-    private suspend fun initDeviceKeys(): DeviceKeys {
-        if (store.contains(Keys.PrivateKey) && store.contains(Keys.PublicKey)) {
-            return DeviceKeys(
-                privateKey = store.getValue(Keys.PrivateKey),
-                publicKey = store.getValue(Keys.PublicKey),
-            )
-        }
-        return createDeviceKeys()
-    }
+    private suspend fun initDeviceKeys(): DeviceKeys =
+        if (hasDeviceKeys()) readDeviceKeys() else createDeviceKeys()
+
+    private suspend fun hasDeviceKeys(): Boolean =
+        store.contains(Keys.PrivateKey) && store.contains(Keys.PublicKey)
+
+    private suspend fun readDeviceKeys(): DeviceKeys = DeviceKeys(
+        privateKey = store.getValue(Keys.PrivateKey),
+        publicKey = store.getValue(Keys.PublicKey),
+    )
 
     private suspend fun createDeviceKeys(): DeviceKeys {
         val deviceKey = generateDeviceKeyPair()
