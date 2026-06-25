@@ -3,8 +3,22 @@ name: Android Tests
 on:
   push:
     branches: ["main"]
+    paths:
+      - "android/**"
+      - "core/**"
+      - "localization/**"
+      - ".gitmodules"
+      - ".github/actions/**"
+      - ".github/workflows/android-ci.yml"
   pull_request:
     branches: ["main"]
+    paths:
+      - "android/**"
+      - "core/**"
+      - "localization/**"
+      - ".gitmodules"
+      - ".github/actions/**"
+      - ".github/workflows/android-ci.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -33,20 +47,14 @@ jobs:
       - name: Setup Android CI
         uses: ./.github/actions/setup-android-ci
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
+
       - name: Bootstrap
         run: just bootstrap
 
-      - name: Clean Android build outputs
-        run: just clean
-
-      - name: Build
-        run: just build
-        env:
-          GPR_USERNAME: ${{ github.actor }}
-          GPR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run unit tests
-        run: just test
+      - name: Build and run unit tests
+        run: just ci-test
         env:
           GPR_USERNAME: ${{ github.actor }}
           GPR_TOKEN: ${{ secrets.GITHUB_TOKEN }}

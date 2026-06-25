@@ -6,21 +6,17 @@ on:
     branches: ["main"]
     paths:
       - "ios/**"
-      - "core"
       - "core/**"
       - ".gitmodules"
-      - ".github/actions/setup-ios-ci/**"
-      - ".github/actions/setup-rust-ci/**"
+      - ".github/actions/**"
       - ".github/workflows/ios-ui-tests.yml"
   pull_request:
     branches: ["main"]
     paths:
       - "ios/**"
-      - "core"
       - "core/**"
       - ".gitmodules"
-      - ".github/actions/setup-ios-ci/**"
-      - ".github/actions/setup-rust-ci/**"
+      - ".github/actions/**"
       - ".github/workflows/ios-ui-tests.yml"
 
 concurrency:

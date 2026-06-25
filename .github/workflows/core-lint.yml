@@ -4,7 +4,7 @@ on:
     branches: ["main"]
     paths:
       - "core/**"
-      - ".github/actions/setup-rust-ci/**"
+      - ".github/actions/**"
       - ".github/workflows/core-lint.yml"
 
 env:

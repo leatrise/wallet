@@ -28,6 +28,9 @@ clean:
 build:
     @./gradlew assembleGoogleDebug
 
+ci-test:
+    @./gradlew assembleGoogleDebug testGoogleDebugUnitTest
+
 run: build
     @just _run-adb emulator
 
