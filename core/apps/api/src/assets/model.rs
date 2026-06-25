@@ -4,7 +4,7 @@ use std::str::FromStr;
 const MAX_LIMIT: usize = 500;
 const MAX_OFFSET: usize = 10_000;
 const DEFAULT_LIMIT: usize = 50;
-const MIN_LIST_SEARCH_QUERY_LENGTH: usize = 3;
+const MIN_LIST_SEARCH_QUERY_LENGTH: usize = 2;
 const STRICT_RANK_QUERY_LENGTH: usize = 16;
 
 pub struct SearchRequest {
