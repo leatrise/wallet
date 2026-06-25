@@ -290,8 +290,6 @@ dependencies {
     // Auth
     implementation(libs.androidx.biometric)
 
-    implementation(libs.reorderable)
-
     gemChannels.forEach { (name, channel) ->
         val configuration = "${name}Implementation"
         listOf("push", "review", "walletConnect").forEach { key ->
