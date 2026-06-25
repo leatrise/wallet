@@ -68,8 +68,8 @@ mod tests {
 
     #[test]
     fn should_search_lists() {
-        assert!(!SearchRequest::new("BT", None, None, None, None).should_search_lists());
-        assert!(SearchRequest::new("BTC", None, None, None, None).should_search_lists());
+        assert!(!SearchRequest::new("B", None, None, None, None).should_search_lists());
+        assert!(SearchRequest::new("BT", None, None, None, None).should_search_lists());
         assert!(!SearchRequest::new("stocks", None, Some("stocks"), None, None).should_search_lists());
     }
 
