@@ -87,18 +87,6 @@ pub struct TokenTransferFee {
     pub energy_price: u64,
 }
 
-pub fn calculate_token_transfer_fee(account_usage: &TronAccountUsage, estimated_energy: u64, energy_price: u64, bandwidth_price: u64) -> TokenTransferFee {
-    calculate_token_transfer_fee_for_bandwidth(
-        account_usage,
-        estimated_energy,
-        energy_price,
-        bandwidth_price,
-        DEFAULT_BANDWIDTH_BYTES,
-        0,
-        FEE_LIMIT_BUFFER_PERCENT,
-    )
-}
-
 fn calculate_token_transfer_fee_for_bandwidth(
     account_usage: &TronAccountUsage,
     estimated_energy: u64,
@@ -243,6 +231,18 @@ mod tests {
             key: key.to_string(),
             value: Some(value),
         }
+    }
+
+    fn calculate_token_transfer_fee(account_usage: &TronAccountUsage, estimated_energy: u64, energy_price: u64, bandwidth_price: u64) -> TokenTransferFee {
+        calculate_token_transfer_fee_for_bandwidth(
+            account_usage,
+            estimated_energy,
+            energy_price,
+            bandwidth_price,
+            DEFAULT_BANDWIDTH_BYTES,
+            0,
+            FEE_LIMIT_BUFFER_PERCENT,
+        )
     }
 
     fn account_usage(free_bandwidth: u64, staked_bandwidth: u64, available_energy: u64) -> TronAccountUsage {
