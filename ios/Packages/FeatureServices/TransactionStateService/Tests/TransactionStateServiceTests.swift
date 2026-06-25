@@ -31,7 +31,7 @@ struct TransactionStateServiceTests {
         let status = await fixture.service.update(for: fixture.transaction).status
 
         expectRetry(status)
-        let saved = try #require(fixture.store.getTransactions(state: .inTransit).first)
+        let saved = try #require(fixture.store.getTransactions(states: [.inTransit]).first)
         let savedMetadata = try #require(saved.metadata?.decode(TransactionSwapMetadata.self))
         #expect(savedMetadata.toValue == "9900000000000000000")
     }
@@ -44,7 +44,7 @@ struct TransactionStateServiceTests {
             let status = await fixture.service.update(for: fixture.transaction).status
 
             expectComplete(status)
-            #expect(try fixture.store.getTransactions(state: state).count == 1)
+            #expect(try fixture.store.getTransactions(states: [state]).count == 1)
         }
     }
 
@@ -68,7 +68,7 @@ struct TransactionStateServiceTests {
         let status = await fixture.service.update(for: fixture.transaction).status
 
         expectRetry(status)
-        let saved = try #require(fixture.store.getTransactions(state: .inTransit).first)
+        let saved = try #require(fixture.store.getTransactions(states: [.inTransit]).first)
         let savedMetadata = try #require(saved.metadata?.decode(TransactionSwapMetadata.self))
         #expect(saved.id.hash == "new-hash")
         #expect(savedMetadata.toValue == "9900000000000000000")
@@ -101,8 +101,8 @@ struct TransactionStateServiceTests {
         let status = await fixture.service.update(for: fixture.transaction).status
 
         expectRetry(status)
-        #expect(try fixture.store.getTransactions(state: .pending).isEmpty)
-        let saved = try #require(fixture.store.getTransactions(state: .inTransit).first)
+        #expect(try fixture.store.getTransactions(states: [.pending]).isEmpty)
+        let saved = try #require(fixture.store.getTransactions(states: [.inTransit]).first)
         let savedMetadata = try #require(saved.metadata?.decode(TransactionSwapMetadata.self))
         #expect(saved.id.hash == "new-hash")
         #expect(savedMetadata.toValue == "9900000000000000000")
@@ -127,8 +127,8 @@ struct TransactionStateServiceTests {
         let status = await fixture.service.update(for: fixture.transaction).status
 
         expectComplete(status)
-        #expect(try fixture.store.getTransactions(state: .pending).isEmpty)
-        let saved = try #require(fixture.store.getTransactions(state: .confirmed).first)
+        #expect(try fixture.store.getTransactions(states: [.pending]).isEmpty)
+        let saved = try #require(fixture.store.getTransactions(states: [.confirmed]).first)
         #expect(saved.id.hash == "new-hash")
     }
 
@@ -142,8 +142,8 @@ struct TransactionStateServiceTests {
         let status = await fixture.service.update(for: fixture.transaction).status
 
         expectRetry(status)
-        #expect(try fixture.store.getTransactions(state: .pending).isEmpty)
-        #expect(try fixture.store.getTransactions(state: .inTransit).count == 1)
+        #expect(try fixture.store.getTransactions(states: [.pending]).isEmpty)
+        #expect(try fixture.store.getTransactions(states: [.inTransit]).count == 1)
     }
 
     @Test
@@ -183,7 +183,7 @@ struct TransactionStateServiceTests {
         #expect(await statusService.regularRequestCount() == 0)
         let swapRequests = await statusService.swapRequests()
         #expect(swapRequests.isEmpty)
-        #expect(try fixture.store.getTransactions(state: .inTransit).count == 1)
+        #expect(try fixture.store.getTransactions(states: [.inTransit]).count == 1)
     }
 
     @Test
