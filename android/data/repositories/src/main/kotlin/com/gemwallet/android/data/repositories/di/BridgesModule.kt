@@ -1,6 +1,7 @@
 package com.gemwallet.android.data.repositories.di
 
 import com.gemwallet.android.data.repositories.bridge.BridgesRepository
+import com.gemwallet.android.data.repositories.bridge.ConnectionsRepository
 import com.gemwallet.android.data.repositories.bridge.WalletConnectClient
 import com.gemwallet.android.data.repositories.wallets.WalletsRepository
 import com.gemwallet.android.data.service.store.database.ConnectionsDao
@@ -15,13 +16,21 @@ import javax.inject.Singleton
 object BridgesModule {
     @Singleton
     @Provides
-    fun provideBridgeRepository(
+    fun provideConnectionsRepository(
         walletsRepository: WalletsRepository,
         connectionsDao: ConnectionsDao,
-        walletConnectClient: WalletConnectClient,
-    ): BridgesRepository = BridgesRepository(
+    ): ConnectionsRepository = ConnectionsRepository(
         walletsRepository = walletsRepository,
         connectionsDao = connectionsDao,
+    )
+
+    @Singleton
+    @Provides
+    fun provideBridgeRepository(
+        connectionsRepository: ConnectionsRepository,
+        walletConnectClient: WalletConnectClient,
+    ): BridgesRepository = BridgesRepository(
+        connectionsRepository = connectionsRepository,
         walletConnectClient = walletConnectClient,
     )
 }

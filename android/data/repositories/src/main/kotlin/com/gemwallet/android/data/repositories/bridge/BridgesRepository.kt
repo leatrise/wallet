@@ -1,12 +1,6 @@
 package com.gemwallet.android.data.repositories.bridge
 
 import androidx.core.net.toUri
-import com.gemwallet.android.data.repositories.wallets.WalletsRepository
-import com.gemwallet.android.data.service.store.database.ConnectionsDao
-import com.gemwallet.android.data.service.store.database.entities.toDTO
-import com.gemwallet.android.data.service.store.database.entities.toRecord
-import com.gemwallet.android.ext.canSign
-import com.wallet.core.primitives.Account
 import com.wallet.core.primitives.WalletConnection
 import com.wallet.core.primitives.Wallet as GemWallet
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,8 +20,7 @@ import uniffi.gemstone.WalletConnect
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BridgesRepository(
-    private val walletsRepository: WalletsRepository,
-    private val connectionsDao: ConnectionsDao,
+    private val connectionsRepository: ConnectionsRepository,
     private val walletConnectClient: WalletConnectClient,
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
 ) {
@@ -57,8 +49,8 @@ class BridgesRepository(
         scope.launch(Dispatchers.IO) {
             bridgeEvents.collect { event ->
                 when (event) {
-                    is WalletConnectEvent.SessionSettled -> addConnection(event.session)
-                    is WalletConnectEvent.SessionDeleted -> deleteConnection(event.topic)
+                    is WalletConnectEvent.SessionSettled -> connectionsRepository.addConnection(event.session)
+                    is WalletConnectEvent.SessionDeleted -> connectionsRepository.deleteConnection(event.topic)
                     else -> Unit
                 }
             }
@@ -80,44 +72,19 @@ class BridgesRepository(
     }
 
     fun getConnections(): Flow<List<WalletConnection>> {
-        return walletsRepository.getAll().flatMapLatest { wallets ->
-            connectionsDao.getAll().map { items ->
-                items.mapNotNull { room ->
-                    val wallet = wallets.firstOrNull { it.id.id == room.walletId } ?: return@mapNotNull null
-                    room.toDTO(wallet)
-                }
-            }
-        }
+        return connectionsRepository.getConnections()
     }
 
     suspend fun getConnectionByTopic(topic: String): WalletConnection? {
-        val record = connectionsDao.getBySessionId(topic) ?: return null
-        val wallet = walletsRepository.getAll().firstOrNull()
-            ?.firstOrNull { it.id.id == record.walletId }
-            ?: return null
-        return record.toDTO(wallet)
+        return connectionsRepository.getConnectionByTopic(topic)
     }
 
     fun getConnection(connectionId: String): Flow<WalletConnection?> {
-        return walletsRepository.getAll().flatMapLatest { wallets ->
-            connectionsDao.getConnection(connectionId).map { room ->
-                val wallet = wallets.firstOrNull { it.id.id == room?.walletId } ?: return@map null
-                room?.toDTO(wallet)
-            }
-        }
+        return connectionsRepository.getConnection(connectionId)
     }
 
     private suspend fun sync() {
-        val local = getConnections().firstOrNull() ?: emptyList()
-        val sessions = activeSessions()
-        val unknownSessions = local.filter { local -> !sessions.any { local.session.sessionId == it.topic } }
-        if (unknownSessions.isNotEmpty()) {
-            connectionsDao.deleteAll(unknownSessions.map { it.toRecord() })
-        }
-        val localSessionIds = local.map { it.session.sessionId }.toSet()
-        sessions
-            .filter { it.topic in localSessionIds }
-            .forEach { updateConnection(it) }
+        connectionsRepository.sync(activeSessions())
     }
 
     private fun handlePendingRequests() {
@@ -139,8 +106,7 @@ class BridgesRepository(
             .getOrDefault(emptyList())
 
     suspend fun disconnect(id: String, onSuccess: () -> Unit = {}, onError: (String) -> Unit = {}) {
-        val connection = getConnections().firstOrNull()?.firstOrNull { it.session.id == id } ?: return
-        connectionsDao.delete(id)
+        val connection = connectionsRepository.disconnect(id) ?: return
         val activeSession = activeSessions().firstOrNull { it.topic == connection.session.sessionId }
         if (activeSession != null) {
             walletConnectClient.disconnectSession(activeSession.topic, onSuccess = {}, onError = {})
@@ -171,7 +137,7 @@ class BridgesRepository(
         onSuccess: () -> Unit,
         onError: (String) -> Unit,
     ) {
-        val supportedNamespaces = getSupportedNamespaces(wallet)
+        val supportedNamespaces = connectionsRepository.getSupportedNamespaces(wallet)
         val sessionNamespaces = walletConnectClient.generateApprovedNamespaces(
             proposal = proposal,
             supportedNamespaces = supportedNamespaces,
@@ -257,41 +223,6 @@ class BridgesRepository(
         return walletConnectClient.generateAuthObject(payloadParams, issuer, signature)
     }
 
-    private suspend fun addConnection(session: WalletConnectSession) {
-        if (connectionsDao.getBySessionId(session.topic) != null) {
-            updateConnection(session)
-            return
-        }
-        val wallet = walletForSession(session) ?: return
-        addConnection(session, wallet)
-    }
-
-    private suspend fun addConnection(
-        session: WalletConnectSession,
-        wallet: GemWallet,
-    ) {
-        connectionsDao.insert(
-            session.toConnectionRecord(
-                walletId = wallet.id.id,
-                createdAt = System.currentTimeMillis(),
-            )
-        )
-    }
-
-    private suspend fun updateConnection(session: WalletConnectSession) {
-        val record = connectionsDao.getBySessionId(session.topic) ?: return
-        connectionsDao.insert(
-            session.toConnectionRecord(
-                walletId = record.walletId,
-                createdAt = record.createdAt,
-            )
-        )
-    }
-
-    private suspend fun deleteConnection(topic: String) {
-        connectionsDao.delete(topic)
-    }
-
     private fun persistNewSessions(
         wallet: GemWallet,
         activeBefore: Set<String>,
@@ -314,53 +245,6 @@ class BridgesRepository(
         wallet: GemWallet,
         activeBefore: Set<String>,
     ) {
-        val localSessionIds = connectionsDao.getAll().firstOrNull()
-            ?.map { it.sessionId }
-            ?.toSet()
-            ?: emptySet()
-        activeSessions()
-            .filter { it.topic !in localSessionIds }
-            .filter { it.topic !in activeBefore }
-            .filter { it.belongsTo(wallet) }
-            .forEach { addConnection(it, wallet) }
+        connectionsRepository.addNewSessions(wallet, activeSessions(), activeBefore)
     }
-
-    private suspend fun walletForSession(session: WalletConnectSession): GemWallet? {
-        val sessionAccounts = session.accounts()
-        if (sessionAccounts.isEmpty()) return null
-        val wallets = walletsRepository.getAll().firstOrNull() ?: return null
-        return wallets.firstOrNull { wallet ->
-            wallet.type.canSign && sessionAccounts.belongsTo(wallet)
-        }
-    }
-
-    private fun getSupportedNamespaces(wallet: GemWallet): Map<String, WalletConnectSessionNamespace> {
-        return wallet.accounts
-            .mapNotNull { it.toSupportedAccount() }
-            .groupBy { it.namespace }
-            .map { (namespace, accounts) ->
-                namespace.string to WalletConnectSessionNamespace(
-                    chains = accounts.map { it.chainId },
-                    methods = namespace.methodIds,
-                    events = namespace.eventIds,
-                    accounts = accounts.map { it.accountId },
-                )
-            }
-            .toMap()
-    }
-}
-
-private data class SupportedAccount(
-    val account: Account,
-    val namespace: ChainNamespace,
-    val reference: String,
-) {
-    val chainId: String get() = "${namespace.string}:$reference"
-    val accountId: String get() = "$chainId:${account.address}"
-}
-
-private fun Account.toSupportedAccount(): SupportedAccount? {
-    val namespace = chain.walletConnectNamespace() ?: return null
-    val reference = chain.walletConnectReference() ?: return null
-    return SupportedAccount(this, namespace, reference)
 }
