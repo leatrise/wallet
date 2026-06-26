@@ -31,7 +31,7 @@ env:
 jobs:
   unit_test:
     name: Unit Tests
-    runs-on: macos-26
+    runs-on: ubuntu-latest
     env:
       UNIT_TESTS: "true"
     defaults:
