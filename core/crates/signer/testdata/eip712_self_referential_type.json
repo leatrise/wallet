@@ -1,0 +1,9 @@
+{
+  "types": {
+    "EIP712Domain": [{ "name": "chainId", "type": "uint256" }],
+    "Recursive": [{ "name": "child", "type": "Recursive" }]
+  },
+  "primaryType": "Recursive",
+  "domain": { "chainId": 1 },
+  "message": {}
+}

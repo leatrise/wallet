@@ -13,22 +13,33 @@ use super::parse::{
 
 const PREFIX_PERSONAL_MESSAGE: &[u8] = b"\x19\x01";
 
+const MAX_EIP712_DEPTH: usize = 64;
+const EIP712_DOMAIN_TYPE: &str = "EIP712Domain";
+const CHAIN_ID_FIELD: &str = "chainId";
+
+fn check_type_depth(depth: usize) -> Result<(), SignerError> {
+    if depth > MAX_EIP712_DEPTH {
+        return SignerError::invalid_input_err("EIP-712 type nesting exceeds maximum depth");
+    }
+    Ok(())
+}
+
 pub fn hash_typed_data(json: &str) -> Result<[u8; 32], SignerError> {
     let value: Value = serde_json::from_str(json).map_err(|err| SignerError::invalid_input(format!("Invalid EIP-712 JSON: {err}")))?;
-    validate_eip712_domain_chain_id_binding(&value)?;
+    validate_eip712_domain_binding(&value)?;
     let parsed = TypedData::from_value(value)?;
 
     if parsed.message.is_null() {
         return SignerError::invalid_input_err("Invalid EIP-712 JSON: missing message");
     }
 
-    let domain_hash = if parsed.types.contains_key("EIP712Domain") {
-        hash_struct("EIP712Domain", Some(&parsed.domain), &parsed.types)?
+    let domain_hash = if parsed.types.contains_key(EIP712_DOMAIN_TYPE) {
+        hash_struct(EIP712_DOMAIN_TYPE, Some(&parsed.domain), &parsed.types, 0)?
     } else {
         [0u8; 32]
     };
 
-    let message_hash = hash_struct(&parsed.primary_type, Some(&parsed.message), &parsed.types)?;
+    let message_hash = hash_struct(&parsed.primary_type, Some(&parsed.message), &parsed.types, 0)?;
 
     let mut preimage = Vec::with_capacity(2 + 32 + 32);
     preimage.extend_from_slice(PREFIX_PERSONAL_MESSAGE);
@@ -38,22 +49,42 @@ pub fn hash_typed_data(json: &str) -> Result<[u8; 32], SignerError> {
     Ok(keccak256(&preimage))
 }
 
-pub fn validate_eip712_domain_chain_id_binding(value: &Value) -> Result<(), SignerError> {
-    let domain_chain_id = value.get("domain").and_then(|domain| domain.get("chainId"));
-    let schema_has_chain_id = value
+pub fn validate_eip712_domain_binding(value: &Value) -> Result<(), SignerError> {
+    let declared: BTreeSet<&str> = value
         .get("types")
-        .and_then(|types| types.get("EIP712Domain"))
+        .and_then(|types| types.get(EIP712_DOMAIN_TYPE))
         .and_then(Value::as_array)
-        .is_some_and(|fields| fields.iter().any(|field| field.get("name").and_then(Value::as_str) == Some("chainId")));
+        .map(|fields| fields.iter().filter_map(|field| field.get("name").and_then(Value::as_str)).collect())
+        .unwrap_or_default();
 
-    match (domain_chain_id, schema_has_chain_id) {
-        (Some(_), false) => SignerError::invalid_input_err("EIP712Domain type schema must declare chainId when domain.chainId is present"),
-        (Some(Value::Null) | None, true) => SignerError::invalid_input_err("EIP712 domain missing chainId"),
-        _ => Ok(()),
+    let domain = value.get("domain").and_then(Value::as_object);
+    let domain_chain_id = domain.and_then(|domain| domain.get(CHAIN_ID_FIELD));
+
+    match (domain_chain_id, declared.contains(CHAIN_ID_FIELD)) {
+        (Some(_), false) => return SignerError::invalid_input_err("EIP712Domain type schema must declare chainId when domain.chainId is present"),
+        (Some(Value::Null) | None, true) => return SignerError::invalid_input_err("EIP712 domain missing chainId"),
+        _ => {}
     }
+
+    if let Some(domain) = domain {
+        for (field_name, field_value) in domain {
+            if field_name == CHAIN_ID_FIELD || field_value.is_null() {
+                continue;
+            }
+            if !declared.contains(field_name.as_str()) {
+                return SignerError::invalid_input_err(format!(
+                    "EIP712 domain field '{field_name}' is not declared in the EIP712Domain type and would not be bound into the signed domain separator"
+                ));
+            }
+        }
+    }
+
+    Ok(())
 }
 
-fn hash_struct(primary_type: &str, data: Option<&Value>, types: &std::collections::HashMap<String, Vec<TypeField>>) -> Result<[u8; 32], SignerError> {
+fn hash_struct(primary_type: &str, data: Option<&Value>, types: &std::collections::HashMap<String, Vec<TypeField>>, depth: usize) -> Result<[u8; 32], SignerError> {
+    check_type_depth(depth)?;
+
     let fields = types
         .get(primary_type)
         .ok_or_else(|| SignerError::invalid_input(format!("Unknown EIP-712 type '{primary_type}'")))?;
@@ -69,14 +100,16 @@ fn hash_struct(primary_type: &str, data: Option<&Value>, types: &std::collection
     encoded.extend_from_slice(&type_hash);
 
     for field in fields {
-        let encoded_value = encode_value(&field.r#type, data_map.get(&field.name), types)?;
+        let encoded_value = encode_value(&field.r#type, data_map.get(&field.name), types, depth + 1)?;
         encoded.extend_from_slice(&encoded_value);
     }
 
     Ok(keccak256(&encoded))
 }
 
-fn encode_value(type_name: &str, value: Option<&Value>, types: &std::collections::HashMap<String, Vec<TypeField>>) -> Result<[u8; 32], SignerError> {
+fn encode_value(type_name: &str, value: Option<&Value>, types: &std::collections::HashMap<String, Vec<TypeField>>, depth: usize) -> Result<[u8; 32], SignerError> {
+    check_type_depth(depth)?;
+
     if let Some((element_type, expected_len)) = parse_array_type(type_name) {
         let mut concatenated = Vec::new();
 
@@ -93,7 +126,7 @@ fn encode_value(type_name: &str, value: Option<&Value>, types: &std::collections
                 }
 
                 for item in items {
-                    let element_bytes = encode_value(&element_type, Some(item), types)?;
+                    let element_bytes = encode_value(&element_type, Some(item), types, depth + 1)?;
                     concatenated.extend_from_slice(&element_bytes);
                 }
             }
@@ -117,7 +150,7 @@ fn encode_value(type_name: &str, value: Option<&Value>, types: &std::collections
 
     let base_type = base_type_name(type_name);
     if types.contains_key(base_type) {
-        return hash_struct(base_type, value, types);
+        return hash_struct(base_type, value, types, depth + 1);
     }
 
     match base_type {
@@ -241,7 +274,7 @@ fn encode_type(primary_type: &str, types: &std::collections::HashMap<String, Vec
     }
 
     let mut deps = BTreeSet::new();
-    collect_type_dependencies(primary_type, types, &mut deps);
+    collect_type_dependencies(primary_type, types, &mut deps, 0)?;
     deps.remove(primary_type);
 
     let mut parts = Vec::with_capacity(deps.len() + 1);
@@ -270,17 +303,26 @@ fn encode_type(primary_type: &str, types: &std::collections::HashMap<String, Vec
     Ok(encoded)
 }
 
-fn collect_type_dependencies(primary_type: &str, types: &std::collections::HashMap<String, Vec<TypeField>>, results: &mut BTreeSet<String>) {
+fn collect_type_dependencies(
+    primary_type: &str,
+    types: &std::collections::HashMap<String, Vec<TypeField>>,
+    results: &mut BTreeSet<String>,
+    depth: usize,
+) -> Result<(), SignerError> {
+    check_type_depth(depth)?;
+
     let base = base_type_name(primary_type);
     if results.contains(base) || !types.contains_key(base) {
-        return;
+        return Ok(());
     }
 
     results.insert(base.to_string());
 
     if let Some(fields) = types.get(base) {
         for field in fields {
-            collect_type_dependencies(&field.r#type, types, results);
+            collect_type_dependencies(&field.r#type, types, results, depth + 1)?;
         }
     }
+
+    Ok(())
 }
