@@ -12,6 +12,14 @@ use streamer::{QueueName, StreamProducer, SupportWebhookPayload};
 use crate::devices::FiatQuotesClient;
 use crate::responders::{ApiError, ApiResponse};
 
+fn fiat_webhook_error(error: Box<dyn std::error::Error + Send + Sync>) -> ApiError {
+    if error.is::<serde_json::Error>() {
+        return ApiError::BadRequest("Invalid fiat webhook payload".to_string());
+    }
+
+    error.into()
+}
+
 pub struct WebhooksClient {
     stream_producer: StreamProducer,
 }
@@ -95,7 +103,12 @@ async fn process_webhook(
             webhooks_client.lock().await.process_support_webhook(webhook_data).await?;
         }
         WebhookKind::Fiat => {
-            fiat_quotes_client.lock().await.process_and_publish_webhook(sender, webhook_data).await?;
+            fiat_quotes_client
+                .lock()
+                .await
+                .process_and_publish_webhook(sender, webhook_data)
+                .await
+                .map_err(fiat_webhook_error)?;
         }
     }
     Ok(true.into())
@@ -125,4 +138,24 @@ pub async fn create_webhook_with_header(
     webhooks_client: &State<Mutex<WebhooksClient>>,
 ) -> Result<ApiResponse<bool>, ApiError> {
     process_webhook(kind, sender, &secret.0, database, webhook_data, fiat_quotes_client, webhooks_client).await
+}
+
+#[cfg(test)]
+mod tests {
+    use super::fiat_webhook_error;
+    use crate::responders::ApiError;
+
+    #[test]
+    fn test_fiat_webhook_error() {
+        let serde_error = serde_json::from_str::<serde_json::Value>("{").unwrap_err();
+        match fiat_webhook_error(Box::new(serde_error)) {
+            ApiError::BadRequest(message) => assert_eq!(message, "Invalid fiat webhook payload"),
+            error => panic!("unexpected error: {error:?}"),
+        }
+
+        match fiat_webhook_error("publish failed".into()) {
+            ApiError::InternalServerError(message) => assert_eq!(message, "publish failed"),
+            error => panic!("unexpected error: {error:?}"),
+        }
+    }
 }
