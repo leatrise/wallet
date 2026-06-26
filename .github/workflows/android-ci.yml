@@ -55,8 +55,8 @@ jobs:
           just install-toolchains
           just install-ndk
 
-      - name: Build and run unit tests
-        run: just ci-test
-        env:
-          GPR_USERNAME: ${{ github.actor }}
-          GPR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build app
+        run: just build
+
+      - name: Run unit tests
+        run: just test
