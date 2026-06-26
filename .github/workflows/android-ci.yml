@@ -50,8 +50,10 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
 
-      - name: Bootstrap
-        run: just bootstrap
+      - name: Install Android toolchains
+        run: |
+          just install-toolchains
+          just install-ndk
 
       - name: Build and run unit tests
         run: just ci-test
