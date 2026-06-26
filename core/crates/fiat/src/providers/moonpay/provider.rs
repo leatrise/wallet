@@ -5,11 +5,28 @@ use crate::{
     providers::moonpay::models::{Data, Transaction},
 };
 use async_trait::async_trait;
+use serde::Deserialize;
 use std::error::Error;
 use streamer::FiatWebhook;
 
 use super::{client::MoonPayClient, mapper::map_order};
 use primitives::{FiatProviderCountry, FiatProviderName, FiatQuoteRequest, FiatQuoteResponse, FiatQuoteType, FiatQuoteUrl, FiatQuoteUrlData};
+
+#[derive(Deserialize)]
+#[serde(untagged)]
+enum MoonPayWebhook {
+    Data(Data<Transaction>),
+    Transaction(Transaction),
+}
+
+impl MoonPayWebhook {
+    fn transaction(self) -> Transaction {
+        match self {
+            Self::Data(webhook) => webhook.data,
+            Self::Transaction(transaction) => transaction,
+        }
+    }
+}
 
 #[async_trait]
 impl FiatProvider for MoonPayClient {
@@ -36,7 +53,7 @@ impl FiatProvider for MoonPayClient {
     }
 
     async fn process_webhook(&self, data: serde_json::Value) -> Result<FiatWebhook, Box<dyn std::error::Error + Send + Sync>> {
-        let payload = serde_json::from_value::<Data<Transaction>>(data)?.data;
+        let payload = serde_json::from_value::<MoonPayWebhook>(data)?.transaction();
         Ok(FiatWebhook::Transaction(map_order(payload)))
     }
 
@@ -127,5 +144,61 @@ mod fiat_integration_tests {
         }
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{FiatProvider, providers::moonpay::client::MoonPayClient};
+    use primitives::{FiatTransactionStatus, FiatTransactionUpdate};
+    use streamer::FiatWebhook;
+
+    fn client() -> MoonPayClient {
+        MoonPayClient::new(reqwest::Client::new(), String::new(), String::new())
+    }
+
+    fn assert_transaction(webhook: FiatWebhook, expected: FiatTransactionUpdate) {
+        match webhook {
+            FiatWebhook::Transaction(transaction) => assert_eq!(transaction, expected),
+            webhook => panic!("unexpected webhook: {webhook:?}"),
+        }
+    }
+
+    #[tokio::test]
+    async fn test_process_webhook_accepts_wrapped_transaction() {
+        let webhook_data = serde_json::from_str(include_str!("../../../testdata/moonpay/webhook_buy_complete.json")).unwrap();
+
+        let result = client().process_webhook(webhook_data).await.unwrap();
+
+        assert_transaction(
+            result,
+            FiatTransactionUpdate {
+                transaction_id: "1b6cdb1e-9299-45b1-9670-54db1ea5a21f".to_string(),
+                provider_transaction_id: None,
+                status: FiatTransactionStatus::Failed,
+                transaction_hash: None,
+                fiat_amount: Some(20.0),
+                fiat_currency: Some("USD".to_string()),
+            },
+        );
+    }
+
+    #[tokio::test]
+    async fn test_process_webhook_accepts_direct_transaction() {
+        let webhook_data = serde_json::from_str(include_str!("../../../testdata/moonpay/sell_transaction_complete.json")).unwrap();
+
+        let result = client().process_webhook(webhook_data).await.unwrap();
+
+        assert_transaction(
+            result,
+            FiatTransactionUpdate {
+                transaction_id: "bcd0315e-4264-48bb-8c10-1a5207297341".to_string(),
+                provider_transaction_id: None,
+                status: FiatTransactionStatus::Complete,
+                transaction_hash: Some("0xabc123456789".to_string()),
+                fiat_amount: Some(3123.07),
+                fiat_currency: Some("USD".to_string()),
+            },
+        );
     }
 }
