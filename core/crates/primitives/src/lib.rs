@@ -169,6 +169,8 @@ pub mod wallet_type;
 pub use self::wallet_type::WalletType;
 pub mod webhook_kind;
 pub use self::webhook_kind::WebhookKind;
+pub mod image_type;
+pub use self::image_type::{ImageType, MIME_TYPE_JPEG, MIME_TYPE_PNG, MIME_TYPE_SVG};
 pub mod wallet_id;
 pub use self::wallet_id::WalletId;
 pub mod wallet_import;
@@ -179,7 +181,7 @@ pub use self::wallet_connector::{
     WalletConnectionSessionProposal, WalletConnectionState, WalletConnectionVerificationStatus,
 };
 pub mod nft;
-pub use self::nft::{MIME_TYPE_PNG, NFTAsset, NFTAssetId, NFTAttribute, NFTAttributeType, NFTCollection, NFTCollectionId, NFTData, NFTImages, NFTResource, NFTType, ReportNft};
+pub use self::nft::{NFTAsset, NFTAssetId, NFTAttribute, NFTAttributeType, NFTCollection, NFTCollectionId, NFTData, NFTImages, NFTResource, NFTType, ReportNft};
 pub mod price_alert;
 pub use self::price_alert::{DevicePriceAlert, PriceAlert, PriceAlertDirection, PriceAlertType, PriceAlerts};
 pub mod rewards;

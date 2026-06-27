@@ -226,6 +226,10 @@ scan:
 support:
   url: ""
   widget_public_token: ""
+  types:
+    images:
+      - jpeg
+      - png
 
 parser:
   timeout: 1s
