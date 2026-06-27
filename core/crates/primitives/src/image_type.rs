@@ -1,58 +1,34 @@
 use serde::{Deserialize, Serialize};
+use std::str::FromStr;
+use strum::{AsRefStr, EnumString};
 
 pub const MIME_TYPE_PNG: &str = "image/png";
 pub const MIME_TYPE_JPEG: &str = "image/jpeg";
 pub const MIME_TYPE_SVG: &str = "image/svg+xml";
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, AsRefStr, EnumString)]
 #[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
 pub enum ImageType {
+    #[strum(serialize = "jpg", serialize = "jpeg")]
     Jpeg,
     Png,
     Svg,
 }
 
-struct ImageTypeInfo {
-    image_type: ImageType,
-    labels: &'static [&'static str],
-    mime_type: &'static str,
-    extension: &'static str,
-    magic_bytes: &'static [&'static [u8]],
-}
-
-const IMAGE_TYPES: &[ImageTypeInfo] = &[
-    ImageTypeInfo {
-        image_type: ImageType::Jpeg,
-        labels: &["jpg", "jpeg"],
-        mime_type: MIME_TYPE_JPEG,
-        extension: "jpg",
-        magic_bytes: &[&[0xFF, 0xD8, 0xFF]],
-    },
-    ImageTypeInfo {
-        image_type: ImageType::Png,
-        labels: &["png"],
-        mime_type: MIME_TYPE_PNG,
-        extension: "png",
-        magic_bytes: &[b"\x89PNG\r\n\x1A\n"],
-    },
-    ImageTypeInfo {
-        image_type: ImageType::Svg,
-        labels: &["svg"],
-        mime_type: MIME_TYPE_SVG,
-        extension: "svg",
-        magic_bytes: &[b"<svg"],
-    },
-];
-
 impl ImageType {
     pub fn from_label(value: &str) -> Option<Self> {
-        let value = value.to_ascii_lowercase();
-        IMAGE_TYPES.iter().find(|info| info.labels.contains(&value.as_str())).map(|info| info.image_type)
+        Self::from_str(&value.to_ascii_lowercase()).ok()
     }
 
     pub fn from_mime_type(value: &str) -> Option<Self> {
         let value = value.split(';').next().unwrap_or(value).trim();
-        IMAGE_TYPES.iter().find(|info| info.mime_type == value).map(|info| info.image_type)
+        match value {
+            MIME_TYPE_JPEG => Some(Self::Jpeg),
+            MIME_TYPE_PNG => Some(Self::Png),
+            MIME_TYPE_SVG => Some(Self::Svg),
+            _ => None,
+        }
     }
 
     pub fn from_extension(file_name: &str) -> Option<Self> {
@@ -60,22 +36,28 @@ impl ImageType {
     }
 
     pub fn from_magic_bytes(data: &[u8]) -> Option<Self> {
-        IMAGE_TYPES
-            .iter()
-            .find(|info| info.magic_bytes.iter().any(|magic_bytes| data.starts_with(magic_bytes)))
-            .map(|info| info.image_type)
+        if data.starts_with(&[0xFF, 0xD8, 0xFF]) {
+            return Some(Self::Jpeg);
+        }
+        if data.starts_with(b"\x89PNG\r\n\x1A\n") {
+            return Some(Self::Png);
+        }
+        if data.starts_with(b"<svg") {
+            return Some(Self::Svg);
+        }
+        None
     }
 
     pub fn mime_type(self) -> &'static str {
-        self.info().mime_type
+        match self {
+            Self::Jpeg => MIME_TYPE_JPEG,
+            Self::Png => MIME_TYPE_PNG,
+            Self::Svg => MIME_TYPE_SVG,
+        }
     }
 
-    pub fn extension(self) -> &'static str {
-        self.info().extension
-    }
-
-    fn info(self) -> &'static ImageTypeInfo {
-        IMAGE_TYPES.iter().find(|info| info.image_type == self).unwrap()
+    pub fn extension(self) -> String {
+        self.as_ref().to_string()
     }
 }
 
