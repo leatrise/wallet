@@ -43,8 +43,9 @@ extension JobRunner {
             case .complete:
                 do {
                     try await job.onComplete()
+                    debugLog("transaction status complete: id=\(job.id), status=complete")
                 } catch {
-                    debugLog("job \(job.id) completed with error: \(error)")
+                    debugLog("transaction status complete: id=\(job.id), status=complete, error=\(error)")
                 }
                 return
             case .retry:
@@ -53,6 +54,7 @@ extension JobRunner {
                     try? await clock.sleep(until: sleepUntil)
                 }
                 intervalMs = job.nextInterval(after: intervalMs)
+                debugLog("transaction status pending: id=\(job.id), next_check_ms=\(intervalMs)")
             }
         }
     }

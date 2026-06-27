@@ -1,6 +1,7 @@
 package com.gemwallet.android.data.repositories.transactions
 
 import android.text.format.DateUtils
+import android.util.Log
 import com.gemwallet.android.application.transactions.coordinators.GetChangedTransactions
 import com.gemwallet.android.application.transactions.coordinators.GetPendingTransactionsCount
 import com.gemwallet.android.application.transactions.coordinators.TransactionsRequestFilter
@@ -56,6 +57,7 @@ import java.math.BigInteger
 import java.util.concurrent.ConcurrentHashMap
 
 private val pollingTransactionStates = listOf(TransactionState.Pending, TransactionState.InTransit)
+private const val TAG = "TransactionsRepository"
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TransactionsRepositoryImpl(
@@ -227,8 +229,16 @@ class TransactionsRepositoryImpl(
                     break
                 }
                 if (currentTransaction.transaction.state.isCompleted()) {
+                    Log.d(
+                        TAG,
+                        "transaction status complete: id=${currentTransaction.transaction.id.identifier}, state=${currentTransaction.transaction.state}",
+                    )
                     break
                 }
+                Log.d(
+                    TAG,
+                    "transaction status pending: id=${currentTransaction.transaction.id.identifier}, state=${currentTransaction.transaction.state}, next_check_ms=$pollingDelay",
+                )
             }
             currentTransaction.toDTO()?.let { changedTransactions.tryEmit(listOf(it)) }
         } finally {
