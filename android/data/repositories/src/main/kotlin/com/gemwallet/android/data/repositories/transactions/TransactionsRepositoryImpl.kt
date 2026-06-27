@@ -231,13 +231,13 @@ class TransactionsRepositoryImpl(
                 if (currentTransaction.transaction.state.isCompleted()) {
                     Log.d(
                         TAG,
-                        "transaction status complete: id=${currentTransaction.transaction.id.identifier}, state=${currentTransaction.transaction.state}",
+                        "transaction status complete: id=${currentTransaction.transaction.id.identifier}, state=${currentTransaction.transaction.state}, status=complete",
                     )
                     break
                 }
                 Log.d(
                     TAG,
-                    "transaction status pending: id=${currentTransaction.transaction.id.identifier}, state=${currentTransaction.transaction.state}, next_check_ms=$pollingDelay",
+                    "transaction status pending: id=${currentTransaction.transaction.id.identifier}, state=${currentTransaction.transaction.state}, next check = ${pollingDelay}ms",
                 )
             }
             currentTransaction.toDTO()?.let { changedTransactions.tryEmit(listOf(it)) }

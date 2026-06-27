@@ -48,13 +48,17 @@ extension JobRunner {
                     debugLog("transaction status complete: id=\(job.id), status=complete, error=\(error)")
                 }
                 return
-            case .retry:
+            case let .retry(error):
                 let sleepUntil = attemptStart.advanced(by: .milliseconds(Int(intervalMs)))
                 if clock.now < sleepUntil {
                     try? await clock.sleep(until: sleepUntil)
                 }
                 intervalMs = job.nextInterval(after: intervalMs)
-                debugLog("transaction status pending: id=\(job.id), next_check_ms=\(intervalMs)")
+                if let error {
+                    debugLog("transaction status pending: id=\(job.id), next check = \(intervalMs)ms, error=\(error)")
+                } else {
+                    debugLog("transaction status pending: id=\(job.id), next check = \(intervalMs)ms")
+                }
             }
         }
     }
