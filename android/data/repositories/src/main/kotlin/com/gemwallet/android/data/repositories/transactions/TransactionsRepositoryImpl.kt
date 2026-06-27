@@ -51,6 +51,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uniffi.gemstone.Config
+import uniffi.gemstone.transactionStateConfig
 import java.math.BigInteger
 import java.util.concurrent.ConcurrentHashMap
 
@@ -69,8 +70,6 @@ class TransactionsRepositoryImpl(
     CreateTransaction,
     SaveTransactions,
     ClearPendingTransactions {
-
-    private val transactionsCheckDelay = 10 * DateUtils.SECOND_IN_MILLIS
 
     val changedTransactions = MutableStateFlow<List<TransactionExtended>>(emptyList())
     private val pollingTransactionJobs = ConcurrentHashMap<TransactionId, Job>()
@@ -199,14 +198,13 @@ class TransactionsRepositoryImpl(
     private fun pollTransactionStatus(transaction: DbTransactionExtended) = scope.launch {
         val jobKeys = mutableSetOf(transaction.transaction.id)
         try {
-            var iteration = 0L
             var currentTransaction = transaction
-            val chainConfig = Config().getChainConfig(currentTransaction.transaction.assetId.chain.string)
-            val blockDelay = chainConfig.blockTime.toLong()
+            val jobConfig = transactionStateConfig(currentTransaction.transaction.assetId.chain.string)
+            var pollingDelay = jobConfig.initialIntervalMs
 
             while (true) {
-                transactionCheckDelay(blockDelay, iteration)
-                iteration++
+                delay(pollingDelay.toLong())
+                pollingDelay = jobConfig.nextIntervalMs(pollingDelay)
 
                 checkTransaction(currentTransaction)?.let { updatedTransaction ->
                     if (updatedTransaction.transaction.id != currentTransaction.transaction.id) {
@@ -236,18 +234,6 @@ class TransactionsRepositoryImpl(
         } finally {
             jobKeys.forEach { pollingTransactionJobs.remove(it) }
         }
-    }
-
-    private suspend fun transactionCheckDelay(blockDelay: Long, iteration: Long) {
-        val multiple = when (iteration) {
-            0L -> 1.2
-            1L -> 1.5
-            2L -> 2.0
-            3L -> 5.0
-            else -> 10.0
-        }
-        val pollingDelay = (blockDelay * multiple).toLong().takeIf { it < transactionsCheckDelay } ?: transactionsCheckDelay
-        delay(pollingDelay)
     }
 
     private fun transactionTimeout(transaction: DbTransaction): Long {

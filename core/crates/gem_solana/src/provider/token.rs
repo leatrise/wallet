@@ -14,17 +14,7 @@ use crate::{
 #[async_trait]
 impl<C: Client + Clone> ChainToken for SolanaClient<C> {
     async fn get_token_data(&self, token_id: String) -> Result<Asset, Box<dyn Error + Sync + Send>> {
-        self.token_data(token_id, None).await
-    }
-
-    fn get_is_token_address(&self, token_id: &str) -> bool {
-        token_id.len() >= 40 && token_id.len() <= 60 && bs58::decode(token_id).into_vec().is_ok()
-    }
-}
-
-impl<C: Client + Clone> SolanaClient<C> {
-    pub(crate) async fn token_data(&self, token_id: String, ttl_seconds: Option<u64>) -> Result<Asset, Box<dyn Error + Sync + Send>> {
-        let token_info_result = self.get_token_mint_info(&token_id, ttl_seconds).await?;
+        let token_info_result = self.get_token_mint_info(&token_id).await?;
         let token_info = token_info_result.info();
 
         if let Some(extensions) = &token_info.extensions {
@@ -35,8 +25,12 @@ impl<C: Client + Clone> SolanaClient<C> {
             }
         }
 
-        let metadata = self.get_metaplex_metadata(&token_id, ttl_seconds).await?;
+        let metadata = self.get_metaplex_metadata(&token_id).await?;
         map_token_data_metaplex(self.get_chain(), token_id, &token_info, &metadata)
+    }
+
+    fn get_is_token_address(&self, token_id: &str) -> bool {
+        token_id.len() >= 40 && token_id.len() <= 60 && bs58::decode(token_id).into_vec().is_ok()
     }
 }
 
