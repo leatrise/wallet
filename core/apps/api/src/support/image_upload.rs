@@ -29,10 +29,6 @@ impl SupportImageUploadConfig {
     fn allows(&self, image_type: ImageType) -> bool {
         self.allowed_types.contains(&image_type)
     }
-
-    fn allows_mime_type(&self, mime_type: &str) -> bool {
-        self.allowed_types.iter().any(|image_type| image_type.mime_type() == mime_type)
-    }
 }
 
 #[derive(Debug)]
@@ -49,7 +45,11 @@ pub fn validate_support_image_upload(
     data: Vec<u8>,
 ) -> Result<ValidatedSupportImage, ApiError> {
     let content_image_type = if content_type.top() == "image" {
-        ImageType::from_label(content_type.sub().as_str()).filter(|image_type| config.allows_mime_type(image_type.mime_type()))
+        ImageType::from_label(content_type.sub().as_str()).filter(|image_type| {
+            let mime_type = image_type.mime_type();
+
+            config.allowed_types.iter().any(|allowed_type| allowed_type.mime_type() == mime_type)
+        })
     } else {
         None
     }

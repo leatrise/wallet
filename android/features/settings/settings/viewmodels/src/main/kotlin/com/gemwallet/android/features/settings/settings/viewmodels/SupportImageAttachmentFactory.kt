@@ -21,16 +21,13 @@ class SupportImageAttachmentFactory @Inject constructor(
     @param:ApplicationContext private val context: Context,
 ) {
     suspend fun fromUri(uri: Uri): ImageAttachment? = withContext(Dispatchers.IO) {
-        val bytes = context.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: return@withContext null
-        val jpegBytes = bytes.toJpeg() ?: return@withContext null
+        val bitmap = context.contentResolver.openInputStream(uri)?.use {
+            BitmapFactory.decodeStream(it)
+        } ?: return@withContext null
+        val jpegBytes = ByteArrayOutputStream().use { stream ->
+            bitmap.compress(Bitmap.CompressFormat.JPEG, SUPPORT_IMAGE_JPEG_QUALITY, stream)
+            stream.toByteArray()
+        }
         ImageAttachment(data = jpegBytes, fileName = "image-${UUID.randomUUID()}.jpg", mimeType = SUPPORT_IMAGE_MIME_TYPE)
-    }
-}
-
-private fun ByteArray.toJpeg(): ByteArray? {
-    val bitmap = BitmapFactory.decodeByteArray(this, 0, size) ?: return null
-    return ByteArrayOutputStream().use { stream ->
-        bitmap.compress(Bitmap.CompressFormat.JPEG, SUPPORT_IMAGE_JPEG_QUALITY, stream)
-        stream.toByteArray()
     }
 }
