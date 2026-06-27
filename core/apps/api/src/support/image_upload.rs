@@ -29,6 +29,10 @@ impl SupportImageUploadConfig {
     fn allows(&self, image_type: ImageType) -> bool {
         self.allowed_types.contains(&image_type)
     }
+
+    fn allows_mime_type(&self, mime_type: &str) -> bool {
+        self.allowed_types.iter().any(|image_type| image_type.mime_type() == mime_type)
+    }
 }
 
 #[derive(Debug)]
@@ -45,7 +49,7 @@ pub fn validate_support_image_upload(
     data: Vec<u8>,
 ) -> Result<ValidatedSupportImage, ApiError> {
     let content_image_type = if content_type.top() == "image" {
-        ImageType::from_label(content_type.sub().as_str()).filter(|image_type| config.allows(*image_type))
+        ImageType::from_label(content_type.sub().as_str()).filter(|image_type| config.allows_mime_type(image_type.mime_type()))
     } else {
         None
     }
@@ -56,14 +60,17 @@ pub fn validate_support_image_upload(
     }
 
     let bytes_image_type = ImageType::from_magic_bytes(&data).ok_or_else(|| ApiError::BadRequest("Image upload is not a valid image".to_string()))?;
-    if bytes_image_type != content_image_type {
+    if bytes_image_type.mime_type() != content_image_type.mime_type() {
         return Err(ApiError::BadRequest("Image content does not match Content-Type".to_string()));
     }
 
     let file_name = match file_name {
         Some(file_name) => {
             let extension_image_type = ImageType::from_extension(&file_name).ok_or_else(|| ApiError::BadRequest("Image filename extension is not supported".to_string()))?;
-            if extension_image_type != content_image_type {
+            if !config.allows(extension_image_type) {
+                return Err(ApiError::BadRequest("Image filename extension is not supported".to_string()));
+            }
+            if extension_image_type.mime_type() != content_image_type.mime_type() {
                 return Err(ApiError::BadRequest("Image filename extension does not match Content-Type".to_string()));
             }
             file_name
@@ -81,10 +88,16 @@ pub fn validate_support_image_upload(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use primitives::MIME_TYPE_PNG;
+    use primitives::{ImageType, MIME_TYPE_PNG};
 
     fn config() -> SupportImageUploadConfig {
-        SupportImageUploadConfig::new(&["jpeg".to_string(), "png".to_string()]).unwrap()
+        SupportImageUploadConfig::new(&["jpeg".to_string(), "jpg".to_string(), "png".to_string()]).unwrap()
+    }
+
+    fn jpeg_bytes() -> Vec<u8> {
+        let mut data = vec![0xFF, 0xD8, 0xFF];
+        data.resize(MIN_SUPPORT_IMAGE_BYTES, 0);
+        data
     }
 
     fn png_bytes() -> Vec<u8> {
@@ -106,6 +119,14 @@ mod tests {
 
         assert_eq!(image.file_name, "proof.png");
         assert_eq!(image.content_type, MIME_TYPE_PNG);
+    }
+
+    #[test]
+    fn validates_jpg_upload() {
+        let image = validate_support_image_upload(&config(), Some("proof.jpg".to_string()), &ContentType::JPEG, jpeg_bytes()).unwrap();
+
+        assert_eq!(image.file_name, "proof.jpg");
+        assert_eq!(image.content_type, ImageType::Jpg.mime_type());
     }
 
     #[test]
