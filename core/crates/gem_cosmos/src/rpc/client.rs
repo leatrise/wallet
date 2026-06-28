@@ -26,18 +26,6 @@ impl<C: Client> CosmosClient<C> {
         self.chain
     }
 
-    pub fn get_amount(&self, coins: Vec<crate::models::Coin>) -> Option<String> {
-        Some(
-            coins
-                .into_iter()
-                .filter(|x| x.denom == self.chain.as_chain().as_denom().unwrap_or_default())
-                .collect::<Vec<_>>()
-                .first()?
-                .amount
-                .clone(),
-        )
-    }
-
     pub async fn get_transaction(&self, hash: String) -> Result<TransactionResponse, Box<dyn Error + Send + Sync>> {
         Ok(self.client.get(&format!("/cosmos/tx/v1beta1/txs/{}", hash)).await?)
     }

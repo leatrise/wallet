@@ -25,10 +25,6 @@ impl<C: Client + Clone> XRPClient<C> {
         self.chain
     }
 
-    pub fn get_client(&self) -> &GenericJsonRpcClient<C> {
-        &self.client
-    }
-
     async fn call<T>(&self, method: &str, params: impl Into<Value>) -> Result<T, Box<dyn Error + Send + Sync>>
     where
         T: DeserializeOwned + Send,

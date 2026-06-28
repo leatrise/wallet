@@ -144,20 +144,6 @@ pub fn map_direct_transaction(chain: Chain, transaction: XrpTransaction) -> Opti
     )
 }
 
-pub fn map_token_data(chain: Chain, account_objects: Vec<AccountObject>) -> Result<Asset, Box<dyn Error + Send + Sync>> {
-    let account = account_objects.first().ok_or("No account objects found for token_id")?;
-    let symbol = account.low_limit.symbol().ok_or("Invalid currency")?;
-    let token_id = &account.low_limit.issuer;
-
-    Ok(Asset::new(
-        AssetId::from_token(chain, token_id),
-        symbol.clone(),
-        symbol.clone(),
-        XRP_DEFAULT_ASSET_DECIMALS as i32,
-        AssetType::TOKEN,
-    ))
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -27,11 +27,6 @@ impl TransactionsRequest {
         }
     }
 
-    pub fn with_asset_id(mut self, asset_id: AssetId) -> Self {
-        self.asset_id = Some(asset_id);
-        self
-    }
-
     pub fn with_limit(mut self, limit: usize) -> Self {
         self.limit = Some(limit);
         self
