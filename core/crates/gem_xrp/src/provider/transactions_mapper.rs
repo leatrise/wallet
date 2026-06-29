@@ -1,7 +1,7 @@
-use crate::models::rpc::{AccountLedger, AccountLedgerTransaction, AccountObject, Amount, Ledger, Transaction as XrpTransaction, TransactionBroadcast, TransactionMemo};
-use crate::{RESULT_SUCCESS, TRANSACTION_TYPE_PAYMENT, XRP_DEFAULT_ASSET_DECIMALS, XRP_EPOCH_OFFSET_SECONDS};
+use crate::models::rpc::{AccountLedger, AccountLedgerTransaction, Amount, Ledger, Transaction as XrpTransaction, TransactionBroadcast, TransactionMemo};
+use crate::{RESULT_SUCCESS, TRANSACTION_TYPE_PAYMENT, XRP_EPOCH_OFFSET_SECONDS};
 use chrono::DateTime;
-use primitives::{Asset, AssetId, AssetType, Transaction, TransactionState, TransactionType, chain::Chain};
+use primitives::{AssetId, Transaction, TransactionState, TransactionType, chain::Chain};
 use std::error::Error;
 
 pub fn map_transaction_broadcast(broadcast_result: &TransactionBroadcast) -> Result<String, Box<dyn Error + Sync + Send>> {
