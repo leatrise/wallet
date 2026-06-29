@@ -466,15 +466,6 @@ private extension PerpetualSceneViewModel {
     }
 }
 
-public extension RecipientData {
-    static func hyperliquid() -> RecipientData {
-        RecipientData(
-            recipient: Recipient(name: "Hyperliquid", address: "", memo: .none),
-            amount: .none,
-        )
-    }
-}
-
 private extension ChartPeriod {
     var hyperliquidInterval: String {
         switch self {
