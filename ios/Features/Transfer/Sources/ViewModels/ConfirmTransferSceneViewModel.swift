@@ -5,6 +5,7 @@ import Blockchain
 import Components
 import FiatService
 import Foundation
+import GemstonePrimitives
 import InfoSheet
 import Localization
 import Preferences
@@ -447,6 +448,7 @@ extension ConfirmTransferSceneViewModel {
         isPresentingSheet = .fiatConnect(
             assetAddress: feeAssetAddress,
             wallet: wallet,
+            amount: FiatConfig.insufficientNetworkFeeBuyAmount,
         )
     }
 
