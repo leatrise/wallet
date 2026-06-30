@@ -188,7 +188,7 @@ static CHAIN_CONFIGS: LazyLock<Vec<ChainConfig>> = LazyLock::new(|| {
             evm: None,
             stake: Some(StakeChainConfig {
                 lock_time: 259_200,
-                min_stake_amount: 10_000_000,
+                min_stake_amount: 1_000_000_000,
                 change_amount_on_unstake: false,
                 can_redelegate: false,
                 can_withdraw: true,
