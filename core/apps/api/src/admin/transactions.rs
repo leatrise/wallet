@@ -1,11 +1,21 @@
 use primitives::{Transaction, TransactionId};
 use rocket::serde::json::Json;
-use rocket::{State, post, tokio::sync::Mutex};
+use rocket::{State, get, post, tokio::sync::Mutex};
 use streamer::{StreamProducer, StreamProducerQueue, TransactionsPayload};
 
-use crate::api_clients::PermissionAdminWrite;
+use crate::api_clients::{PermissionAdminWrite, PermissionDeviceTransactionsRead};
 use crate::chain::ChainClient;
+use crate::devices::TransactionsClient;
 use crate::responders::{ApiError, ApiResponse};
+
+#[get("/transactions/<hash>")]
+pub async fn get_transactions_by_hash(
+    _permission: PermissionDeviceTransactionsRead,
+    hash: &str,
+    client: &State<Mutex<TransactionsClient>>,
+) -> Result<ApiResponse<Vec<Transaction>>, ApiError> {
+    Ok(client.lock().await.get_transactions_by_hash(hash)?.into())
+}
 
 #[post("/transactions/add", format = "json", data = "<transaction_id>")]
 pub async fn add_transaction(

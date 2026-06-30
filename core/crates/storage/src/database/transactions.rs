@@ -25,6 +25,7 @@ pub enum TransactionUpdate {
 
 pub(crate) trait TransactionsStore {
     fn get_transaction_by_id(&mut self, chain: &str, hash: &str) -> Result<TransactionRow, diesel::result::Error>;
+    fn get_transactions_by_hash(&mut self, hash: &str) -> Result<Vec<TransactionRow>, diesel::result::Error>;
     fn get_transaction_exists(&mut self, chain: &str, hash: &str) -> Result<bool, diesel::result::Error>;
     fn add_transactions(&mut self, transactions: Vec<Transaction>) -> Result<usize, diesel::result::Error>;
     fn get_transactions_by_device_id(
@@ -54,6 +55,16 @@ impl TransactionsStore for DatabaseClient {
             .filter(dsl::hash.eq(hash))
             .select(TransactionRow::as_select())
             .first(&mut self.connection)
+    }
+
+    fn get_transactions_by_hash(&mut self, transaction_hash: &str) -> Result<Vec<TransactionRow>, diesel::result::Error> {
+        use crate::schema::transactions::dsl;
+
+        dsl::transactions
+            .filter(dsl::hash.eq(transaction_hash))
+            .order(dsl::created_at.desc())
+            .select(TransactionRow::as_select())
+            .load(&mut self.connection)
     }
 
     fn get_transaction_exists(&mut self, chain: &str, hash: &str) -> Result<bool, diesel::result::Error> {

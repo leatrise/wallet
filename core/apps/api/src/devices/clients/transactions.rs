@@ -72,4 +72,14 @@ impl TransactionsClient {
     pub fn get_transaction_by_id(&self, id: &TransactionId) -> Result<Transaction, Box<dyn Error + Send + Sync>> {
         Ok(self.database.transactions()?.get_transaction_by_id(id)?.as_primitive(vec![]))
     }
+
+    pub fn get_transactions_by_hash(&self, hash: &str) -> Result<Vec<Transaction>, Box<dyn Error + Send + Sync>> {
+        Ok(self
+            .database
+            .transactions()?
+            .get_transactions_by_hash(hash)?
+            .into_iter()
+            .map(|row| row.as_primitive(vec![]))
+            .collect())
+    }
 }
