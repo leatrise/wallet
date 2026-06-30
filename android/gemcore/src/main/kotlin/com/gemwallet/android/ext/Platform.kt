@@ -9,7 +9,9 @@ val Platform.Companion.os: String get() {
     } else {
         Build.VERSION.RELEASE
     }
-    return "Android $version"
+    return androidOsDisplayName(version, Build.VERSION.SDK_INT)
 }
 
-val Platform.Companion.model: String  get() = "${Build.MANUFACTURER} ${Build.MODEL}"
+val Platform.Companion.model: String  get() = Build.MODEL
+
+internal fun androidOsDisplayName(version: String, sdk: Int): String = "Android $version (SDK $sdk)"
