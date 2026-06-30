@@ -124,7 +124,7 @@ chains:
   osmosis:
     url: "https://osmosis-rest.publicnode.com"
   thorchain:
-    url: "https://thornode.ninerealms.com"
+    url: "https://thornode.thorchain.liquify.com"
   mayachain:
     url: "https://mayanode.mayachain.info"
   tron:

@@ -1,8 +1,10 @@
 use num_bigint::BigInt;
-use primitives::{AssetSubtype, Chain, FeeOption, FeePriority, FeeRate, GasPriceType, TransactionFee, TransactionInputType};
+use primitives::{AssetSubtype, Chain, FeeOption, FeePriority, FeeRate, GasPriceType, StakeType, TransactionFee, TransactionInputType};
 use std::collections::HashMap;
 
 use crate::{DEFAULT_SWAP_GAS_LIMIT, constants::STATIC_BASE_FEE, models::prioritization_fee::SolanaPrioritizationFee};
+
+const STAKE_ACCOUNT_CREATION_FEE: u64 = 2_282_880;
 
 pub fn calculate_transaction_fee(input_type: &TransactionInputType, gas_price_type: &GasPriceType, recipient_token_address: Option<String>) -> TransactionFee {
     let mut options = HashMap::new();
@@ -12,6 +14,9 @@ pub fn calculate_transaction_fee(input_type: &TransactionInputType, gas_price_ty
             FeeOption::TokenAccountCreation,
             BigInt::from(input_type.get_asset().id.chain.token_activation_fee().unwrap_or(0)),
         );
+    }
+    if let TransactionInputType::Stake(_, StakeType::Stake(_)) = input_type {
+        options.insert(FeeOption::TokenAccountCreation, BigInt::from(STAKE_ACCOUNT_CREATION_FEE));
     }
     TransactionFee::new_gas_price_type(gas_price_type.clone(), gas_price_type.total_fee(), get_gas_limit(input_type), options)
 }
@@ -119,7 +124,7 @@ mod tests {
     use super::*;
     use crate::USDC_TOKEN_MINT;
     use primitives::swap::SwapData;
-    use primitives::{Asset, AssetId, AssetType, Chain, SwapProvider, asset_constants::SOLANA_USDC_ASSET_ID};
+    use primitives::{Asset, AssetId, AssetType, Chain, DelegationValidator, SwapProvider, asset_constants::SOLANA_USDC_ASSET_ID};
 
     fn mock_swap_data_with_gas_limit(provider: SwapProvider, gas_limit: Option<&str>) -> SwapData {
         let mut data = SwapData::mock_with_provider(provider);
@@ -374,5 +379,17 @@ mod tests {
         assert_eq!(fee.options.len(), 1);
         assert!(fee.options.contains_key(&FeeOption::TokenAccountCreation));
         assert_eq!(fee.options[&FeeOption::TokenAccountCreation], BigInt::from(2_039_280u64));
+    }
+
+    #[test]
+    fn test_calculate_transaction_fee_stake_delegate() {
+        let gas_price_type = GasPriceType::solana(5_000u64, 2_500u64, 25_000u64);
+        let validator = DelegationValidator::stake(Chain::Solana, "validator".to_string(), "validator".to_string(), true, 0.0, 0.0);
+        let input_type = TransactionInputType::Stake(Asset::mock_sol(), StakeType::Stake(validator));
+
+        let fee = calculate_transaction_fee(&input_type, &gas_price_type, None);
+
+        assert_eq!(fee.fee, BigInt::from(2_290_380u64));
+        assert_eq!(fee.options[&FeeOption::TokenAccountCreation], BigInt::from(STAKE_ACCOUNT_CREATION_FEE));
     }
 }
