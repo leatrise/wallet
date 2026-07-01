@@ -1,5 +1,6 @@
 package com.gemwallet.android.features.asset.viewmodels.chart.viewmodels
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gemwallet.android.application.assets.coordinators.GetPortfolioData
@@ -43,12 +44,13 @@ private val defaultPeriods = listOf(
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class PortfolioChartViewModel @Inject constructor(
+class PortfolioChartViewModel internal constructor(
     getCurrentCurrency: GetCurrentCurrency,
     observePerpetualWallet: ObservePerpetualWallet,
     private val getPortfolioData: GetPortfolioData,
+    initialType: PortfolioType,
 ) : ViewModel() {
-    private val _selectedType = MutableStateFlow(PortfolioType.Wallet)
+    private val _selectedType = MutableStateFlow(initialType)
     val selectedType = _selectedType.asStateFlow()
 
     private val _selectedChartType = MutableStateFlow(PortfolioChartType.Pnl)
@@ -65,11 +67,11 @@ class PortfolioChartViewModel @Inject constructor(
 
     val showChartTypePicker = selectedType
         .map { it == PortfolioType.Perpetuals }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, initialType == PortfolioType.Perpetuals)
 
     val showHeaderValue = combine(selectedType, selectedChartType) { type, chartType ->
         type == PortfolioType.Wallet || chartType == PortfolioChartType.Value
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, true)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, initialType == PortfolioType.Wallet)
 
     val chartUIState = combine(selectedPeriod, viewState) { period, viewState ->
         ChartUIModel.State(period = period, viewState = viewState)
@@ -151,6 +153,19 @@ class PortfolioChartViewModel @Inject constructor(
         viewState.value = ChartViewState.Loading
         refreshTrigger.value = refreshTrigger.value + 1
     }
+
+    @Inject
+    constructor(
+        getCurrentCurrency: GetCurrentCurrency,
+        observePerpetualWallet: ObservePerpetualWallet,
+        getPortfolioData: GetPortfolioData,
+        savedStateHandle: SavedStateHandle,
+    ) : this(
+        getCurrentCurrency = getCurrentCurrency,
+        observePerpetualWallet = observePerpetualWallet,
+        getPortfolioData = getPortfolioData,
+        initialType = savedStateHandle.portfolioType(),
+    )
 }
 
 private fun PortfolioData.chartValues(chartType: PortfolioChartType): List<ChartDateValue> =

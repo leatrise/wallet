@@ -57,6 +57,7 @@ import com.gemwallet.android.ui.navigation.routes.transactionDetailsScreen
 import com.gemwallet.android.ui.navigation.routes.walletScreen
 import com.gemwallet.android.ui.navigation.routes.walletSearchScreen
 import com.gemwallet.android.ui.navigation.routes.walletsScreen
+import com.wallet.core.primitives.PortfolioType
 import com.wallet.core.primitives.WalletId
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -295,6 +296,7 @@ fun WalletNavGraph(
 
             perpetualScreen(
                 onOpenPerpetualDetails = navigator::openPerpetualDetails,
+                onOpenPortfolio = { navigator.openPortfolioChart(PortfolioType.Perpetuals) },
                 amountAction = AmountTransactionAction(navigator::openAmount),
                 confirmAction = ConfirmTransactionAction(navigator::openConfirm),
                 onCancel = onCancel,

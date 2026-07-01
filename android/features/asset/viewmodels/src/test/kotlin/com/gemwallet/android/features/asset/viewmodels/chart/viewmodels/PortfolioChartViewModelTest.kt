@@ -125,6 +125,20 @@ class PortfolioChartViewModelTest {
     }
 
     @Test
+    fun `starts on perpetuals when opened with perpetuals type`() = runTest(testDispatcher) {
+        coEvery {
+            getPortfolioData.getPortfolioData(PortfolioType.Perpetuals, ChartPeriod.All, Currency.USD)
+        } returns portfolioData(listOf(1f, 2f))
+        val viewModel = createViewModel(initialType = PortfolioType.Perpetuals)
+        backgroundScope.launch { viewModel.chartUIModel.collect {} }
+
+        viewModel.chartUIModel.first { it.chartPoints.size == 2 }
+
+        assertEquals(PortfolioType.Perpetuals, viewModel.selectedType.value)
+        coVerify(exactly = 0) { getPortfolioData.getPortfolioData(PortfolioType.Wallet, any(), any()) }
+    }
+
+    @Test
     fun `shows error state when the portfolio request fails`() = runTest(testDispatcher) {
         coEvery { getPortfolioData.getPortfolioData(any(), any(), any()) } throws IllegalStateException("network down")
         val viewModel = createViewModel()
@@ -178,9 +192,10 @@ class PortfolioChartViewModelTest {
         availablePeriods = availablePeriods,
     )
 
-    private fun createViewModel() = PortfolioChartViewModel(
+    private fun createViewModel(initialType: PortfolioType = PortfolioType.Wallet) = PortfolioChartViewModel(
         getCurrentCurrency = getCurrentCurrency,
         observePerpetualWallet = observePerpetualWallet,
         getPortfolioData = getPortfolioData,
+        initialType = initialType,
     ).also(viewModels::add)
 }

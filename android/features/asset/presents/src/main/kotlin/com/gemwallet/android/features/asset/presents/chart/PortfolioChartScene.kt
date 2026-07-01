@@ -56,7 +56,7 @@ fun PortfolioChartScene(
             if (showSegmentedControl) {
                 PortfolioTypeSelector(selected = selectedType, onSelect = viewModel::setType)
             } else {
-                Text(stringResource(R.string.wallet_portfolio_title))
+                Text(stringResource(selectedType.titleRes()))
             }
         },
         onClose = onCancel,
