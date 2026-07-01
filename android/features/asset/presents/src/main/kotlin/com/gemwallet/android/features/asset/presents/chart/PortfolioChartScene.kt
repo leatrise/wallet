@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.gemwallet.android.features.asset.viewmodels.chart.models.chartHeader
+import com.gemwallet.android.features.asset.viewmodels.chart.models.portfolioChartHeader
 import com.gemwallet.android.features.asset.viewmodels.chart.viewmodels.PortfolioChartViewModel
 import com.gemwallet.android.ui.R
 import com.gemwallet.android.ui.components.chart.ChartStateView
@@ -48,6 +48,7 @@ fun PortfolioChartScene(
     val showSegmentedControl by viewModel.showSegmentedControl.collectAsStateWithLifecycle()
     val selectedChartType by viewModel.selectedChartType.collectAsStateWithLifecycle()
     val showChartTypePicker by viewModel.showChartTypePicker.collectAsStateWithLifecycle()
+    val state by viewModel.chartUIState.collectAsStateWithLifecycle()
     val pullToRefreshState = rememberPullToRefreshState()
 
     Scene(
@@ -79,7 +80,9 @@ fun PortfolioChartScene(
         ) {
             LazyColumn {
                 item { PortfolioChart(viewModel) }
-                portfolioStatistics(currency, statistics)
+                if (state.viewState == ChartViewState.Ready || state.viewState == ChartViewState.Empty) {
+                    portfolioStatistics(currency, statistics)
+                }
             }
         }
     }
@@ -125,6 +128,7 @@ private fun PortfolioChart(viewModel: PortfolioChartViewModel) {
     val uiModel by viewModel.chartUIModel.collectAsStateWithLifecycle()
     val state by viewModel.chartUIState.collectAsStateWithLifecycle()
     val periods by viewModel.availablePeriods.collectAsStateWithLifecycle()
+    val showHeaderValue by viewModel.showHeaderValue.collectAsStateWithLifecycle()
 
     key(state.period) {
         var selectedIndex by remember { mutableStateOf<Int?>(null) }
@@ -142,7 +146,7 @@ private fun PortfolioChart(viewModel: PortfolioChartViewModel) {
 
         ChartStateView(
             state = displayState,
-            header = chartHeader(uiModel, selectedPoint),
+            header = portfolioChartHeader(uiModel, selectedPoint, showHeaderValue),
             period = state.period,
             onPeriodSelect = viewModel::setPeriod,
             periods = periods,

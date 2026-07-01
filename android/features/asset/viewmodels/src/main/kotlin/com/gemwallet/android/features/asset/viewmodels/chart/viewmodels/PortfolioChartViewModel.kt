@@ -67,6 +67,10 @@ class PortfolioChartViewModel @Inject constructor(
         .map { it == PortfolioType.Perpetuals }
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
+    val showHeaderValue = combine(selectedType, selectedChartType) { type, chartType ->
+        type == PortfolioType.Wallet || chartType == PortfolioChartType.Value
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
     val chartUIState = combine(selectedPeriod, viewState) { period, viewState ->
         ChartUIModel.State(period = period, viewState = viewState)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, ChartUIModel.State())
