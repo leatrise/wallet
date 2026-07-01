@@ -26,7 +26,8 @@ public struct ChainImage: Sendable {
              .linea,
              .arbitrum,
              .blast,
-             .world: Images.Chains.ethereum
+             .world,
+             .robinhood: Images.Chains.ethereum
         case .smartChain: Images.Chains.smartchain
         case .celo: Images.Chains.celo
         case .solana: Images.Chains.solana
@@ -64,7 +65,6 @@ public struct ChainImage: Sendable {
         case .plasma: Images.Chains.plasma
         case .zcash: Images.Chains.zcash
         case .xLayer: Images.Chains.xlayer
-        case .robinhood: Images.Chains.robinhood
         case .stable: Images.Chains.stable
         }
     }

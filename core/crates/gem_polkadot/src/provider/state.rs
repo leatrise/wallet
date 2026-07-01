@@ -31,7 +31,7 @@ mod tests {
     #[tokio::test]
     async fn test_get_node_status() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let client = PolkadotClient::new(MockClient::new().with_get(|path| {
-            assert_eq!(path, "/blocks/head/header");
+            assert_eq!(path, "/v1/blocks/head/header");
             Ok(r#"{"number":"123456"}"#.as_bytes().to_vec())
         }));
 

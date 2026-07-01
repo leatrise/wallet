@@ -207,7 +207,7 @@ impl Across {
         let recipient = if message.is_empty() {
             *recipient
         } else {
-            parse_address(chain, deployment.multicall_handler().as_str())?
+            parse_address(chain, deployment.multicall_handler())?
         };
 
         let v3_relay_data = V3RelayData {
@@ -586,6 +586,7 @@ mod tests {
         assert!(Across::is_supported_route(&op, &eth));
         assert!(Across::is_supported_route(&arb, &eth));
         assert!(Across::is_supported_route(&op, &arb));
+        assert!(!Across::is_supported_route(&eth, &AssetId::from(Chain::Robinhood, None)));
     }
 
     fn provider_with_tron_allowance(allowance: &str) -> Across {

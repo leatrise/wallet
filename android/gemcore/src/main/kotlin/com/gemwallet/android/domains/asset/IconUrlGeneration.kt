@@ -40,6 +40,7 @@ fun AssetId.getIconUrl(): String = when {
         Chain.OpBNB,
         Chain.Blast,
         Chain.World,
+        Chain.Robinhood,
         Chain.Manta -> "file:///android_asset/chains/icons/${Chain.Ethereum.string}.svg"
         else -> chain.getIconUrl()
     }
@@ -59,6 +60,7 @@ fun AssetId.getSupportIconUrl(): String? = when (type()) {
         Chain.OpBNB,
         Chain.Blast,
         Chain.World,
+        Chain.Robinhood,
         Chain.Manta -> "file:///android_asset/chains/icons/${chain.string}.svg"
         else -> null
     }

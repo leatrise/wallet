@@ -16,6 +16,8 @@ const CBBTC_NAME: &str = "Coinbase BTC";
 const CBBTC_SYMBOL: &str = "cbBTC";
 const USDS_NAME: &str = "USDS Stablecoin";
 const USDS_SYMBOL: &str = "USDS";
+const USDG_NAME: &str = "Global Dollar";
+const USDG_SYMBOL: &str = "USDG";
 
 fn token_asset(chain: Chain, token_id: &str, name: &str, symbol: &str, decimals: i32, asset_type: AssetType) -> Asset {
     Asset::new(AssetId::from_token(chain, token_id), name.to_string(), symbol.to_string(), decimals, asset_type)
@@ -92,6 +94,8 @@ pub static HYPEREVM_USDC: LazyLock<Asset> = LazyLock::new(|| token_asset(Chain::
 pub static HYPEREVM_USDT: LazyLock<Asset> = LazyLock::new(|| token_asset(Chain::Hyperliquid, HYPEREVM_USDT_TOKEN_ID, USDT_NAME, USDT_SYMBOL, 6, AssetType::ERC20));
 
 pub static PLASMA_USDT: LazyLock<Asset> = LazyLock::new(|| token_asset(Chain::Plasma, PLASMA_USDT_TOKEN_ID, USDT_NAME, USDT_SYMBOL, 6, AssetType::ERC20));
+
+pub static ROBINHOOD_USDG: LazyLock<Asset> = LazyLock::new(|| token_asset(Chain::Robinhood, ROBINHOOD_USDG_TOKEN_ID, USDG_NAME, USDG_SYMBOL, 6, AssetType::ERC20));
 
 pub static SOLANA_USDC: LazyLock<Asset> = LazyLock::new(|| token_asset(Chain::Solana, SOLANA_USDC_TOKEN_ID, USDC_NAME, USDC_SYMBOL, 6, AssetType::SPL));
 pub static SOLANA_USDT: LazyLock<Asset> = LazyLock::new(|| token_asset(Chain::Solana, SOLANA_USDT_TOKEN_ID, USDT_NAME, USDT_SYMBOL, 6, AssetType::SPL));

@@ -50,6 +50,13 @@ struct AssetIdViewModelTests {
                 chainPlaceholder: ChainImage(chain: .arbitrum).l2Image,
             ),
         )
+        #expect(
+            AssetIdViewModel(assetId: .mock(.robinhood)).assetImage == AssetImage(
+                type: "ERC20",
+                placeholder: ChainImage(chain: .ethereum).image,
+                chainPlaceholder: ChainImage(chain: .robinhood).l2Image,
+            ),
+        )
     }
 
     @Test

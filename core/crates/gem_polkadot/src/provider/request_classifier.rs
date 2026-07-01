@@ -5,7 +5,7 @@ use crate::provider::BroadcastProvider;
 
 impl ChainRequestClassifier for BroadcastProvider {
     fn classify_request(&self, request: ChainRequest<'_>) -> ChainRequestType {
-        if request.is_http_post_path("/transaction") {
+        if request.is_http_post_path("/v1/transaction") {
             ChainRequestType::Broadcast
         } else {
             ChainRequestType::Unknown

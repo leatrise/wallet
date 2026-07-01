@@ -245,6 +245,9 @@ pub static UNICHAIN_WETH_ASSET_ID: LazyLock<AssetId> = LazyLock::new(|| AssetId:
 pub const ROBINHOOD_WETH_TOKEN_ID: &str = "0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73";
 pub static ROBINHOOD_WETH_ASSET_ID: LazyLock<AssetId> = LazyLock::new(|| AssetId::from_token(Chain::Robinhood, ROBINHOOD_WETH_TOKEN_ID));
 
+pub const ROBINHOOD_USDG_TOKEN_ID: &str = "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168";
+pub static ROBINHOOD_USDG_ASSET_ID: LazyLock<AssetId> = LazyLock::new(|| AssetId::from_token(Chain::Robinhood, ROBINHOOD_USDG_TOKEN_ID));
+
 pub const CELO_WETH_TOKEN_ID: &str = "0x471EcE3750Da237f93B8E339c536989b8978a438";
 pub static CELO_WETH_ASSET_ID: LazyLock<AssetId> = LazyLock::new(|| AssetId::from_token(Chain::Celo, CELO_WETH_TOKEN_ID));
 

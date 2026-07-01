@@ -9,6 +9,7 @@ use std::{collections::HashMap, vec};
 pub struct AcrossDeployment {
     pub chain_id: u32,
     pub spoke_pool: &'static str,
+    pub multicall_handler: &'static str,
 }
 
 #[derive(Debug)]
@@ -43,24 +44,27 @@ impl AcrossDeployment {
             Chain::Tron => TRON_ACROSS_SPOKE_POOL_CONTRACT,
             _ => return None,
         };
-        Some(Self { chain_id, spoke_pool })
+        let multicall_handler = match chain {
+            Chain::Linea => LINEA_ACROSS_MULTICALL_HANDLER_CONTRACT,
+            Chain::ZkSync => ZKSYNC_ACROSS_MULTICALL_HANDLER_CONTRACT,
+            Chain::SmartChain => SMARTCHAIN_ACROSS_MULTICALL_HANDLER_CONTRACT,
+            Chain::Monad => MONAD_ACROSS_MULTICALL_HANDLER_CONTRACT,
+            Chain::Hyperliquid => HYPEREVM_ACROSS_MULTICALL_HANDLER_CONTRACT,
+            Chain::Plasma => PLASMA_ACROSS_MULTICALL_HANDLER_CONTRACT,
+            Chain::Ethereum | Chain::Arbitrum | Chain::Base | Chain::Blast | Chain::Optimism | Chain::Polygon | Chain::World | Chain::Ink | Chain::Unichain | Chain::Tron => {
+                ETHEREUM_ACROSS_MULTICALL_HANDLER_CONTRACT
+            }
+            _ => return None,
+        };
+        Some(Self {
+            chain_id,
+            spoke_pool,
+            multicall_handler,
+        })
     }
 
-    pub fn multicall_handler(&self) -> String {
-        match self.chain_id {
-            // Linea
-            59144 => LINEA_ACROSS_MULTICALL_HANDLER_CONTRACT.into(),
-            // zkSync
-            324 => ZKSYNC_ACROSS_MULTICALL_HANDLER_CONTRACT.into(),
-            // SmartChain
-            56 => SMARTCHAIN_ACROSS_MULTICALL_HANDLER_CONTRACT.into(),
-            // Monad
-            143 => MONAD_ACROSS_MULTICALL_HANDLER_CONTRACT.into(),
-            // HyperEvm | Plasma
-            999 => HYPEREVM_ACROSS_MULTICALL_HANDLER_CONTRACT.into(),
-            9745 => PLASMA_ACROSS_MULTICALL_HANDLER_CONTRACT.into(),
-            _ => ETHEREUM_ACROSS_MULTICALL_HANDLER_CONTRACT.into(),
-        }
+    pub fn multicall_handler(&self) -> &'static str {
+        self.multicall_handler
     }
 
     pub fn supported_assets() -> HashMap<Chain, Vec<AssetId>> {
@@ -110,7 +114,7 @@ impl AcrossDeployment {
         for chain in Chain::all() {
             if let Some(deployment) = Self::deployment_by_chain(&chain) {
                 addresses.insert(deployment.spoke_pool.to_string());
-                addresses.insert(deployment.multicall_handler());
+                addresses.insert(deployment.multicall_handler().to_string());
             }
         }
         addresses.into_iter().collect()
@@ -265,5 +269,17 @@ impl AcrossDeployment {
                 ]),
             },
         ]
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::AcrossDeployment;
+    use primitives::Chain;
+
+    #[test]
+    fn test_robinhood_is_not_supported_without_multicall_handler() {
+        assert!(AcrossDeployment::deployment_by_chain(&Chain::Robinhood).is_none());
+        assert!(AcrossDeployment::supported_assets().get(&Chain::Robinhood).is_none());
     }
 }
