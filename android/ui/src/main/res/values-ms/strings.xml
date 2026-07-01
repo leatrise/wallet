@@ -293,6 +293,9 @@
   <string name="swap_you_receive">Anda Terima</string>
   <string name="swap_price_impact">Kesan Harga</string>
   <string name="swap_slippage">Gelinciran</string>
+  <string name="swap_slippage_warning">Gelinciran tinggi. Pertukaran anda mungkin dilaksanakan pada harga yang lebih buruk daripada dijangka.</string>
+  <string name="swap_slippage_auto">Auto</string>
+  <string name="swap_slippage_auto_description">Menetapkan gelinciran terbaik secara automatik untuk pertukaran yang berjaya.</string>
   <string name="swap_price_impact_warning_description">Anda akan kehilangan %1$s daripada %2$s anda dalam perdagangan ini. Adakah anda pasti mahu meneruskan?</string>
   <string name="swap_price_impact_warning_title">Kesan Harga Tinggi</string>
   <string name="swap_estimated_time_title">Anggaran Masa</string>

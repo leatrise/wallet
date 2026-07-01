@@ -464,6 +464,8 @@ class SwapViewModelTest {
             ),
             minimumReceive = "2.1 USDC",
             slippageText = "0.5%",
+            slippageBps = 50u,
+            selectedSlippage = 50u,
         )
 
         val quotesFlow = MutableSharedFlow<SwapQuotesResult?>(replay = 1)

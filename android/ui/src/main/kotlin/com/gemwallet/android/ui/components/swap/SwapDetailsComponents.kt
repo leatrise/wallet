@@ -97,6 +97,7 @@ fun SwapDetailsBottomSheet(
     skipPartiallyExpanded: Boolean = false,
     showProviderSectionHeader: Boolean = false,
     onProviderSelect: ((SwapperProvider) -> Unit)? = null,
+    onSlippageClick: ((UInt?) -> Unit)? = null,
 ) {
     if (model == null) return
 
@@ -171,12 +172,30 @@ fun SwapDetailsBottomSheet(
                 )
             }
             item {
-                PropertyItem(
-                    title = R.string.swap_slippage,
-                    data = model.slippageText,
-                    info = InfoSheetEntity.Slippage,
-                    listPosition = ListPosition.Last,
-                )
+                val slippageDisplay = if (model.selectedSlippage == null) {
+                    stringResource(R.string.swap_slippage_auto)
+                } else {
+                    model.slippageText
+                }
+                if (onSlippageClick != null) {
+                    PropertyItem(
+                        action = R.string.swap_slippage,
+                        data = slippageDisplay,
+                        info = InfoSheetEntity.Slippage,
+                        listPosition = ListPosition.Last,
+                        onClick = {
+                            onDismiss()
+                            onSlippageClick(model.selectedSlippage)
+                        },
+                    )
+                } else {
+                    PropertyItem(
+                        title = R.string.swap_slippage,
+                        data = slippageDisplay,
+                        info = InfoSheetEntity.Slippage,
+                        listPosition = ListPosition.Last,
+                    )
+                }
             }
         }
     }

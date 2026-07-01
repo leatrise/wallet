@@ -293,6 +293,9 @@
   <string name="swap_you_receive">Sie erhalten</string>
   <string name="swap_price_impact">Preisauswirkungen</string>
   <string name="swap_slippage">Slippage</string>
+  <string name="swap_slippage_warning">Hohe Slippage. Dein Swap wird möglicherweise zu einem schlechteren Preis als erwartet ausgeführt.</string>
+  <string name="swap_slippage_auto">Auto</string>
+  <string name="swap_slippage_auto_description">Legt automatisch die beste Slippage für einen erfolgreichen Swap fest.</string>
   <string name="swap_price_impact_warning_description">Sie verlieren bei diesem Handel %1$s Ihrer %2$s. Möchten Sie wirklich fortfahren?</string>
   <string name="swap_price_impact_warning_title">Hoher Preiseinfluss</string>
   <string name="swap_estimated_time_title">Geschätzte Zeit</string>

@@ -65,6 +65,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import uniffi.gemstone.Config
 import uniffi.gemstone.SwapperProvider
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -93,6 +94,9 @@ class SwapViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, BigDecimal.ZERO)
 
     val selectedProvider = MutableStateFlow<SwapperProvider?>(null)
+    private val selectedSlippageBps = MutableStateFlow<UInt?>(null)
+
+    val slippageWarningThresholdBps: UInt by lazy { Config().getSwapConfig().highSlippageWarningBps }
 
     private val refreshRequests = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     private val refreshEnabled = MutableStateFlow(false)
@@ -121,8 +125,8 @@ class SwapViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
 
-    private val quoteRequestParams = combine(payValueFlow, payAsset, receiveAsset) { value, fromAsset, toAsset ->
-            SwapQuoteRequestParams.create(value, fromAsset, toAsset)
+    private val quoteRequestParams = combine(payValueFlow, payAsset, receiveAsset, selectedSlippageBps) { value, fromAsset, toAsset, slippageBps ->
+            SwapQuoteRequestParams.create(value, fromAsset, toAsset, slippageBps)
         }
         .distinctUntilChangedBy { it?.key }
         .onEach(::onQuoteRequestParamsChanged)
@@ -215,6 +219,7 @@ class SwapViewModel @Inject constructor(
                     provider = provider,
                     providers = providers,
                     slippageBps = quote.quote.data.slippageBps,
+                    selectedSlippage = selectedSlippageBps.value,
                     etaInSeconds = quote.quote.etaInSeconds,
                     isProviderSelectable = providers.size > 1,
                 )
@@ -239,6 +244,7 @@ class SwapViewModel @Inject constructor(
 
     fun onSelect(type: SwapItemType, assetId: AssetId) {
         clearTransferQuoteState()
+        selectedSlippageBps.update { null }
         when (type) {
             SwapItemType.Pay -> {
                 if (receiveAsset.value?.id() == assetId) {
@@ -259,6 +265,7 @@ class SwapViewModel @Inject constructor(
 
     fun switchSwap() = viewModelScope.launch {
         clearTransferQuoteState()
+        selectedSlippageBps.update { null }
         val payAssetId = payAsset.value?.id()?.toIdentifier()
         val receiveAssetId = receiveAsset.value?.id()?.toIdentifier()
         savedStateHandle[RouteArgument.FromAssetId.key] = receiveAssetId
@@ -269,6 +276,14 @@ class SwapViewModel @Inject constructor(
     fun setProvider(provider: SwapperProvider) {
         clearTransferQuoteState()
         this.selectedProvider.update { provider }
+    }
+
+    fun setSlippage(slippageBps: UInt?) {
+        if (slippageBps == selectedSlippageBps.value) {
+            return
+        }
+        clearTransferQuoteState()
+        selectedSlippageBps.update { slippageBps }
     }
 
     fun refresh() {
