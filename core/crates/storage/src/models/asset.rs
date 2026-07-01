@@ -67,7 +67,9 @@ pub struct NewAssetRow {
 
 impl NewAssetRow {
     pub fn from_primitive_default(asset: Asset) -> Self {
-        Self::from_primitive(asset.clone(), AssetScore::default(), AssetProperties::default(asset.id))
+        let score = asset.default_score();
+        let properties = AssetProperties::default(asset.id.clone());
+        Self::from_primitive(asset, score, properties)
     }
 
     pub fn from_primitive(asset: Asset, score: AssetScore, properties: AssetProperties) -> Self {
@@ -156,5 +158,26 @@ impl AssetLinkRow {
             link_type: primitives::LinkType::from_str(&link.name).unwrap().into(),
             url: link.url.clone(),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use primitives::{AssetId, AssetType as PrimitiveAssetType, Chain};
+
+    #[test]
+    fn test_from_primitive_default_rank() {
+        let native = NewAssetRow::from_primitive_default(Asset::from_chain(Chain::Robinhood));
+        let token = NewAssetRow::from_primitive_default(Asset::new(
+            AssetId::from_token(Chain::Robinhood, "0x123"),
+            "Token".to_string(),
+            "TKN".to_string(),
+            18,
+            PrimitiveAssetType::ERC20,
+        ));
+
+        assert_eq!(native.rank, Chain::Robinhood.rank());
+        assert_eq!(token.rank, AssetScore::default().rank);
     }
 }

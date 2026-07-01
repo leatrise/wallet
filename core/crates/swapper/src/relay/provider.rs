@@ -238,4 +238,32 @@ mod swap_integration_tests {
 
         Ok(())
     }
+
+    #[tokio::test]
+    async fn test_relay_arbitrum_eth_to_robinhood_eth() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+        let provider = Arc::new(NativeProvider::default());
+        let relay = Relay::new(provider);
+
+        let request = QuoteRequest {
+            from_asset: SwapperQuoteAsset::from(AssetId::from_chain(Chain::Arbitrum)),
+            to_asset: SwapperQuoteAsset::from(AssetId::from_chain(Chain::Robinhood)),
+            wallet_address: "0x514BCb1F9AAbb904e6106Bd1052B66d2706dBbb7".to_string(),
+            destination_address: "0x514BCb1F9AAbb904e6106Bd1052B66d2706dBbb7".to_string(),
+            value: "5000000000000000".to_string(),
+            options: Options::new_with_slippage(100.into()),
+        };
+
+        let quote = relay.get_quote(&request).await?;
+        let quote_data = relay.get_quote_data(&quote, FetchQuoteData::None).await?;
+
+        println!("quote: from_value={}, to_value={}", quote.from_value, quote.to_value);
+        println!("quote_data: to={}, value={}, data_len={}", quote_data.to, quote_data.value, quote_data.data.len());
+
+        assert_eq!(quote.from_value, request.value);
+        assert!(!quote.to_value.is_empty());
+        assert!(!quote_data.data.is_empty());
+        assert!(!quote_data.to.is_empty());
+
+        Ok(())
+    }
 }

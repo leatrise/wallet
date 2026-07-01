@@ -181,6 +181,11 @@ mod tests {
     }
 
     #[test]
+    fn test_robinhood_swap_supported() {
+        assert!(Chain::Robinhood.is_swap_supported());
+    }
+
+    #[test]
     fn test_from_chain_id_supports_hex_network_id() {
         assert_eq!(Chain::from_chain_id(728_126_428), Some(Chain::Tron));
     }

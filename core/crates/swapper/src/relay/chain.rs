@@ -35,6 +35,7 @@ mod tests {
     fn test_from_chain() {
         assert_eq!(RelayChain::from_chain(&Chain::Ethereum).unwrap().chain_id(), EVMChain::Ethereum.chain_id());
         assert_eq!(RelayChain::from_chain(&Chain::SmartChain).unwrap().chain_id(), EVMChain::SmartChain.chain_id());
+        assert_eq!(RelayChain::from_chain(&Chain::Robinhood).unwrap().chain_id(), EVMChain::Robinhood.chain_id());
         assert!(RelayChain::from_chain(&Chain::Solana).is_none());
         assert!(RelayChain::from_chain(&Chain::Bitcoin).is_none());
         assert!(RelayChain::from_chain(&Chain::Cosmos).is_none());

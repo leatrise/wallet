@@ -8,7 +8,7 @@ use primitives::{
     asset_constants::{
         ARBITRUM_USDC_ASSET_ID, ARBITRUM_USDT_ASSET_ID, AVALANCHE_USDC_ASSET_ID, AVALANCHE_USDT_ASSET_ID, BASE_USDC_ASSET_ID, ETHEREUM_USDC_ASSET_ID, ETHEREUM_USDT_ASSET_ID,
         HYPEREVM_USDC_ASSET_ID, HYPEREVM_USDT_ASSET_ID, LINEA_USDT_ASSET_ID, OPTIMISM_USDC_ASSET_ID, OPTIMISM_USDT_ASSET_ID, POLYGON_USDC_ASSET_ID, POLYGON_USDT_ASSET_ID,
-        ROBINHOOD_USDG_ASSET_ID, SEIEVM_USDC_ASSET_ID, SEIEVM_USDT_ASSET_ID, SMARTCHAIN_USDC_ASSET_ID, SMARTCHAIN_USDT_ASSET_ID, ZKSYNC_USDT_ASSET_ID,
+        SEIEVM_USDC_ASSET_ID, SEIEVM_USDT_ASSET_ID, SMARTCHAIN_USDC_ASSET_ID, SMARTCHAIN_USDT_ASSET_ID, ZKSYNC_USDT_ASSET_ID,
     },
     contract_constants::EVM_ZERO_ADDRESS,
 };
@@ -53,7 +53,7 @@ pub static SUPPORTED_CHAINS: LazyLock<Vec<SwapperChainAsset>> = LazyLock::new(||
         SwapperChainAsset::Assets(Chain::Abstract, vec![]),
         SwapperChainAsset::Assets(Chain::Celo, vec![]),
         SwapperChainAsset::Assets(Chain::Stable, vec![]),
-        SwapperChainAsset::Assets(Chain::Robinhood, vec![ROBINHOOD_USDG_ASSET_ID.clone()]),
+        SwapperChainAsset::Assets(Chain::Robinhood, vec![]),
     ]
 });
 
@@ -73,10 +73,7 @@ pub fn asset_to_currency(asset_id: &AssetId) -> Result<String, SwapperError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use primitives::{
-        Chain,
-        asset_constants::{ETHEREUM_USDC_TOKEN_ID, ROBINHOOD_USDG_TOKEN_ID},
-    };
+    use primitives::{Chain, asset_constants::ETHEREUM_USDC_TOKEN_ID};
 
     #[test]
     fn test_evm_native_asset() {
@@ -103,11 +100,7 @@ mod tests {
             _ => None,
         });
 
-        assert_eq!(assets, Some(vec![ROBINHOOD_USDG_ASSET_ID.clone()]));
+        assert_eq!(assets, Some(vec![]));
         assert_eq!(asset_to_currency(&AssetId::from_chain(Chain::Robinhood)).unwrap(), EVM_ZERO_ADDRESS);
-        assert_eq!(
-            asset_to_currency(&AssetId::from_token(Chain::Robinhood, ROBINHOOD_USDG_TOKEN_ID)).unwrap(),
-            ROBINHOOD_USDG_TOKEN_ID
-        );
     }
 }
