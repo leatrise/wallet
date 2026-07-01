@@ -20,12 +20,14 @@ public struct CollectionsScene<ViewModel: CollectionsViewable>: View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: .zero) {
-                    LazyVGrid(columns: model.columns) {
-                        collectionsView
-                    }
-                    .padding(.horizontal, Spacing.medium + Spacing.tiny)
+                    if model.content.items.isNotEmpty {
+                        LazyVGrid(columns: model.columns) {
+                            collectionsView
+                        }
+                        .padding(.horizontal, Spacing.medium + Spacing.tiny)
 
-                    Spacer(minLength: .medium)
+                        Spacer(minLength: .medium)
+                    }
 
                     if let unverifiedCount = model.content.unverifiedCount {
                         List {
@@ -36,17 +38,18 @@ public struct CollectionsScene<ViewModel: CollectionsViewable>: View {
                                 )
                             }
                         }
+                        .contentMargins(.top, .zero, for: .scrollContent)
                         .scrollDisabled(true)
                         .frame(height: .list.minHeight)
                     }
                 }
-                .frame(minHeight: geometry.size.height)
+                .frame(minHeight: geometry.size.height, alignment: .top)
             }
         }
         .bindQuery(model.query)
         .contentMargins(.top, .scene.top, for: .scrollContent)
         .overlay {
-            if model.content.items.isEmpty {
+            if model.content.items.isEmpty, model.content.unverifiedCount == nil {
                 EmptyContentView(model: model.emptyContentModel)
             }
         }
