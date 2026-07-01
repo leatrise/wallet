@@ -64,6 +64,7 @@ public struct ChainImage: Sendable {
         case .plasma: Images.Chains.plasma
         case .zcash: Images.Chains.zcash
         case .xLayer: Images.Chains.xlayer
+        case .robinhood: Images.Chains.robinhood
         case .stable: Images.Chains.stable
         }
     }
@@ -86,6 +87,7 @@ public struct ChainImage: Sendable {
         case .blast: Images.Chains.blast
         case .world: Images.Chains.world
         case .manta: Images.Chains.manta
+        case .robinhood: Images.Chains.robinhood
         default: nil
         }
     }

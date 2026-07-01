@@ -32,5 +32,6 @@ public enum EVMChain: String, Codable, CaseIterable, Equatable, Hashable, Sendab
 	case hyperliquid
 	case monad
 	case xLayer = "xlayer"
+	case robinhood
 	case stable
 }

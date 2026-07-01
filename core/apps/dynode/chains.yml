@@ -79,3 +79,8 @@ chains:
   - chain: hypercore
     urls:
       - url: https://api.hyperliquid.xyz
+
+  # Robinhood
+  - chain: robinhood
+    urls:
+      - url: https://rpc.mainnet.chain.robinhood.com

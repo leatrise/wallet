@@ -41,6 +41,7 @@ pub enum EVMChain {
     Hyperliquid,
     Monad,
     XLayer,
+    Robinhood,
     Stable,
 }
 
@@ -106,8 +107,10 @@ mod tests {
     }
 
     #[test]
-    fn test_sei_evm_chain_id() {
+    fn test_evm_chain_id() {
         assert_eq!(EVMChain::SeiEvm.chain_id(), 1329);
         assert_eq!(Chain::from_chain_id(1329), Some(Chain::SeiEvm));
+        assert_eq!(EVMChain::Robinhood.chain_id(), 4663);
+        assert_eq!(Chain::from_chain_id(4663), Some(Chain::Robinhood));
     }
 }

@@ -200,6 +200,8 @@ chains:
     url: https://rpc.monad.xyz
   xlayer:
     url: https://rpc.xlayer.tech
+  robinhood:
+    url: https://rpc.mainnet.chain.robinhood.com
   stable:
     url: https://rpc.stable.xyz
 

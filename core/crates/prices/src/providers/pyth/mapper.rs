@@ -27,7 +27,8 @@ pub fn price_feed_id_for_chain(chain: Chain) -> Option<&'static str> {
         | Chain::Unichain
         | Chain::Blast
         | Chain::World
-        | Chain::Plasma => "ff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+        | Chain::Plasma
+        | Chain::Robinhood => "ff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
         Chain::SmartChain | Chain::OpBNB => "2f95862b045670cd22bee3114c39763a4a08beeb663b145d283c31d7d1101c4f",
         Chain::Solana => "ef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d",
         Chain::Polygon => "ff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",

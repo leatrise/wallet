@@ -52,6 +52,7 @@ fun Chain.assetType(): AssetType? {
         Chain.Plasma,
         Chain.XLayer,
         Chain.Stable,
+        Chain.Robinhood,
         Chain.World -> AssetType.ERC20
 
         Chain.HyperCore,
@@ -197,6 +198,7 @@ fun Chain.toChainType(): ChainType {
         Chain.Plasma,
         Chain.XLayer,
         Chain.Stable,
+        Chain.Robinhood,
         Chain.Ethereum -> ChainType.Ethereum
     }
 }

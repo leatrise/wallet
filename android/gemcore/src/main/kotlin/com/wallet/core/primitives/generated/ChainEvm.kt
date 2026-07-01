@@ -63,6 +63,8 @@ enum class EVMChain(val string: String) {
 	Monad("monad"),
 	@SerialName("xlayer")
 	XLayer("xlayer"),
+	@SerialName("robinhood")
+	Robinhood("robinhood"),
 	@SerialName("stable")
 	Stable("stable"),
 }

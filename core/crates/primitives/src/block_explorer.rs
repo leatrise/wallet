@@ -145,6 +145,7 @@ pub fn get_block_explorers(chain: Chain) -> Vec<Box<dyn BlockExplorer>> {
         Chain::HyperCore => vec![HyperliquidExplorer::boxed(), HypurrScan::boxed(), FlowScan::boxed()],
         Chain::Monad => vec![EtherScan::boxed(EVMChain::Monad), BlockVision::new_monad()],
         Chain::XLayer => vec![OkxExplorer::new_xlayer()],
+        Chain::Robinhood => vec![BlockScout::new_robinhood()],
         Chain::Stable => vec![EtherScan::boxed(EVMChain::Stable)],
     }
 }

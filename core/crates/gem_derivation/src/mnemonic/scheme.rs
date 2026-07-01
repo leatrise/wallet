@@ -41,6 +41,7 @@ pub(super) fn derivation_scheme(chain: Chain) -> Result<DerivationScheme, Accoun
         | Chain::Monad
         | Chain::Plasma
         | Chain::XLayer
+        | Chain::Robinhood
         | Chain::Stable
         | Chain::BitcoinCash
         | Chain::Thorchain

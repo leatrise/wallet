@@ -235,6 +235,7 @@ pub struct Chains {
     pub hypercore: Chain,
     pub monad: Chain,
     pub xlayer: Chain,
+    pub robinhood: Chain,
     pub stable: Chain,
 }
 

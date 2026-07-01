@@ -19,4 +19,8 @@ impl BlockScout {
     pub fn new_hyperliquid() -> Box<dyn BlockExplorer> {
         Explorer::boxed(Metadata::with_token("BlockScout", "https://hyperliquid.cloud.blockscout.com"))
     }
+
+    pub fn new_robinhood() -> Box<dyn BlockExplorer> {
+        Explorer::boxed(Metadata::with_token("BlockScout", "https://robinhoodchain.blockscout.com"))
+    }
 }

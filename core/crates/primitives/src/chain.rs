@@ -64,6 +64,7 @@ pub enum Chain {
     HyperCore,   // HyperCore native chain
     Monad,
     XLayer,
+    Robinhood,
     Stable,
 }
 

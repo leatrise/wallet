@@ -101,6 +101,7 @@ impl ChainClientFactory {
             | Chain::Plasma
             | Chain::Monad
             | Chain::XLayer
+            | Chain::Robinhood
             | Chain::Stable => Ok(Arc::new(EthereumClient::new(JsonRpcClient::new(alien_client), EVMChain::from_chain(chain).unwrap()))),
         }
     }

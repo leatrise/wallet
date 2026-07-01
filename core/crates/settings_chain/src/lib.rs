@@ -111,6 +111,7 @@ impl ProviderFactory {
             | Chain::Hyperliquid
             | Chain::Monad
             | Chain::XLayer
+            | Chain::Robinhood
             | Chain::Stable => {
                 let chain = EVMChain::from_chain(chain).unwrap();
                 let client = gem_client.clone();
@@ -197,6 +198,7 @@ impl ProviderFactory {
             Chain::HyperCore => &settings.chains.hypercore,
             Chain::Monad => &settings.chains.monad,
             Chain::XLayer => &settings.chains.xlayer,
+            Chain::Robinhood => &settings.chains.robinhood,
             Chain::Stable => &settings.chains.stable,
         }
     }
