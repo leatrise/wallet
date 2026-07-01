@@ -3,6 +3,7 @@
 import BalanceServiceTestKit
 import EarnService
 import Foundation
+import GemAPITestKit
 import NFTServiceTestKit
 import Primitives
 import PrimitivesTestKit
@@ -240,6 +241,41 @@ struct TransactionStateServiceTests {
             try await postProcessingService.process(wallet: wallet, transaction: transaction)
         }
     }
+
+    @Test
+    func postProcessingRefreshesNftsAfterTransfer() async throws {
+        let db = DB.mockWithChains([.ethereum])
+        let walletStore = WalletStore.mock(db: db)
+        let nftStore = NFTStore.mock(db: db)
+        let wallet = Wallet.mock(id: .mock(), accounts: [.mock(chain: .ethereum)])
+        try walletStore.addWallet(wallet)
+
+        let collectionId = NFTCollectionId(chain: .ethereum, contractAddress: "0xcollection")
+        let assetId = NFTAssetId(chain: .ethereum, contractAddress: "0xcollection", tokenId: "1")
+        let nftData = NFTData(
+            collection: .mock(id: collectionId, chain: .ethereum),
+            assets: [.mock(id: assetId, collectionId: collectionId, chain: .ethereum)],
+        )
+        let postProcessingService = TransactionPostProcessingService(
+            transactionStore: .mock(),
+            balanceUpdater: BalanceUpdaterMock(),
+            stakeService: .mock(),
+            earnService: .mock(),
+            nftService: .mock(
+                apiService: GemAPINFTServiceMock(nftAssets: [nftData]),
+                nftStore: nftStore,
+            ),
+        )
+
+        try await postProcessingService.process(
+            wallet: wallet,
+            transaction: .mock(type: .transferNFT, state: .confirmed, assetId: .mock(.ethereum)),
+        )
+
+        let savedNFTs = try fetchNFTs(db: db, walletId: wallet.id)
+        #expect(savedNFTs.map(\.collection.id) == [collectionId])
+        #expect(savedNFTs.flatMap(\.assets).map(\.id) == [assetId])
+    }
 }
 
 // MARK: - Private
@@ -328,6 +364,12 @@ private extension TransactionStateServiceTests {
             metadata: metadata,
             createdAt: Date(timeIntervalSince1970: 1234),
         )
+    }
+
+    func fetchNFTs(db: DB, walletId: WalletId) throws -> [NFTData] {
+        try db.dbQueue.read { database in
+            try NFTRequest(walletId: walletId, filter: .all).fetch(database)
+        }
     }
 
     func expectRetry(_ status: JobStatus) {

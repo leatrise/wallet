@@ -693,6 +693,7 @@ let package = Package(
                 "BalanceServiceTestKit",
                 "EarnService",
                 "NFTServiceTestKit",
+                .product(name: "GemAPITestKit", package: "GemAPI"),
                 .product(name: "PrimitivesTestKit", package: "Primitives"),
                 .product(name: "StakeServiceTestKit", package: "ChainServices"),
                 .product(name: "StoreTestKit", package: "Store"),

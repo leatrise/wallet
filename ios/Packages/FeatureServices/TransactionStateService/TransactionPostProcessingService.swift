@@ -57,9 +57,7 @@ public struct TransactionPostProcessingService: Sendable {
                 }
             }
         case .transferNFT:
-            Task {
-                // TODO: implement nftService.update when ready
-            }
+            try await nftService.updateAssets(wallet: wallet)
         default:
             break
         }
