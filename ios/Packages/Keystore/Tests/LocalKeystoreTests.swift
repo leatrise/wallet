@@ -166,6 +166,7 @@ struct LocalKeystoreTests {
                      .hyperCore,
                      .plasma,
                      .xLayer,
+                     .robinhood,
                      .stable:
                     "0x8f348F300873Fd5DA36950B2aC75a26584584feE"
                 case .solana:
