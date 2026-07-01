@@ -48,9 +48,13 @@ fun NetworksScreen(
                 chains = state.chains,
                 listState = selectListState,
                 chainFilter = viewModel.chainFilter,
-                onStatus = { showStatus = true },
-                onSelect = viewModel::onSelectedChain,
-                onCancel = onCancel
+                onAction = { action ->
+                    when (action) {
+                        NetworksListAction.ShowStatus -> showStatus = true
+                        is NetworksListAction.Select -> viewModel.onSelectedChain(action.chain)
+                        NetworksListAction.Cancel -> onCancel()
+                    }
+                },
             )
             NetworksScreenState.Network -> NetworkScene(
                 state = state,
