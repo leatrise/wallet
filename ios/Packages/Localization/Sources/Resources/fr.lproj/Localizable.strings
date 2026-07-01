@@ -30,6 +30,7 @@
 "common.open_settings" = "Ouvrir les paramètres";
 "common.pin" = "Épingler";
 "common.pinned" = "Épinglé";
+"common.lists" = "Listes";
 "common.unpin" = "Désépingler";
 "common.skip" = "Passer";
 "common.warning" = "Avertissement";

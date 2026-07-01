@@ -32,6 +32,7 @@ common_latency_in_ms = %d ms
 common_open_settings = Otevřete nastavení
 common_pin = Připnout
 common_pinned = Připnuto
+common_lists = Seznamy
 common_unpin = Odepnout
 common_skip = Přeskočit
 common_warning = Varování

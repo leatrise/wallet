@@ -30,6 +30,7 @@
 "common.open_settings" = "Apri le impostazioni";
 "common.pin" = "Fissa";
 "common.pinned" = "Appuntato";
+"common.lists" = "Liste";
 "common.unpin" = "Rimuovi fissaggio";
 "common.skip" = "Salta";
 "common.warning" = "Avviso";

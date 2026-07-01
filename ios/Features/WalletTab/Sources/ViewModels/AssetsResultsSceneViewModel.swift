@@ -1,9 +1,12 @@
 // Copyright (c). Gem Wallet. All rights reserved.
 
+import ActivityService
+import AssetsService
 import BalanceService
 import Components
 import Foundation
 import Localization
+import PerpetualService
 import Preferences
 import Primitives
 import PrimitivesComponents
@@ -19,8 +22,12 @@ public final class AssetsResultsSceneViewModel {
     private let assetsEnabler: any AssetsEnabler
     private let balanceService: BalanceService
     private let preferences: Preferences
+    private let searchService: WalletSearchService
+    private let perpetualService: PerpetualService
+    private let activityService: ActivityService
     private let wallet: Wallet
 
+    let title: String
     let onSelectAssetAction: AssetAction
 
     public let searchQuery: ObservableQuery<WalletSearchRequest>
@@ -29,25 +36,30 @@ public final class AssetsResultsSceneViewModel {
     }
 
     var isPresentingToastMessage: ToastMessage?
+    private var state: StateViewType<Bool> = .loading
 
     public init(
         wallet: Wallet,
         assetsEnabler: any AssetsEnabler,
         balanceService: BalanceService,
         preferences: Preferences,
+        searchService: WalletSearchService,
+        perpetualService: PerpetualService,
+        activityService: ActivityService,
         request: WalletSearchRequest,
+        title: String,
         onSelectAsset: @escaping (Asset) -> Void,
     ) {
         self.wallet = wallet
         self.assetsEnabler = assetsEnabler
         self.balanceService = balanceService
         self.preferences = preferences
+        self.searchService = searchService
+        self.perpetualService = perpetualService
+        self.activityService = activityService
+        self.title = title
         searchQuery = ObservableQuery(request, initialValue: .empty)
         onSelectAssetAction = onSelectAsset
-    }
-
-    var title: String {
-        Localized.Assets.title
     }
 
     var currencyCode: String {
@@ -64,6 +76,26 @@ public final class AssetsResultsSceneViewModel {
 
     var showAssets: Bool {
         sections.assets.isNotEmpty
+    }
+
+    var perpetualsTitle: String {
+        Localized.Perpetuals.title
+    }
+
+    var perpetuals: [PerpetualData] {
+        sections.perpetuals
+    }
+
+    var showPerpetuals: Bool {
+        searchQuery.request.scope.isList && sections.perpetuals.isNotEmpty && preferences.showPerpetuals(for: wallet)
+    }
+
+    var showEmpty: Bool {
+        !showPinned && !showAssets && !showPerpetuals
+    }
+
+    var showLoading: Bool {
+        state.isLoading && showEmpty
     }
 
     func contextMenuItems(for assetData: AssetData) -> [ContextMenuItemType] {
@@ -87,6 +119,43 @@ public final class AssetsResultsSceneViewModel {
 // MARK: - Actions
 
 extension AssetsResultsSceneViewModel {
+    func fetch() {
+        Task { await refresh() }
+    }
+
+    func refresh() async {
+        state = .loading
+        do {
+            try await searchService.search(
+                wallet: wallet,
+                query: searchQuery.request.searchBy,
+                scope: searchQuery.request.scope,
+            )
+            state = .data(true)
+        } catch {
+            state.setError(error)
+        }
+    }
+
+    func onSelectAsset(_ asset: Asset) {
+        onSelectAssetAction?(asset)
+        do {
+            try activityService.updateRecent(data: .search(asset), walletId: wallet.id)
+        } catch {
+            debugLog("AssetsResultsSceneViewModel update recent error: \(error)")
+        }
+    }
+
+    func onSelectPinPerpetual(_ perpetualData: PerpetualData) {
+        let pinned = !perpetualData.metadata.isPinned
+        do {
+            try perpetualService.setPinned(pinned, perpetualId: perpetualData.perpetual.id)
+            isPresentingToastMessage = .pin(perpetualData.perpetual.name, pinned: pinned)
+        } catch {
+            debugLog("AssetsResultsSceneViewModel pin perpetual error: \(error)")
+        }
+    }
+
     private func onAddToWallet(_ asset: Asset) {
         Task {
             do {

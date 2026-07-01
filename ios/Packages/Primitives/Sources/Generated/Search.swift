@@ -4,7 +4,7 @@
 
 import Foundation
 
-public struct AssetList: Codable, Sendable {
+public struct AssetList: Codable, Equatable, Hashable, Identifiable, Sendable {
 	public let id: String
 	public let name: String
 	public let count: UInt32

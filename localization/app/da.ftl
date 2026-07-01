@@ -32,6 +32,7 @@ common_latency_in_ms = %d ms
 common_open_settings = Åbn indstillinger
 common_pin = Fastgør
 common_pinned = Fastgjort
+common_lists = Lister
 common_unpin = Frigør
 common_skip = Spring over
 common_warning = Advarsel

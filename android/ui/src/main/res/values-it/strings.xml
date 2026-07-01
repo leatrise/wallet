@@ -32,6 +32,7 @@
   <string name="common_open_settings">Apri le impostazioni</string>
   <string name="common_pin">Fissa</string>
   <string name="common_pinned">Appuntato</string>
+  <string name="common_lists">Liste</string>
   <string name="common_unpin">Rimuovi fissaggio</string>
   <string name="common_skip">Salta</string>
   <string name="common_warning">Avviso</string>

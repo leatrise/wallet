@@ -32,6 +32,7 @@ common_latency_in_ms = %d ms
 common_open_settings = Ouvrir les paramètres
 common_pin = Épingler
 common_pinned = Épinglé
+common_lists = Listes
 common_unpin = Désépingler
 common_skip = Passer
 common_warning = Avertissement

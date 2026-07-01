@@ -32,6 +32,7 @@ common_latency_in_ms = %d мс
 common_open_settings = Відкрити налаштування
 common_pin = Закріпити
 common_pinned = Закріплені
+common_lists = Списки
 common_unpin = Відкріпити
 common_skip = Пропустити
 common_warning = Попередження

@@ -30,6 +30,7 @@
 "common.open_settings" = "Mở cài đặt";
 "common.pin" = "Ghim";
 "common.pinned" = "Đã ghim";
+"common.lists" = "Danh sách";
 "common.unpin" = "Bỏ ghim";
 "common.skip" = "Bỏ qua";
 "common.warning" = "Cảnh báo";

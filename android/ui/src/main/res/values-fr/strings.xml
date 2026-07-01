@@ -32,6 +32,7 @@
   <string name="common_open_settings">Ouvrir les paramètres</string>
   <string name="common_pin">Épingler</string>
   <string name="common_pinned">Épinglé</string>
+  <string name="common_lists">Listes</string>
   <string name="common_unpin">Désépingler</string>
   <string name="common_skip">Passer</string>
   <string name="common_warning">Avertissement</string>

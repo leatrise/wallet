@@ -32,6 +32,7 @@ common_latency_in_ms = %d MS
 common_open_settings = פתח את ההגדרות
 common_pin = הצמד
 common_pinned = מוצמד
+common_lists = רשימות
 common_unpin = בטל את ההצמדה
 common_skip = לְדַלֵג
 common_warning = אַזהָרָה

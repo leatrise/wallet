@@ -32,6 +32,7 @@ common_latency_in_ms = %d ms
 common_open_settings = Buka Pengaturan
 common_pin = Sematkan
 common_pinned = Disematkan
+common_lists = Daftar
 common_unpin = Lepas sematan
 common_skip = Lewati
 common_warning = Peringatan
