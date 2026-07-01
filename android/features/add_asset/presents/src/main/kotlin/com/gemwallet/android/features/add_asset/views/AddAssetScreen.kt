@@ -54,10 +54,15 @@ fun AddAssetScree(
                 token = token,
                 explorerLink = explorerLink,
                 isLoading = uiState.isLoading,
-                onCancel = onCancel,
-                onScan = viewModel::onQrScan,
-                onAddAsset = { viewModel.addAsset(onFinish) },
-                onChainSelect = if ((availableChains?.size ?: 0) > 1) viewModel::selectChain else null,
+                canSelectChain = (availableChains?.size ?: 0) > 1,
+                onAction = { action ->
+                    when (action) {
+                        AddAssetAction.Scan -> viewModel.onQrScan()
+                        AddAssetAction.Add -> viewModel.addAsset(onFinish)
+                        AddAssetAction.SelectChain -> viewModel.selectChain()
+                        AddAssetAction.Cancel -> onCancel()
+                    }
+                },
             )
         }
     }
