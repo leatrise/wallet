@@ -9,18 +9,36 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gemwallet.android.features.asset.viewmodels.chart.models.ChartUIModel
 import com.gemwallet.android.features.asset.viewmodels.chart.models.PricePoint
 import com.gemwallet.android.features.asset.viewmodels.chart.models.chartHeader
 import com.gemwallet.android.features.asset.viewmodels.chart.viewmodels.ChartViewModel
 import com.gemwallet.android.ui.components.chart.ChartStateView
 import com.gemwallet.android.ui.components.chart.GemLineChart
+import com.gemwallet.android.ui.models.chart.ChartHeaderUIModel
 import com.gemwallet.android.ui.models.chart.ChartViewState
+import com.wallet.core.primitives.ChartPeriod
 
 @Composable
 fun Chart(viewModel: ChartViewModel = hiltViewModel()) {
     val uiModel by viewModel.chartUIModel.collectAsStateWithLifecycle()
     val state by viewModel.chartUIState.collectAsStateWithLifecycle()
 
+    ChartSection(
+        uiModel = uiModel,
+        state = state,
+        onPeriodSelect = viewModel::setPeriod,
+    ) { selectedPoint -> chartHeader(uiModel, selectedPoint) }
+}
+
+@Composable
+internal fun ChartSection(
+    uiModel: ChartUIModel,
+    state: ChartUIModel.State,
+    onPeriodSelect: (ChartPeriod) -> Unit,
+    periods: List<ChartPeriod> = ChartPeriod.entries,
+    header: (PricePoint?) -> ChartHeaderUIModel?,
+) {
     key(state.period) {
         var selectedIndex by remember { mutableStateOf<Int?>(null) }
 
@@ -37,9 +55,10 @@ fun Chart(viewModel: ChartViewModel = hiltViewModel()) {
 
         ChartStateView(
             state = displayState,
-            header = chartHeader(uiModel, selectedPoint),
+            header = header(selectedPoint),
             period = state.period,
-            onPeriodSelect = viewModel::setPeriod,
+            onPeriodSelect = onPeriodSelect,
+            periods = periods,
         ) {
             GemLineChart(
                 points = uiModel.renderPoints,

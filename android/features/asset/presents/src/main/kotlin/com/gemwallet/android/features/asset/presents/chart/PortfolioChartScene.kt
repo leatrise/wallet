@@ -4,7 +4,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -15,7 +14,6 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,8 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gemwallet.android.features.asset.viewmodels.chart.models.portfolioChartHeader
 import com.gemwallet.android.features.asset.viewmodels.chart.viewmodels.PortfolioChartViewModel
 import com.gemwallet.android.ui.R
-import com.gemwallet.android.ui.components.chart.ChartStateView
-import com.gemwallet.android.ui.components.chart.GemLineChart
 import com.gemwallet.android.ui.components.screen.Scene
 import com.gemwallet.android.ui.models.chart.ChartViewState
 import com.wallet.core.primitives.PortfolioChartType
@@ -130,37 +126,12 @@ private fun PortfolioChart(viewModel: PortfolioChartViewModel) {
     val periods by viewModel.availablePeriods.collectAsStateWithLifecycle()
     val showHeaderValue by viewModel.showHeaderValue.collectAsStateWithLifecycle()
 
-    key(state.period) {
-        var selectedIndex by remember { mutableStateOf<Int?>(null) }
-
-        val displayState = when {
-            state.period != uiModel.period -> ChartViewState.Loading
-            else -> state.viewState
-        }
-        val chartPoints = uiModel.chartPoints
-        val selectedPoint = if (displayState == ChartViewState.Ready) {
-            selectedIndex?.let { chartPoints.getOrNull(it) }
-        } else {
-            null
-        }
-
-        ChartStateView(
-            state = displayState,
-            header = portfolioChartHeader(uiModel, selectedPoint, showHeaderValue),
-            period = state.period,
-            onPeriodSelect = viewModel::setPeriod,
-            periods = periods,
-        ) {
-            GemLineChart(
-                points = uiModel.renderPoints,
-                lineColor = MaterialTheme.colorScheme.primary,
-                selectedIndex = selectedIndex,
-                onSelectionChanged = { selectedIndex = it },
-                minLabel = uiModel.minLabel,
-                maxLabel = uiModel.maxLabel,
-            )
-        }
-    }
+    ChartSection(
+        uiModel = uiModel,
+        state = state,
+        onPeriodSelect = viewModel::setPeriod,
+        periods = periods,
+    ) { selectedPoint -> portfolioChartHeader(uiModel, selectedPoint, showHeaderValue) }
 }
 
 private fun PortfolioType.titleRes(): Int = when (this) {
