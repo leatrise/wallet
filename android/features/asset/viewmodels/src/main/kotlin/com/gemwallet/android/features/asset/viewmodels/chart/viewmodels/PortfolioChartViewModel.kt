@@ -11,6 +11,7 @@ import com.wallet.core.primitives.ChartPeriod
 import com.wallet.core.primitives.Currency
 import com.wallet.core.primitives.PortfolioChartType
 import com.wallet.core.primitives.PortfolioData
+import com.wallet.core.primitives.PortfolioType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,7 +55,7 @@ class PortfolioChartViewModel @Inject constructor(
     ) { period, currency, _ -> period to currency }
         .mapLatest { (period, currency) ->
             try {
-                val data = getPortfolioData.getPortfolioData(period, currency)
+                val data = getPortfolioData.getPortfolioData(PortfolioType.Wallet, period, currency)
                 viewState.value = if (data.chartValues().size < MinChartPoints) ChartViewState.Empty else ChartViewState.Ready
                 data to currency
             } catch (e: Exception) {

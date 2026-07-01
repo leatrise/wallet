@@ -57,6 +57,7 @@ import com.gemwallet.android.data.coordinators.asset.SyncAssetInfoImpl
 import com.gemwallet.android.data.coordinators.asset.SyncAssetsImpl
 import com.gemwallet.android.data.coordinators.asset.ToggleAssetPinImpl
 import com.gemwallet.android.data.coordinators.asset.ToggleHideBalancesImpl
+import com.gemwallet.android.blockchain.services.PerpetualService
 import com.gemwallet.android.data.repositories.assets.AssetsRepository
 import com.gemwallet.android.data.repositories.config.UserConfig
 import com.gemwallet.android.data.repositories.perpetual.ObservePerpetualWallet
@@ -163,9 +164,13 @@ object AssetModule {
     fun provideGetPortfolioData(
         gemDeviceApiClient: GemDeviceApiClient,
         assetsRepository: AssetsRepository,
+        perpetualService: PerpetualService,
+        sessionRepository: SessionRepository,
     ): GetPortfolioData = GetPortfolioDataImpl(
         gemDeviceApiClient = gemDeviceApiClient,
         assetsRepository = assetsRepository,
+        perpetualService = perpetualService,
+        sessionRepository = sessionRepository,
     )
 
     @Provides

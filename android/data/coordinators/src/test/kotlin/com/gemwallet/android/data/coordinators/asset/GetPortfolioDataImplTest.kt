@@ -1,8 +1,11 @@
 package com.gemwallet.android.data.coordinators.asset
 
+import com.gemwallet.android.blockchain.services.PerpetualService
 import com.gemwallet.android.data.repositories.assets.AssetsRepository
+import com.gemwallet.android.data.repositories.session.SessionRepository
 import com.gemwallet.android.data.services.gemapi.GemDeviceApiClient
 import com.gemwallet.android.model.AssetBalance
+import com.gemwallet.android.model.Session
 import com.gemwallet.android.testkit.mockAsset
 import com.gemwallet.android.testkit.mockAssetEthereum
 import com.gemwallet.android.testkit.mockAssetInfo
@@ -15,10 +18,12 @@ import com.wallet.core.primitives.PortfolioAsset
 import com.wallet.core.primitives.PortfolioAssets
 import com.wallet.core.primitives.PortfolioAssetsRequest
 import com.wallet.core.primitives.PortfolioStatistic
+import com.wallet.core.primitives.PortfolioType
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -29,10 +34,14 @@ class GetPortfolioDataImplTest {
 
     private val gemDeviceApiClient = mockk<GemDeviceApiClient>()
     private val assetsRepository = mockk<AssetsRepository>(relaxed = true)
+    private val perpetualService = mockk<PerpetualService>(relaxed = true)
+    private val sessionRepository = mockk<SessionRepository>(relaxed = true)
 
     private val subject = GetPortfolioDataImpl(
         gemDeviceApiClient = gemDeviceApiClient,
         assetsRepository = assetsRepository,
+        perpetualService = perpetualService,
+        sessionRepository = sessionRepository,
     )
 
     private fun portfolio(allTimeHigh: ChartValuePercentage? = null) = PortfolioAssets(
@@ -55,7 +64,7 @@ class GetPortfolioDataImplTest {
         every { assetsRepository.getCurrencyRate(Currency.EUR) } returns flowOf(FiatRate("EUR", 2.0))
         coEvery { gemDeviceApiClient.getPortfolioAssets("day", any()) } returns portfolio()
 
-        val result = subject.getPortfolioData(period = ChartPeriod.Day, currency = Currency.EUR)
+        val result = subject.getPortfolioData(PortfolioType.Wallet, period = ChartPeriod.Day, currency = Currency.EUR)
 
         coVerify {
             gemDeviceApiClient.getPortfolioAssets(
@@ -77,9 +86,16 @@ class GetPortfolioDataImplTest {
         val allTimeHigh = ChartValuePercentage(date = 10L, value = 99f, percentage = 5f)
         coEvery { gemDeviceApiClient.getPortfolioAssets(any(), any()) } returns portfolio(allTimeHigh = allTimeHigh)
 
-        val result = subject.getPortfolioData(period = ChartPeriod.Day, currency = Currency.USD)
+        val result = subject.getPortfolioData(PortfolioType.Wallet, period = ChartPeriod.Day, currency = Currency.USD)
 
         assertEquals(listOf(PortfolioStatistic.AllTimeHigh(allTimeHigh)), result.statistics)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun getPortfolioData_perpetualsThrowsWithoutAccount() = runTest {
+        every { sessionRepository.session() } returns MutableStateFlow<Session?>(null)
+
+        subject.getPortfolioData(PortfolioType.Perpetuals, period = ChartPeriod.All, currency = Currency.USD)
     }
 
     @Test
@@ -90,7 +106,7 @@ class GetPortfolioDataImplTest {
         every { assetsRepository.getCurrencyRate(Currency.EUR) } returns flowOf(null)
         coEvery { gemDeviceApiClient.getPortfolioAssets(any(), any()) } returns portfolio()
 
-        val result = subject.getPortfolioData(period = ChartPeriod.Day, currency = Currency.EUR)
+        val result = subject.getPortfolioData(PortfolioType.Wallet, period = ChartPeriod.Day, currency = Currency.EUR)
 
         assertTrue(result.charts.isEmpty())
     }
