@@ -7,8 +7,7 @@
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white)](https://t.me/gemwallet_developers)
 ![GitHub Repo stars](https://img.shields.io/github/stars/gemwalletcom/wallet?style=social)
 
-[![Core Unit Tests](https://github.com/gemwalletcom/wallet/actions/workflows/core-ci.yml/badge.svg)](https://github.com/gemwalletcom/wallet/actions/workflows/core-ci.yml)
-[![Core Lint](https://github.com/gemwalletcom/wallet/actions/workflows/core-lint.yml/badge.svg)](https://github.com/gemwalletcom/wallet/actions/workflows/core-lint.yml)
+[![Core CI](https://github.com/gemwalletcom/wallet/actions/workflows/core-ci.yml/badge.svg)](https://github.com/gemwalletcom/wallet/actions/workflows/core-ci.yml)
 [![Dynode Docker](https://github.com/gemwalletcom/wallet/actions/workflows/dynode-docker.yml/badge.svg)](https://github.com/gemwalletcom/wallet/actions/workflows/dynode-docker.yml)
 
 # Introduction
