@@ -2,7 +2,7 @@ use gem_tracing::info_with_fields;
 use pricer::PriceClient;
 use prices::{AssetPriceFull, AssetPriceMapping, PriceAssetsProvider, PriceProviderAsset, PriceProviderAssetMetadata};
 use primitives::{AssetId, PriceData};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use storage::database::prices::PriceFilter;
 use storage::models::{AssetRow, PriceRow};
@@ -163,13 +163,29 @@ impl PricesUpdater {
     fn save_assets_metadata(&self, metadata: Vec<PriceProviderAssetMetadata>) -> Result<usize, Box<dyn std::error::Error + Send + Sync>> {
         let metadata_by_asset_id: HashMap<String, PriceProviderAssetMetadata> =
             metadata.into_iter().map(|asset_metadata| (asset_metadata.asset_id.to_string(), asset_metadata)).collect();
-        for asset_metadata in metadata_by_asset_id.values() {
+
+        let asset_ids = metadata_by_asset_id.values().map(|asset_metadata| asset_metadata.asset_id.clone()).collect();
+        let enabled_asset_ids: HashSet<String> = self
+            .database
+            .assets()?
+            .get_assets_rows(asset_ids)?
+            .into_iter()
+            .filter(|asset| asset.is_enabled)
+            .map(|asset| asset.id)
+            .collect();
+
+        let mut updated = 0;
+        for (asset_id, asset_metadata) in &metadata_by_asset_id {
+            if !enabled_asset_ids.contains(asset_id) {
+                continue;
+            }
             self.database
                 .assets()?
                 .update_assets(vec![asset_metadata.asset_id.clone()], vec![AssetUpdate::Rank(asset_metadata.rank)])?;
             self.database.assets_links()?.add_assets_links(&asset_metadata.asset_id, asset_metadata.links.clone())?;
+            updated += 1;
         }
-        Ok(metadata_by_asset_id.len())
+        Ok(updated)
     }
 
     fn store_asset_updates(&self, updates: Vec<(AssetId, AssetUpdate)>) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
