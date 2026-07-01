@@ -1,12 +1,12 @@
 package com.gemwallet.android.features.asset.presents.chart
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -26,7 +26,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gemwallet.android.features.asset.viewmodels.chart.models.portfolioChartHeader
 import com.gemwallet.android.features.asset.viewmodels.chart.viewmodels.PortfolioChartViewModel
 import com.gemwallet.android.ui.R
+import com.gemwallet.android.ui.components.TabsBar
 import com.gemwallet.android.ui.components.screen.Scene
+import com.gemwallet.android.ui.icons.AppIcons
 import com.gemwallet.android.ui.models.chart.ChartViewState
 import com.wallet.core.primitives.PortfolioChartType
 import com.wallet.core.primitives.PortfolioType
@@ -84,19 +86,10 @@ fun PortfolioChartScene(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PortfolioTypeSelector(selected: PortfolioType, onSelect: (PortfolioType) -> Unit) {
-    SingleChoiceSegmentedButtonRow {
-        val types = PortfolioType.entries
-        types.forEachIndexed { index, type ->
-            SegmentedButton(
-                selected = type == selected,
-                onClick = { onSelect(type) },
-                shape = SegmentedButtonDefaults.itemShape(index = index, count = types.size),
-                label = { Text(stringResource(type.titleRes())) },
-            )
-        }
+    TabsBar(PortfolioType.entries, selected, onSelect) { type ->
+        Text(stringResource(type.titleRes()))
     }
 }
 
@@ -104,7 +97,18 @@ private fun PortfolioTypeSelector(selected: PortfolioType, onSelect: (PortfolioT
 private fun ChartTypeSelector(selected: PortfolioChartType, onSelect: (PortfolioChartType) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     TextButton(onClick = { expanded = true }) {
-        Text(stringResource(selected.titleRes()), fontWeight = FontWeight.SemiBold)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(selected.titleRes()),
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.SemiBold,
+            )
+            Icon(
+                imageVector = AppIcons.ExpandMore,
+                tint = MaterialTheme.colorScheme.onSurface,
+                contentDescription = "select_chart_type",
+            )
+        }
     }
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         PortfolioChartType.entries.forEach { type ->
