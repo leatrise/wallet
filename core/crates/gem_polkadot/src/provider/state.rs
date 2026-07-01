@@ -3,6 +3,7 @@ use chain_traits::ChainState;
 use std::error::Error;
 
 use gem_client::Client;
+use primitives::NodeSyncStatus;
 
 use crate::rpc::client::PolkadotClient;
 
@@ -14,6 +15,33 @@ impl<C: Client> ChainState for PolkadotClient<C> {
 
     async fn get_block_latest_number(&self) -> Result<u64, Box<dyn Error + Sync + Send>> {
         Ok(self.get_block_header("head").await?.number)
+    }
+
+    async fn get_node_status(&self) -> Result<NodeSyncStatus, Box<dyn Error + Sync + Send>> {
+        let latest_block = self.get_block_latest_number().await?;
+        Ok(NodeSyncStatus::synced(latest_block))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use gem_client::testkit::MockClient;
+
+    #[tokio::test]
+    async fn test_get_node_status() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+        let client = PolkadotClient::new(MockClient::new().with_get(|path| {
+            assert_eq!(path, "/blocks/head/header");
+            Ok(r#"{"number":"123456"}"#.as_bytes().to_vec())
+        }));
+
+        let status = client.get_node_status().await?;
+
+        assert!(status.in_sync);
+        assert_eq!(status.latest_block_number, Some(123456));
+        assert_eq!(status.current_block_number, Some(123456));
+
+        Ok(())
     }
 }
 
