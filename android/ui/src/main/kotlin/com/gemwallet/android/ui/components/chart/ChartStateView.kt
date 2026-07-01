@@ -32,6 +32,7 @@ fun ChartStateView(
     period: ChartPeriod,
     onPeriodSelect: (ChartPeriod) -> Unit,
     modifier: Modifier = Modifier,
+    periods: List<ChartPeriod> = ChartPeriod.entries,
     chartBody: @Composable BoxScope.() -> Unit,
 ) {
     Column(
@@ -67,7 +68,7 @@ fun ChartStateView(
                 }
             }
         }
-        PeriodsPanel(period, onPeriodSelect)
+        PeriodsPanel(period, onPeriodSelect, periods)
     }
 }
 
