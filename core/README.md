@@ -8,7 +8,6 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/gemwalletcom/wallet?style=social)
 
 [![Core CI](https://github.com/gemwalletcom/wallet/actions/workflows/core-ci.yml/badge.svg)](https://github.com/gemwalletcom/wallet/actions/workflows/core-ci.yml)
-[![Dynode Docker](https://github.com/gemwalletcom/wallet/actions/workflows/dynode-docker.yml/badge.svg)](https://github.com/gemwalletcom/wallet/actions/workflows/dynode-docker.yml)
 
 # Introduction
 
