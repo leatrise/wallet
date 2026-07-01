@@ -37,6 +37,7 @@ import com.gemwallet.android.ui.navigation.routes.addAssetScreen
 import com.gemwallet.android.ui.navigation.routes.amount
 import com.gemwallet.android.ui.navigation.routes.assetChartScreen
 import com.gemwallet.android.ui.navigation.routes.assetScreen
+import com.gemwallet.android.ui.navigation.routes.portfolioChartScreen
 import com.gemwallet.android.ui.navigation.routes.bridgesScreen
 import com.gemwallet.android.ui.navigation.routes.confirm
 import com.gemwallet.android.ui.navigation.routes.fiatScreen
@@ -128,6 +129,10 @@ fun WalletNavGraph(
                 onAddPriceAlertTarget = navigator::openAddPriceAlertTarget,
                 toastMessage = navigator::toastMessage,
                 onToastShown = navigator::clearToastMessage,
+                onCancel = onCancel,
+            )
+
+            portfolioChartScreen(
                 onCancel = onCancel,
             )
 

@@ -69,6 +69,7 @@ import com.gemwallet.android.ui.navigation.routes.SwapPairRoute
 import com.gemwallet.android.ui.navigation.routes.SwapRoute
 import com.gemwallet.android.ui.navigation.routes.SwapSelectRoute
 import com.gemwallet.android.ui.navigation.routes.TransactionDetailsRoute
+import com.gemwallet.android.ui.navigation.routes.PortfolioChartRoute
 import com.gemwallet.android.ui.navigation.routes.WalletDetailsRoute
 import com.gemwallet.android.ui.navigation.routes.WalletImageRoute
 import com.gemwallet.android.ui.navigation.routes.WalletPhraseRoute
@@ -189,6 +190,7 @@ class WalletNavigator(
     fun openAddAsset() = push(AddAssetRoute)
     fun openAsset(assetId: AssetId) = push(AssetRoute(assetId))
     fun openAssetChart(assetId: AssetId) = push(AssetChartRoute(assetId))
+    fun openPortfolioChart() = push(PortfolioChartRoute)
     fun openTransaction(transactionId: TransactionId) = push(TransactionDetailsRoute(transactionId))
     fun openBridgeConnections() = push(BridgeConnectionsRoute)
     fun openBridgeConnectionDetails(connectionId: String) = push(BridgeConnectionDetailsRoute(connectionId))
