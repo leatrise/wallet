@@ -7,8 +7,7 @@ import com.gemwallet.android.application.fiat.coordinators.SyncFiatTransactions
 import com.gemwallet.android.application.pricealerts.coordinators.UpdatePriceAlerts
 import com.gemwallet.android.blockchain.services.BalancesService
 import com.gemwallet.android.blockchain.services.PerpetualService
-import com.gemwallet.android.cases.device.IsDeviceRegistered
-import com.gemwallet.android.cases.device.SyncDeviceInfo
+import com.gemwallet.android.cases.device.EnsureDeviceRegistered
 import com.gemwallet.android.cases.nft.SyncNfts
 import com.gemwallet.android.cases.tokens.SearchTokensCase
 import com.gemwallet.android.application.transactions.coordinators.SyncTransactions
@@ -150,8 +149,7 @@ object AssetsModule {
         deviceRequestSigner: DeviceRequestSigner,
         streamSubscriptionService: StreamSubscriptionService,
         eventHandler: StreamEventHandler,
-        syncDeviceInfo: SyncDeviceInfo,
-        isDeviceRegistered: IsDeviceRegistered,
+        ensureDeviceRegistered: EnsureDeviceRegistered,
     ): StreamObserverService = StreamObserverService(
         sessionRepository = sessionRepository,
         userConfig = userConfig,
@@ -168,8 +166,7 @@ object AssetsModule {
             },
             reconnection = ExponentialReconnection(maxDelay = 30.0),
         ),
-        syncDeviceInfo = syncDeviceInfo,
-        isDeviceRegistered = isDeviceRegistered,
+        ensureDeviceRegistered = ensureDeviceRegistered,
     )
 
     @Provides

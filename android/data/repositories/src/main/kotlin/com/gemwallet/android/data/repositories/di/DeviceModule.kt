@@ -3,6 +3,7 @@ package com.gemwallet.android.data.repositories.di
 import android.content.Context
 import com.gemwallet.android.application.device.coordinators.GetDeviceId
 import com.gemwallet.android.application.session.coordinators.GetCurrentCurrency
+import com.gemwallet.android.cases.device.EnsureDeviceRegistered
 import com.gemwallet.android.cases.device.GetPushEnabled
 import com.gemwallet.android.cases.device.GetPushToken
 import com.gemwallet.android.cases.device.IsDeviceRegistered
@@ -15,6 +16,7 @@ import com.gemwallet.android.data.repositories.pricealerts.PriceAlertRepository
 import com.gemwallet.android.data.repositories.wallets.WalletsRepository
 import com.gemwallet.android.data.service.store.ConfigStore
 import com.gemwallet.android.data.services.gemapi.GemDeviceApiClient
+import com.gemwallet.android.data.services.gemapi.di.DeviceApiWithoutRegistration
 import com.gemwallet.android.model.BuildInfo
 import dagger.Module
 import dagger.Provides
@@ -33,7 +35,7 @@ object DeviceModule {
     fun provideDeviceRepository(
         @ApplicationContext context: Context,
         buildInfo: BuildInfo,
-        gemDeviceApiClient: GemDeviceApiClient,
+        @DeviceApiWithoutRegistration gemDeviceApiClient: GemDeviceApiClient,
         getDeviceId: GetDeviceId,
         priceAlertRepository: PriceAlertRepository,
         getCurrentCurrency: GetCurrentCurrency,
@@ -73,4 +75,7 @@ object DeviceModule {
 
     @Provides
     fun provideIsDeviceRegisteredCase(repository: DeviceRepository): IsDeviceRegistered = repository
+
+    @Provides
+    fun provideEnsureDeviceRegisteredCase(repository: DeviceRepository): EnsureDeviceRegistered = repository
 }

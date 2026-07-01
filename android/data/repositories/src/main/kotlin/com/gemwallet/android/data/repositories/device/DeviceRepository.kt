@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.gemwallet.android.application.device.coordinators.GetDeviceId
 import com.gemwallet.android.application.session.coordinators.GetCurrentCurrency
+import com.gemwallet.android.cases.device.EnsureDeviceRegistered
 import com.gemwallet.android.cases.device.GetPushEnabled
 import com.gemwallet.android.cases.device.GetPushToken
 import com.gemwallet.android.cases.device.IsDeviceRegistered
@@ -36,6 +37,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.Locale
 import kotlin.collections.firstOrNull
 import kotlin.collections.map
@@ -58,9 +61,12 @@ class DeviceRepository(
     GetPushToken,
     SetPushToken,
     SyncSubscription,
-    IsDeviceRegistered
+    IsDeviceRegistered,
+    EnsureDeviceRegistered
 {
     private val Context.dataStore by preferencesDataStore(name = "device_config")
+
+    private val registrationMutex = Mutex()
 
     override suspend fun syncDeviceInfo() {
         synchronizeDevice(
@@ -150,18 +156,23 @@ class DeviceRepository(
         return context.dataStore.data.map { it[Key.DeviceRegistered] }.firstOrNull() == true
     }
 
-    private suspend fun getOrCreateDevice(device: Device): Device {
+    override suspend fun invoke() {
+        if (isDeviceRegistered()) return
+        syncDeviceInfo()
+    }
+
+    private suspend fun getOrCreateDevice(device: Device): Device = registrationMutex.withLock {
         if (isDeviceRegistered() || gemDeviceApiClient.isDeviceRegistered()) {
             gemDeviceApiClient.getDevice()?.let { remoteDevice ->
                 setDeviceRegistered(true)
-                return remoteDevice
+                return@withLock remoteDevice
             }
             setDeviceRegistered(false)
         }
 
         val registeredDevice = gemDeviceApiClient.registerDevice(device) ?: device
         setDeviceRegistered(gemDeviceApiClient.isDeviceRegistered())
-        return registeredDevice
+        registeredDevice
     }
 
     private suspend fun updateDevice(remote: Device, request: Device) {

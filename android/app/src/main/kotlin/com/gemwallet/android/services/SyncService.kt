@@ -13,8 +13,8 @@ class SyncService @Inject constructor(
 
     suspend fun sync() {
         withContext(Dispatchers.IO) {
-            runCatching { syncFiatAssets() }
             runCatching { syncDeviceInfo.syncDeviceInfo() }
+            runCatching { syncFiatAssets() }
         }
     }
 }
