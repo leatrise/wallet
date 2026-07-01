@@ -15,6 +15,7 @@ import com.gemwallet.android.application.assets.coordinators.GetHideBalancesStat
 import com.gemwallet.android.application.assets.coordinators.GetImportInProgress
 import com.gemwallet.android.application.assets.coordinators.GetSearchLists
 import com.gemwallet.android.application.assets.coordinators.GetShowWelcomeBanner
+import com.gemwallet.android.application.assets.coordinators.GetPortfolioData
 import com.gemwallet.android.application.assets.coordinators.GetWalletSummary
 import com.gemwallet.android.application.assets.coordinators.EnsureWalletAssets
 import com.gemwallet.android.application.assets.coordinators.HideAsset
@@ -43,6 +44,7 @@ import com.gemwallet.android.data.coordinators.asset.GetHideBalancesStateImpl
 import com.gemwallet.android.data.coordinators.asset.GetImportInProgressImpl
 import com.gemwallet.android.data.coordinators.asset.GetSearchListsImpl
 import com.gemwallet.android.data.coordinators.asset.GetShowWelcomeBannerImpl
+import com.gemwallet.android.data.coordinators.asset.GetPortfolioDataImpl
 import com.gemwallet.android.data.coordinators.asset.GetWalletSummaryImpl
 import com.gemwallet.android.data.coordinators.asset.DeviceAssetsSyncService
 import com.gemwallet.android.data.coordinators.asset.EnsureWalletAssetsImpl
@@ -62,6 +64,7 @@ import com.gemwallet.android.data.repositories.perpetual.PerpetualRepository
 import com.gemwallet.android.data.repositories.session.SessionRepository
 import com.gemwallet.android.data.repositories.stream.StreamSubscriptionService
 import com.gemwallet.android.data.services.gemapi.GemApiClient
+import com.gemwallet.android.data.services.gemapi.GemDeviceApiClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -152,6 +155,16 @@ object AssetModule {
         assetsRepository: AssetsRepository,
     ): GetAssetChartData = GetAssetChartDataImpl(
         gemApiClient = gemApiClient,
+        assetsRepository = assetsRepository,
+    )
+
+    @Provides
+    @Singleton
+    fun provideGetPortfolioData(
+        gemDeviceApiClient: GemDeviceApiClient,
+        assetsRepository: AssetsRepository,
+    ): GetPortfolioData = GetPortfolioDataImpl(
+        gemDeviceApiClient = gemDeviceApiClient,
         assetsRepository = assetsRepository,
     )
 
