@@ -8,7 +8,5 @@ where
 }
 
 mod string_or_number;
-mod string_value;
 
 pub(crate) use string_or_number::{StringOrNumberFromValue, StringOrNumberVisitor};
-pub(crate) use string_value::StringFromValueVisitor;
