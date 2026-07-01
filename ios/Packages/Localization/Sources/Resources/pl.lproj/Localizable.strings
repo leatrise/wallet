@@ -278,6 +278,9 @@
 "swap.you_receive" = "Otrzymujesz";
 "swap.price_impact" = "Wpływ na cenę";
 "swap.slippage" = "Poślizg";
+"swap.slippage_warning" = "Wysoki poślizg. Twoja zamiana może zostać wykonana po gorszej cenie niż oczekiwano.";
+"swap.slippage_auto" = "Auto";
+"swap.slippage_auto_description" = "Automatycznie ustawia najlepszy poślizg dla udanej wymiany.";
 "swap.price_impact_warning.description" = "Stracisz %@ swojego %@ w tej transakcji. Czy na pewno chcesz kontynuować?";
 "swap.price_impact_warning.title" = "Wysoki wpływ cen";
 "swap.estimated_time.title" = "Szacowany czas";

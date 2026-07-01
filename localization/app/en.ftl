@@ -653,6 +653,9 @@ swap_you_receive = You Receive
 swap_price_impact = Price Impact
 # Used in Swap flow and swap details screen for the slippage label.
 swap_slippage = Slippage
+swap_slippage_warning = High slippage. Your swap may be executed at a worse price than expected.
+swap_slippage_auto = Auto
+swap_slippage_auto_description = Automatically set the best slippage for a successful swap.
 # Used in Swap flow and swap details screen for the price impact warning description. Contains 2 string placeholders.
 swap_price_impact_warning_description = You will lose %@ of your %@ in this trade. Are you sure you want to proceed?
 # Used in Swap flow and swap details screen for the price impact warning title.

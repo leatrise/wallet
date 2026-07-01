@@ -13,6 +13,10 @@ public struct SwapDetailsView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable private var model: SwapDetailsViewModel
 
+    @State private var isPresentingProviderSelection = false
+    @State private var isPresentingSlippage = false
+    @State private var infoSheet: InfoSheetType?
+
     public init(model: Bindable<SwapDetailsViewModel>) {
         _model = model
     }
@@ -35,15 +39,23 @@ public struct SwapDetailsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .listSectionSpacing(.compact)
         .contentMargins([.top], .extraSmall, for: .scrollContent)
-        .sheet(item: $model.isPresentingInfoSheet) {
+        .sheet(item: $infoSheet) {
             InfoSheetScene(type: $0)
         }
-        .sheet(isPresented: $model.isPresentingSwapProviderSelectionSheet) {
+        .sheet(isPresented: $isPresentingProviderSelection) {
             SelectableListNavigationStack(
                 model: model.swapProvidersViewModel,
-                onFinishSelection: model.onFinishSwapProviderSelection,
+                onFinishSelection: {
+                    model.onFinishSwapProviderSelection(item: $0)
+                    isPresentingProviderSelection = false
+                },
                 listContent: { SimpleListItemView(model: $0) },
             )
+        }
+        .sheet(isPresented: $isPresentingSlippage) {
+            SwapSlippageScene(model: model.swapSlippageViewModel)
+                .presentationDetents([.medium])
+                .presentationBackground(Colors.grayBackground)
         }
     }
 
@@ -55,7 +67,7 @@ public struct SwapDetailsView: View {
                     NavigationCustomLink(
                         with: view,
                     ) {
-                        model.onSelectProvidersSelection()
+                        isPresentingProviderSelection = true
                     }
                 } else {
                     view
@@ -80,15 +92,22 @@ public struct SwapDetailsView: View {
 
                 PriceImpactView(
                     model: model.priceImpactModel,
-                    infoAction: model.onSelectPriceImpactInfoSheet,
+                    infoAction: { infoSheet = .priceImpact },
                 )
 
                 ListItemView(field: model.minReceiveField)
 
-                ListItemView(
+                let slippageView = ListItemView(
                     field: model.slippageField,
-                    infoAction: model.onSelectSlippageInfoSheet,
+                    infoAction: { infoSheet = .slippage },
                 )
+                if model.allowSelectSlippage {
+                    NavigationCustomLink(with: slippageView) {
+                        isPresentingSlippage = true
+                    }
+                } else {
+                    slippageView
+                }
             }
         }
     }

@@ -4,7 +4,6 @@ import Components
 import Formatters
 import Foundation
 import struct Gemstone.SwapperQuote
-import InfoSheet
 import Localization
 import Preferences
 import Primitives
@@ -28,31 +27,34 @@ public final class SwapDetailsViewModel {
     private let toAssetPrice: AssetPriceValue
     private let providerViewModel: SwapProviderViewModel
     private var selectedQuote: SwapQuote
+    private let slippage: SwapSlippage
     private var rateDirection: AssetRateFormatter.Direction = .direct
     private let priceViewModel: PriceViewModel
     private let isProviderSelectionEnabled: Bool
     private let swapProviderSelectAction: ((SwapperQuote) -> Void)?
-
-    var isPresentingInfoSheet: InfoSheetType?
-    var isPresentingSwapProviderSelectionSheet: Bool = false
+    private let slippageSelectAction: ((SwapSlippage) -> Void)?
 
     public init(
         state: StateViewType<[SwapperQuote]>? = nil,
         fromAssetPrice: AssetPriceValue,
         toAssetPrice: AssetPriceValue,
         selectedQuote: SwapQuote,
+        slippage: SwapSlippage,
         preferences: Preferences = .standard,
         isProviderSelectionEnabled: Bool = true,
         swapProviderSelectAction: ((SwapperQuote) -> Void)? = nil,
+        slippageSelectAction: ((SwapSlippage) -> Void)? = nil,
     ) {
         self.state = state ?? .data([])
         self.fromAssetPrice = fromAssetPrice
         self.toAssetPrice = toAssetPrice
         providerViewModel = SwapProviderViewModel(providerData: selectedQuote.providerData)
         self.selectedQuote = selectedQuote
+        self.slippage = slippage
         priceViewModel = PriceViewModel(price: toAssetPrice.price, currencyCode: preferences.currency)
         self.isProviderSelectionEnabled = isProviderSelectionEnabled
         self.swapProviderSelectAction = swapProviderSelectAction
+        self.slippageSelectAction = slippageSelectAction
     }
 
     // MARK: - Provider
@@ -144,7 +146,24 @@ public final class SwapDetailsViewModel {
     }
 
     var slippageField: ListItemField {
-        ListItemField(title: Localized.Swap.slippage, value: percentSignLessFormatter.string(Double(slippageValue).rounded(toPlaces: 2)))
+        let value: String = switch slippage {
+        case .auto: Localized.Swap.slippageAuto
+        case let .manual(bps): percentSignLessFormatter.string((Double(bps) / 100).rounded(toPlaces: 2))
+        }
+        return ListItemField(title: Localized.Swap.slippage, value: value)
+    }
+
+    var allowSelectSlippage: Bool {
+        slippageSelectAction != nil
+    }
+
+    var swapSlippageViewModel: SwapSlippageViewModel {
+        SwapSlippageViewModel(
+            slippage: slippage,
+            onSelect: { [weak self] slippage in
+                self?.slippageSelectAction?(slippage)
+            },
+        )
     }
 
     // MARK: - Min receive
@@ -189,18 +208,5 @@ extension SwapDetailsViewModel {
         guard let quote = item.first?.swapperQuote, let swapQuote = try? quote.map() else { return }
         swapProviderSelectAction?(quote)
         selectedQuote = swapQuote
-        isPresentingSwapProviderSelectionSheet = false
-    }
-
-    func onSelectPriceImpactInfoSheet() {
-        isPresentingInfoSheet = .priceImpact
-    }
-
-    func onSelectSlippageInfoSheet() {
-        isPresentingInfoSheet = .slippage
-    }
-
-    func onSelectProvidersSelection() {
-        isPresentingSwapProviderSelectionSheet = true
     }
 }

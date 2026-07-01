@@ -278,6 +278,9 @@
 "swap.you_receive" = "Recibes";
 "swap.price_impact" = "Impacto en el precio";
 "swap.slippage" = "Deslizamiento";
+"swap.slippage_warning" = "Deslizamiento alto. Tu swap podría ejecutarse a un precio peor de lo esperado.";
+"swap.slippage_auto" = "Automático";
+"swap.slippage_auto_description" = "Establece automáticamente el mejor deslizamiento para un swap exitoso.";
 "swap.price_impact_warning.description" = "Perderás %@ de tus %@ en esta operación. ¿Estás seguro de que deseas continuar?";
 "swap.price_impact_warning.title" = "Alto impacto en el precio";
 "swap.estimated_time.title" = "Tiempo estimado";

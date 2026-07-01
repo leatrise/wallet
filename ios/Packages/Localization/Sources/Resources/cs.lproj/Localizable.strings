@@ -278,6 +278,9 @@
 "swap.you_receive" = "Přijímáte";
 "swap.price_impact" = "Vliv ceny";
 "swap.slippage" = "Skluz";
+"swap.slippage_warning" = "Vysoký skluz. Vaše směna může proběhnout za horší cenu, než se očekávalo.";
+"swap.slippage_auto" = "Auto";
+"swap.slippage_auto_description" = "Automaticky nastaví nejlepší skluz pro úspěšný swap.";
 "swap.price_impact_warning.description" = "V tomto obchodu ztratíte %@ z vašich %@. Jste si jisti, že chcete pokračovat?";
 "swap.price_impact_warning.title" = "Vysoký cenový dopad";
 "swap.estimated_time.title" = "Odhadovaný čas";
