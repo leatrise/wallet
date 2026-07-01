@@ -20,6 +20,7 @@
 - Keep test names short and descriptive
 - One behavior per test, small number of assertions
 - Keep setup minimal: prefer shared testkit defaults and override only the inputs that the assertion actually depends on
+- Do not create unit tests that spin up ad hoc local HTTP/TCP test servers; use shared fixtures, MockK, or integration tests instead
 
 ### Instrumented Tests (`src/androidTest/kotlin/`)
 

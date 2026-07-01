@@ -52,7 +52,7 @@ For ViewModel or display-model behavior, pair the module build with the narrowes
 
 Use `./gradlew assembleGoogleDebug` when the change touches app composition, navigation wiring, flavor-specific code, generated bindings, or code that cannot be validated by a module build.
 
-## Test and Quality Commands
+## Test Commands
 
 ```bash
 just test
@@ -62,7 +62,6 @@ just test-integration
 ./gradlew assembleGoogleDebugAndroidTest
 ./gradlew connectedGoogleDebugAndroidTest
 ./gradlew check
-./gradlew lint
 ```
 
 ## Command Rules

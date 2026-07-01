@@ -36,7 +36,6 @@ Read `ios/AGENTS.md`. Work in `ios/`.
    cd ios && just build-package <PACKAGE>
    cd ios && just test <TARGET>
    cd ios && just build
-   cd ios && just lint
    ```
 
 ## 4. Android
@@ -50,7 +49,6 @@ Read `android/AGENTS.md`. Work in `android/`.
    cd android && ./gradlew :<module>:assembleDebug
    cd android && ./gradlew :<module>:testDebugUnitTest
    cd android && ./gradlew assembleGoogleDebug
-   cd android && ./gradlew lint
    ```
 
 ## 5. Final Verification

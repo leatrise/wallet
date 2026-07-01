@@ -8,6 +8,7 @@
 - Use `Result<(), Box<dyn std::error::Error + Send + Sync>>` for test error handling
 - Configure integration tests with `test = false` and appropriate `required-features` for manual execution
 - Prefer real networks for RPC client tests (e.g., Ethereum mainnet)
+- Do not create unit tests that spin up ad hoc local HTTP/TCP test servers; use pure fixtures, injected clients, or gated integration tests instead
 
 ## Use `.unwrap()`, not `.expect()` in Tests
 

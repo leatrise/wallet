@@ -69,17 +69,16 @@ This is a crypto wallet. Treat security-sensitive changes as high risk by defaul
 
 For documentation-only changes, do not run mobile/core build and test suites unless the docs change also modifies executable scripts, generated inputs, localization inputs, CI configuration, build configuration, or release/security procedures. Verify docs-only changes with lightweight checks such as `git diff --check`, link/path inspection, and a quick read-through of the edited files.
 
-During active implementation, rebase conflict resolution, or compile-fix loops, prefer targeted build/test commands and defer broad verification until the change is ready to commit. Do not run full platform builds, full test suites, broad lint, or format after every small edit unless the risk of the change requires it. Do not skip required lint/format checks silently before final handoff; run them in the final verification batch, or report the exact reason they are still pending.
+During active implementation, rebase conflict resolution, or compile-fix loops, prefer targeted build/test commands and defer broad verification until the change is ready to commit. Do not run full platform builds, full test suites, broad lint, or format after every small edit unless the risk of the change requires it.
 
 Run final verification as a batch after you believe no more code edits are needed. If formatting, localization, generation, or a compile fix changes source after that batch starts, rerun the affected targeted checks before handoff.
 
 Before finishing a task:
 1. Build the affected platform(s)
 2. Run the relevant test suites
-3. Run the relevant linters and formatters when code changed
-4. Review security impact for changes affecting secrets, signing, auth, transactions, or wallet recovery
-5. If `core/` changed, regenerate bindings/models and verify both apps
-6. Remove dead code, keep imports clean, and follow platform patterns
+3. Review security impact for changes affecting secrets, signing, auth, transactions, or wallet recovery
+4. If `core/` changed, regenerate bindings/models and verify both apps
+5. Remove dead code, keep imports clean, and follow platform patterns
 
 Do not close a task based only on reasoning, `git diff`, or file inspection. Run real verification commands for the changed area. If verification is blocked by unrelated repo state, report the exact command you ran and the blocking failure explicitly.
 

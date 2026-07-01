@@ -15,8 +15,6 @@ just test-without-building  # re-run tests after build-for-testing
 just test AssetsTests       # run a specific test target
 just test-integration       # run iOS integration/UI tests
 just test-ui                # run iOS integration/UI tests
-just lint                   # run SwiftLint with autofix
-just format                 # run SwiftFormat
 ```
 
 ## Generation and Localization
@@ -61,7 +59,6 @@ Use `just build` when the change touches app composition, navigation wiring, gen
 
 ```bash
 just spm-resolve-all
-just format                 # format Swift sources when needed
 ```
 
 ## Command Rules

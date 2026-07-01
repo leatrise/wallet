@@ -15,6 +15,7 @@
 - Keep test names short and descriptive, for example `showManageToken`
 - Keep tests concise, usually one behavior with a small number of assertions
 - Skip trivial tests that only restate obvious behavior
+- Do not create unit tests that spin up ad hoc local HTTP/TCP test servers; use TestKit mocks, deterministic fixtures, or integration tests instead
 
 ## Mocks
 

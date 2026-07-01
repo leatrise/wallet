@@ -4,6 +4,8 @@ Run the checks that match the area you touched. Use the narrowest meaningful com
 
 For SwiftUI and Compose work, pure presentation changes should not spend most of the loop in full app builds.
 
+Unit tests must not spin up ad hoc local HTTP/TCP servers to mock provider responses. Prefer existing testkit fixtures, pure mappers/parsers, dependency-injected clients, or real gated integration tests when network behavior matters.
+
 ## Iteration Matrix
 
 | Change Type | Inner Loop Checks |
@@ -21,9 +23,9 @@ For SwiftUI and Compose work, pure presentation changes should not spend most of
 | Change Type | Minimum Closing Checks |
 |-------------|------------------------|
 | iOS presentation-only SwiftUI | `cd ios && just build-package <PACKAGE>`<br>Simulator/device smoke when the changed flow is reachable |
-| iOS ViewModel, navigation, app wiring, or behavioral UI change | `cd ios && just build`<br>`cd ios && just test <TARGET>` or `cd ios && just test`<br>`cd ios && just lint` and `cd ios && just format` when Swift code changed |
+| iOS ViewModel, navigation, app wiring, or behavioral UI change | `cd ios && just build`<br>`cd ios && just test <TARGET>` or `cd ios && just test` |
 | Android presentation-only Compose or resource change | `cd android && ./gradlew :<module>:assembleDebug`<br>Emulator/device smoke when the changed flow is reachable |
-| Android ViewModel, navigation, app wiring, or behavioral UI change | `cd android && ./gradlew assembleGoogleDebug` or build the affected app/module variant<br>`cd android && ./gradlew :<module>:testDebugUnitTest` or `cd android && ./gradlew test`<br>`cd android && ./gradlew lint`<br>`cd android && ./gradlew detekt`<br>`cd android && ./gradlew ktlintFormat` |
+| Android ViewModel, navigation, app wiring, or behavioral UI change | `cd android && ./gradlew assembleGoogleDebug` or build the affected app/module variant<br>`cd android && ./gradlew :<module>:testDebugUnitTest` or `cd android && ./gradlew test` |
 | Core-only Rust change with no mobile API impact | `cd core && just test <CRATE>`<br>`cd core && cargo clippy -p <crate> -- -D warnings`<br>`cd core && just format` |
 | Core change that affects mobile bindings or shared models | `cd core && just test <CRATE>`<br>`cd core && cargo clippy -p <crate> -- -D warnings`<br>`cd core && just format`<br>`just generate`<br>`just ios build`<br>`just android build` |
 | Shared localization input change | `just localize`<br>Rebuild the affected app(s) if the generated strings are consumed by the change |
@@ -38,10 +40,9 @@ Except for documentation-only changes, closing a task requires at least one real
 Do not run the closing matrix after every edit. Once the implementation is stable and no more code edits are expected, run the applicable closing checks as one batch:
 
 1. Regenerate models/bindings or localization if the changed inputs require it.
-2. Run formatters and linters required for the touched platform.
-3. Run the targeted tests that cover the changed behavior.
-4. Build the affected package/module/app according to the closing matrix.
-5. Exercise the changed UI flow when the platform guide requires a simulator, emulator, or device smoke check.
+2. Run the targeted tests that cover the changed behavior.
+3. Build the affected package/module/app according to the closing matrix.
+4. Exercise the changed UI flow when the platform guide requires a simulator, emulator, or device smoke check.
 
 If any step modifies source files or forces a compile fix, return to the narrow iteration loop, then run the affected final checks again.
 
