@@ -14,7 +14,7 @@ import com.gemwallet.android.features.add_asset.viewmodels.AddAssetViewModel
 import com.gemwallet.android.features.add_asset.viewmodels.models.AddAssetUIState
 
 @Composable
-fun AddAssetScree(
+fun AddAssetScreen(
     onFinish: () -> Unit,
     onCancel: () -> Unit,
     viewModel: AddAssetViewModel = hiltViewModel(),
