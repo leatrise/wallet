@@ -140,6 +140,7 @@ fun AssetsScreen(
                         onReceiveClick = { onAction(AssetsAction.Receive) },
                         onBuyClick = { onAction(AssetsAction.Buy) },
                         onSwapClick = { onAction(AssetsAction.Swap) },
+                        onPortfolio = { onAction(AssetsAction.Portfolio) },
                         onHideBalances = viewModel::hideBalances
                     )
                 }
