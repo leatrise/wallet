@@ -8,6 +8,7 @@ import com.gemwallet.android.model.CurrencyFormatter
 import com.gemwallet.android.ui.components.chart.ChartPoint
 import com.gemwallet.android.ui.models.chart.ChartHeaderUIModel
 import com.gemwallet.android.ui.models.chart.ChartViewState
+import com.wallet.core.primitives.ChartDateValue
 import com.wallet.core.primitives.ChartPeriod
 import com.wallet.core.primitives.ChartValue
 import com.wallet.core.primitives.Currency
@@ -72,6 +73,28 @@ internal fun ChartUIModel.Companion.from(
         currentPoint = currentPoint,
         chartPoints = historicalPoints + listOfNotNull(currentPoint),
         priceFormatter = priceFormatter,
+    )
+}
+
+internal fun ChartUIModel.Companion.from(
+    values: List<ChartDateValue>,
+    period: ChartPeriod,
+    currency: Currency,
+): ChartUIModel {
+    val basePrice = values.firstOrNull { it.value != 0.0 }?.value ?: 0.0
+    val currencyFormatter = CurrencyFormatter(currency = currency)
+    val points = values.map { value ->
+        PricePoint(
+            y = value.value.toFloat(),
+            price = value.value,
+            priceChangePercentage = PriceChange.percentage(from = basePrice, to = value.value),
+            timestamp = value.date,
+        )
+    }
+    return ChartUIModel(
+        period = period,
+        chartPoints = points,
+        priceFormatter = currencyFormatter::string,
     )
 }
 
