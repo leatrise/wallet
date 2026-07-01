@@ -155,7 +155,7 @@ mod tests {
     use gem_evm::uniswap::{FeeTier, path::build_direct_pair};
     use primitives::{
         AssetId, Chain,
-        asset_constants::{CELO_USDT_TOKEN_ID, CELO_WETH_TOKEN_ID},
+        asset_constants::{CELO_USDT_TOKEN_ID, CELO_WETH_TOKEN_ID, ROBINHOOD_USDG_TOKEN_ID, ROBINHOOD_WETH_TOKEN_ID},
         asset_constants::{ETHEREUM_USDC_TOKEN_ID, ETHEREUM_WETH_TOKEN_ID, OPTIMISM_USDC_E_TOKEN_ID, OPTIMISM_USDC_TOKEN_ID, OPTIMISM_USDT_TOKEN_ID, OPTIMISM_WETH_TOKEN_ID},
         contract_constants::OPTIMISM_UNISWAP_V3_UNIVERSAL_ROUTER_CONTRACT,
     };
@@ -214,6 +214,61 @@ mod tests {
         .unwrap();
 
         assert!(matches!(commands[1], UniversalRouterCommand::V3_SWAP_EXACT_IN_V2_1(_)));
+    }
+
+    #[test]
+    fn test_build_commands_v2_1_usdg_to_eth() {
+        let request = QuoteRequest {
+            from_asset: AssetId::from(Chain::Robinhood, Some(ROBINHOOD_USDG_TOKEN_ID.into())).into(),
+            to_asset: AssetId::from(Chain::Robinhood, None).into(),
+            wallet_address: "0xBA4D1d35bCe0e8F28E5a3403e7a0b996c5d50AC4".into(),
+            destination_address: "0xBA4D1d35bCe0e8F28E5a3403e7a0b996c5d50AC4".into(),
+            value: "10000".into(),
+            options: Options::default(),
+        };
+
+        let deployment = gem_evm::uniswap::deployment::v3::get_uniswap_router_deployment_by_chain(&Chain::Robinhood).unwrap();
+        let token_in = eth_address::parse_str(ROBINHOOD_USDG_TOKEN_ID).unwrap();
+        let token_out = eth_address::parse_str(ROBINHOOD_WETH_TOKEN_ID).unwrap();
+        let amount_in = U256::from_str(&request.value).unwrap();
+        let permit2_data = Permit2Data {
+            permit_single: PermitSingle {
+                details: Permit2Detail {
+                    token: ROBINHOOD_USDG_TOKEN_ID.into(),
+                    amount: "1461501637330902918203684832716283019655932542975".into(),
+                    expiration: 1782952655,
+                    nonce: 0,
+                },
+                spender: deployment.universal_router.into(),
+                sig_deadline: 1782952655,
+            },
+            signature: vec![0; 65],
+        };
+
+        let path = build_direct_pair(&token_in, &token_out, FeeTier::FiveHundred);
+        let commands = super::build_commands(
+            &request,
+            &token_in,
+            &token_out,
+            amount_in,
+            U256::from(250_000_000_000u64),
+            &path,
+            Some(permit2_data.into()),
+            false,
+            deployment.universal_router_abi,
+        )
+        .unwrap();
+
+        assert_eq!(commands.len(), 4);
+        assert!(matches!(commands[0], UniversalRouterCommand::PERMIT2_PERMIT(_)));
+        let UniversalRouterCommand::V3_SWAP_EXACT_IN_V2_1(payload) = &commands[1] else {
+            panic!("expected V2.1 V3_SWAP_EXACT_IN command");
+        };
+        let payload_data = payload.abi_encode();
+        assert!(payload.min_hop_price_x36.is_empty());
+        assert_eq!(payload_data.len(), 320);
+        assert!(matches!(commands[2], UniversalRouterCommand::PAY_PORTION(_)));
+        assert!(matches!(commands[3], UniversalRouterCommand::UNWRAP_WETH(_)));
     }
 
     #[test]
