@@ -33,12 +33,11 @@ import com.wallet.core.primitives.WalletSubscription
 import com.wallet.core.primitives.WalletSubscriptionChains
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import java.util.Locale
 import kotlin.collections.firstOrNull
 import kotlin.collections.map
@@ -66,8 +65,8 @@ class DeviceRepository(
 {
     private val Context.dataStore by preferencesDataStore(name = "device_config")
 
-    private val registrationMutex = Mutex()
-    private val subscriptionMutex = Mutex()
+    private val syncScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val syncCoordinator = DeviceSyncCoordinator(syncScope)
 
     override suspend fun syncDeviceInfo() {
         synchronizeDevice(
@@ -115,11 +114,16 @@ class DeviceRepository(
         shouldInvalidateSubscriptions: Boolean,
         pushTokenOverride: String? = null,
     ) {
-        try {
-            if (shouldInvalidateSubscriptions) {
-                invalidateSubscriptions()
-            }
+        if (shouldInvalidateSubscriptions) {
+            invalidateSubscriptions()
+        }
+        syncCoordinator.coordinate {
+            runDeviceSync(wallets, pushTokenOverride)
+        }
+    }
 
+    private suspend fun runDeviceSync(wallets: List<Wallet>, pushTokenOverride: String?) {
+        try {
             val subscriptionState = getSubscriptionSyncState()
             val pushState = resolvePushState(
                 wallets = wallets,
@@ -162,23 +166,24 @@ class DeviceRepository(
         syncDeviceInfo()
     }
 
-    suspend fun ensureSubscriptionsSynced() = subscriptionMutex.withLock {
-        if (!hasPendingSubscriptionChanges()) return@withLock
+    suspend fun ensureSubscriptionsSynced() {
+        syncCoordinator.waitForSyncIfNeeded()
+        if (!hasPendingSubscriptionChanges()) return
         syncDeviceInfo()
     }
 
-    private suspend fun getOrCreateDevice(device: Device): Device = registrationMutex.withLock {
+    private suspend fun getOrCreateDevice(device: Device): Device {
         if (isDeviceRegistered() || gemDeviceApiClient.isDeviceRegistered()) {
             gemDeviceApiClient.getDevice()?.let { remoteDevice ->
                 setDeviceRegistered(true)
-                return@withLock remoteDevice
+                return remoteDevice
             }
             setDeviceRegistered(false)
         }
 
         val registeredDevice = gemDeviceApiClient.registerDevice(device) ?: device
         setDeviceRegistered(gemDeviceApiClient.isDeviceRegistered())
-        registeredDevice
+        return registeredDevice
     }
 
     private suspend fun updateDevice(remote: Device, request: Device) {
