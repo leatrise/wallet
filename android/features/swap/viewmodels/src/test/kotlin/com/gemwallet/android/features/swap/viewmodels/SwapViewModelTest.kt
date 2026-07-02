@@ -574,6 +574,7 @@ class SwapViewModelTest {
                 protocol = "v3",
                 protocolId = "uniswap_v3",
                 mode = SwapperProviderMode.OnChain,
+                slippageMode = SwapperSlippageMode.EXACT,
             ),
             slippageBps = 50u,
             routes = listOf(

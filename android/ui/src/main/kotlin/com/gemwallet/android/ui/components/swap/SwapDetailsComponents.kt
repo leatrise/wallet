@@ -97,7 +97,6 @@ fun SwapDetailsBottomSheet(
     skipPartiallyExpanded: Boolean = false,
     showProviderSectionHeader: Boolean = false,
     onProviderSelect: ((SwapperProvider) -> Unit)? = null,
-    onSlippageClick: ((UInt?) -> Unit)? = null,
 ) {
     if (model == null) return
 
@@ -177,25 +176,12 @@ fun SwapDetailsBottomSheet(
                 } else {
                     model.slippageText
                 }
-                if (onSlippageClick != null) {
-                    PropertyItem(
-                        action = R.string.swap_slippage,
-                        data = slippageDisplay,
-                        info = InfoSheetEntity.Slippage,
-                        listPosition = ListPosition.Last,
-                        onClick = {
-                            onDismiss()
-                            onSlippageClick(model.selectedSlippage)
-                        },
-                    )
-                } else {
-                    PropertyItem(
-                        title = R.string.swap_slippage,
-                        data = slippageDisplay,
-                        info = InfoSheetEntity.Slippage,
-                        listPosition = ListPosition.Last,
-                    )
-                }
+                PropertyItem(
+                    title = R.string.swap_slippage,
+                    data = slippageDisplay,
+                    info = InfoSheetEntity.Slippage,
+                    listPosition = ListPosition.Last,
+                )
             }
         }
     }

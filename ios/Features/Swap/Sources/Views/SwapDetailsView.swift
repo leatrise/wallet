@@ -14,7 +14,6 @@ public struct SwapDetailsView: View {
     @Bindable private var model: SwapDetailsViewModel
 
     @State private var isPresentingProviderSelection = false
-    @State private var isPresentingSlippage = false
     @State private var infoSheet: InfoSheetType?
 
     public init(model: Bindable<SwapDetailsViewModel>) {
@@ -51,11 +50,6 @@ public struct SwapDetailsView: View {
                 },
                 listContent: { SimpleListItemView(model: $0) },
             )
-        }
-        .sheet(isPresented: $isPresentingSlippage) {
-            SwapSlippageScene(model: model.swapSlippageViewModel)
-                .presentationDetents([.medium])
-                .presentationBackground(Colors.grayBackground)
         }
     }
 
@@ -97,17 +91,10 @@ public struct SwapDetailsView: View {
 
                 ListItemView(field: model.minReceiveField)
 
-                let slippageView = ListItemView(
+                ListItemView(
                     field: model.slippageField,
                     infoAction: { infoSheet = .slippage },
                 )
-                if model.allowSelectSlippage {
-                    NavigationCustomLink(with: slippageView) {
-                        isPresentingSlippage = true
-                    }
-                } else {
-                    slippageView
-                }
             }
         }
     }

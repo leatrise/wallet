@@ -9,8 +9,7 @@ public extension SwapperSlippage {
     init(slippage: SwapSlippage, defaultSlippage: SwapperSlippage) {
         switch slippage {
         case .auto:
-            // TODO: send mode .auto once the swapper implements auto slippage (mode is currently ignored)
-            self = defaultSlippage
+            self.init(bps: defaultSlippage.bps, mode: .auto)
         case let .manual(bps):
             self.init(bps: bps, mode: .exact)
         }

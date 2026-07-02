@@ -27,7 +27,7 @@ class GetSwapQuotesImpl(
         slippageBps: UInt?,
     ): List<SwapperQuote> {
         val slippage = slippageBps?.let { SwapperSlippage(bps = it, mode = SwapperSlippageMode.EXACT) }
-            ?: getDefaultSlippage(from.chain.string)
+            ?: getDefaultSlippage(from.chain.string).copy(mode = SwapperSlippageMode.AUTO)
         val swapRequest = SwapperQuoteRequest(
             fromAsset = SwapperQuoteAsset(
                 id = from.id.toIdentifier(),

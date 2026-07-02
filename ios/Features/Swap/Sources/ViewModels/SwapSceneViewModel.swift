@@ -110,7 +110,13 @@ public final class SwapSceneViewModel {
             swapProviderSelectAction: { [weak self] quote in
                 self?.onFinishSwapProviderSelection(quote)
             },
-            slippageSelectAction: { [weak self] slippage in
+        )
+    }
+
+    var swapSlippageViewModel: SwapSlippageViewModel {
+        SwapSlippageViewModel(
+            slippage: selectedSlippage,
+            onSelect: { [weak self] slippage in
                 self?.onSelectSlippage(slippage)
             },
         )

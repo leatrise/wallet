@@ -78,6 +78,12 @@ fun SwapScreen(
         receiveValue = viewModel.receiveValue,
         onCancel = onCancel,
         onDetails = { isShowDetails = true },
+        onSlippage = {
+            if (swapState.isQuoteInteractionEnabled) {
+                slippageSeedBps = swapDetails?.selectedSlippage
+                isShowSlippage = true
+            }
+        },
         onPrimaryAction = onPrimaryAction,
     )
 
@@ -96,14 +102,6 @@ fun SwapScreen(
         onDismiss = { isShowDetails = false },
         skipPartiallyExpanded = true,
         onProviderSelect = if (swapState.isQuoteInteractionEnabled) viewModel::setProvider else null,
-        onSlippageClick = if (swapState.isQuoteInteractionEnabled) {
-            { slippage ->
-                slippageSeedBps = slippage
-                isShowSlippage = true
-            }
-        } else {
-            null
-        },
     )
 
     SwapSlippageBottomSheet(

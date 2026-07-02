@@ -116,6 +116,8 @@ where
                     to_chain: wormhole_chain::name_for_chain(to_asset.chain)?.to_string(),
                     referrer: default_referral_address(Chain::Solana),
                     referrer_bps: referral_fees.bps_for_chain(from_asset.chain),
+                    slippage_bps: request.options.slippage.bps,
+                    slippage_mode: request.options.slippage.mode,
                 },
                 request.from_asset.decimals,
             )
@@ -401,7 +403,7 @@ mod swap_integration_tests {
     use primitives::{
         AssetId,
         asset_constants::{BASE_USDC_ASSET_ID, HYPERCORE_SPOT_USDC_ASSET_ID, HYPEREVM_USDC_ASSET_ID, POLYGON_USDT_ASSET_ID, SOLANA_USDC_ASSET_ID, SUI_USDC_ASSET_ID},
-        swap::SwapStatus,
+        swap::{Slippage, SlippageMode, SwapStatus},
     };
     use std::{future::Future, time::Instant};
 
@@ -591,6 +593,28 @@ mod swap_integration_tests {
         assert_eq!(route.to_chain, wormhole_chain::WormholeChain::Hypercore.name());
         assert_eq!(quote_data.to, MAYAN_FORWARDER);
         assert!(!quote_data.data.is_empty());
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_mayan_exact_slippage_is_applied() -> Result<(), SwapperError> {
+        let rpc_provider = Arc::new(NativeProvider::default().set_debug(false));
+        let provider = Mayan::new(rpc_provider);
+        let request = QuoteRequest {
+            from_asset: SwapperQuoteAsset::from(AssetId::from_chain(Chain::Ethereum)),
+            to_asset: SwapperQuoteAsset::from(AssetId::from_chain(Chain::Solana)),
+            wallet_address: "0x514BCb1F9AAbb904e6106Bd1052B66d2706dBbb7".to_string(),
+            destination_address: "7g2rVN8fAAQdPh1mkajpvELqYa3gWvFXJsBLnKfEQfqy".to_string(),
+            value: "50000000000000000".to_string(),
+            options: Options::new_with_slippage(Slippage {
+                bps: 250,
+                mode: SlippageMode::Exact,
+            }),
+        };
+
+        let quote = timed("mayan exact slippage quote", provider.get_quote(&request)).await?;
+
+        assert_eq!(quote.data.slippage_bps, 250);
         Ok(())
     }
 
