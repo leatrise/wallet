@@ -21,6 +21,7 @@ data class ChartUIModel(
     val chartPoints: List<PricePoint> = emptyList(),
     internal val priceFormatter: (Double) -> String = { "" },
     internal val priceChangeFormatter: (Double) -> String = { "" },
+    internal val showHeaderValue: Boolean = true,
 ) {
     val renderPoints: List<ChartPoint> by lazy {
         chartPoints.mapIndexed { index, point -> ChartPoint(x = index.toFloat(), y = point.y) }
@@ -83,8 +84,9 @@ internal fun ChartUIModel.Companion.from(
     values: List<ChartDateValue>,
     period: ChartPeriod,
     currency: Currency,
+    showHeaderValue: Boolean,
 ): ChartUIModel {
-    val basePrice = values.firstOrNull { it.value != 0.0 }?.value ?: 0.0
+    val basePrice = values.firstOrNull()?.value ?: 0.0
     val currencyFormatter = CurrencyFormatter(currency = currency)
     val points = values.map { value ->
         PricePoint(
@@ -99,6 +101,7 @@ internal fun ChartUIModel.Companion.from(
         chartPoints = points,
         priceFormatter = currencyFormatter::string,
         priceChangeFormatter = PriceChangeFormatter(currencyFormatter)::string,
+        showHeaderValue = showHeaderValue,
     )
 }
 
@@ -113,11 +116,7 @@ fun chartHeader(uiModel: ChartUIModel, selectedPoint: PricePoint?): ChartHeaderU
     )
 }
 
-fun portfolioChartHeader(
-    uiModel: ChartUIModel,
-    selectedPoint: PricePoint?,
-    showHeaderValue: Boolean,
-): ChartHeaderUIModel? {
+fun portfolioChartHeader(uiModel: ChartUIModel, selectedPoint: PricePoint?): ChartHeaderUIModel? {
     val target = selectedPoint ?: uiModel.chartPoints.lastOrNull() ?: return null
     val base = uiModel.chartPoints.firstOrNull()?.price ?: 0.0
     return ChartHeaderUIModel.build(
@@ -125,7 +124,7 @@ fun portfolioChartHeader(
         priceChangePercentage = target.priceChangePercentage,
         type = ChartValueType.PriceChange,
         timestamp = selectedPoint?.timestamp,
-        headerValue = if (showHeaderValue) target.price else null,
+        headerValue = if (uiModel.showHeaderValue) target.price else null,
         priceFormatter = uiModel.priceFormatter,
         priceChangeFormatter = uiModel.priceChangeFormatter,
         dateFormatter = ::getRelativeDate,

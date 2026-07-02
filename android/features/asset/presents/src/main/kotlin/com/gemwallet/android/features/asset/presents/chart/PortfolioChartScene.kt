@@ -45,7 +45,6 @@ fun PortfolioChartScene(
     val selectedType by viewModel.selectedType.collectAsStateWithLifecycle()
     val showSegmentedControl by viewModel.showSegmentedControl.collectAsStateWithLifecycle()
     val selectedChartType by viewModel.selectedChartType.collectAsStateWithLifecycle()
-    val showChartTypePicker by viewModel.showChartTypePicker.collectAsStateWithLifecycle()
     val state by viewModel.chartUIState.collectAsStateWithLifecycle()
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -59,7 +58,7 @@ fun PortfolioChartScene(
         },
         onClose = onCancel,
         actions = {
-            if (showChartTypePicker) {
+            if (selectedType == PortfolioType.Perpetuals) {
                 ChartTypeSelector(selected = selectedChartType, onSelect = viewModel::setChartType)
             }
         },
@@ -128,14 +127,13 @@ private fun PortfolioChart(viewModel: PortfolioChartViewModel) {
     val uiModel by viewModel.chartUIModel.collectAsStateWithLifecycle()
     val state by viewModel.chartUIState.collectAsStateWithLifecycle()
     val periods by viewModel.availablePeriods.collectAsStateWithLifecycle()
-    val showHeaderValue by viewModel.showHeaderValue.collectAsStateWithLifecycle()
 
     ChartSection(
         uiModel = uiModel,
         state = state,
         onPeriodSelect = viewModel::setPeriod,
         periods = periods,
-    ) { selectedPoint -> portfolioChartHeader(uiModel, selectedPoint, showHeaderValue) }
+    ) { selectedPoint -> portfolioChartHeader(uiModel, selectedPoint) }
 }
 
 private fun PortfolioType.titleRes(): Int = when (this) {

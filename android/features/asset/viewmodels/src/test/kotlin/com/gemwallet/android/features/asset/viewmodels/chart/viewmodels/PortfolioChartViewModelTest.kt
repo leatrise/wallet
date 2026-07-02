@@ -76,7 +76,7 @@ class PortfolioChartViewModelTest {
         val uiModel = viewModel.chartUIModel.first { it.chartPoints.size == 3 }
 
         assertEquals(3, uiModel.chartPoints.size)
-        assertEquals(ChartViewState.Ready, viewModel.chartUIState.value.viewState)
+        assertEquals(ChartViewState.Ready, viewModel.chartUIState.first { it.viewState != ChartViewState.Loading }.viewState)
     }
 
     @Test
@@ -86,7 +86,7 @@ class PortfolioChartViewModelTest {
         val viewModel = createViewModel()
         viewModel.chartUIModel.first { it.chartPoints.size == 2 }
 
-        assertEquals(ChartPeriod.All, viewModel.chartUIState.value.period)
+        assertEquals(ChartPeriod.All, viewModel.chartUIState.first { it.viewState != ChartViewState.Loading }.period)
         coVerify(exactly = 1) { getPortfolioData.getPortfolioData(PortfolioType.Wallet, ChartPeriod.All, Currency.USD) }
     }
 
