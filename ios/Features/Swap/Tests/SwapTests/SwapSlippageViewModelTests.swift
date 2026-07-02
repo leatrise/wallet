@@ -23,6 +23,15 @@ struct SwapSlippageViewModelTests {
     }
 
     @Test
+    func initManualLimitsToRange() {
+        let belowMin = SwapSlippageViewModel(slippage: .manual(bps: 1)) { _ in }
+        #expect(belowMin.selectedBps == SwapSlippageViewModel.minBps)
+
+        let aboveMax = SwapSlippageViewModel(slippage: .manual(bps: 10_000)) { _ in }
+        #expect(aboveMax.selectedBps == SwapSlippageViewModel.maxBps)
+    }
+
+    @Test
     func applyAuto() {
         var applied: SwapSlippage?
         let model = SwapSlippageViewModel(slippage: .manual(bps: 50)) { applied = $0 }
@@ -32,7 +41,7 @@ struct SwapSlippageViewModelTests {
         #expect(applied == .auto)
     }
 
-    @Test(arguments: SwapSlippageViewModel.presets)
+    @Test(arguments: [SwapSlippageViewModel.minBps, 50, 100, SwapSlippageViewModel.maxBps])
     func applyManual(bps: UInt32) {
         var applied: SwapSlippage?
         let model = SwapSlippageViewModel(slippage: .auto) { applied = $0 }
@@ -46,6 +55,8 @@ struct SwapSlippageViewModelTests {
     @Test(arguments: [
         (UInt32(10), false),
         (UInt32(100), false),
+        (UInt32(290), false),
+        (UInt32(300), true),
         (UInt32(500), true),
     ] as [(UInt32, Bool)])
     func warning(bps: UInt32, expected: Bool) {

@@ -18,6 +18,7 @@ import com.gemwallet.android.application.swap.coordinators.create
 import com.gemwallet.android.application.swap.coordinators.getQuote
 import com.gemwallet.android.application.swap.coordinators.matches
 import com.gemwallet.android.data.repositories.assets.AssetsRepository
+import com.gemwallet.android.data.repositories.config.UserConfig
 import com.gemwallet.android.data.repositories.session.SessionRepository
 import com.gemwallet.android.domains.asset.calculateFiat
 import com.gemwallet.android.domains.asset.formatFiat
@@ -77,6 +78,7 @@ class SwapViewModel @Inject constructor(
     private val assetsRepository: AssetsRepository,
     private val enableAsset: EnableAsset,
     private val buildSwapConfirmParams: BuildSwapConfirmParams,
+    private val userConfig: UserConfig,
     requestSwapQuotes: RequestSwapQuotes,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -237,6 +239,9 @@ class SwapViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, SwapUiState())
 
     init {
+        viewModelScope.launch {
+            selectedSlippageBps.value = userConfig.swapSlippageBps().firstOrNull()
+        }
         matchedQuoteResults
             .onEach(::onQuoteResults)
             .launchIn(viewModelScope)
@@ -244,7 +249,6 @@ class SwapViewModel @Inject constructor(
 
     fun onSelect(type: SwapItemType, assetId: AssetId) {
         clearTransferQuoteState()
-        selectedSlippageBps.update { null }
         when (type) {
             SwapItemType.Pay -> {
                 if (receiveAsset.value?.id() == assetId) {
@@ -265,7 +269,6 @@ class SwapViewModel @Inject constructor(
 
     fun switchSwap() = viewModelScope.launch {
         clearTransferQuoteState()
-        selectedSlippageBps.update { null }
         val payAssetId = payAsset.value?.id()?.toIdentifier()
         val receiveAssetId = receiveAsset.value?.id()?.toIdentifier()
         savedStateHandle[RouteArgument.FromAssetId.key] = receiveAssetId
@@ -284,6 +287,9 @@ class SwapViewModel @Inject constructor(
         }
         clearTransferQuoteState()
         selectedSlippageBps.update { slippageBps }
+        viewModelScope.launch(Dispatchers.IO) {
+            userConfig.setSwapSlippageBps(slippageBps)
+        }
     }
 
     fun refresh() {

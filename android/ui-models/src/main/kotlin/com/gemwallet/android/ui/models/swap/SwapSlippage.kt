@@ -1,7 +1,9 @@
 package com.gemwallet.android.ui.models.swap
 
 object SwapSlippage {
-    val presets: List<UInt> = listOf(10u, 50u, 100u, 500u)
+    val minBps: UInt = 10u
+    val maxBps: UInt = 500u
+    val stepBps: UInt = 10u
     val defaultBps: UInt = 100u
 
     fun format(bps: UInt): String =

@@ -1,7 +1,7 @@
 use super::{
     asset::{supported_assets as mayan_supported_assets, token_id_for_asset},
     client::MayanClient,
-    constants::{MAYAN_DEPOSIT_CONTRACTS, MAYAN_SEND_CONTRACTS},
+    constants::{MAYAN_DEPOSIT_CONTRACTS, MAYAN_MAX_SLIPPAGE_BPS, MAYAN_SEND_CONTRACTS},
     mapper::map_swap_result,
     model::{MayanChain, MayanQuote, QuoteParams, SwiftVersion},
     tx_builder::{fast_mctp, mctp, mono_chain, swift},
@@ -116,7 +116,7 @@ where
                     to_chain: wormhole_chain::name_for_chain(to_asset.chain)?.to_string(),
                     referrer: default_referral_address(Chain::Solana),
                     referrer_bps: referral_fees.bps_for_chain(from_asset.chain),
-                    slippage_bps: request.options.slippage.bps,
+                    slippage_bps: request.options.slippage.bps.min(MAYAN_MAX_SLIPPAGE_BPS),
                     slippage_mode: request.options.slippage.mode,
                 },
                 request.from_asset.decimals,
@@ -247,6 +247,7 @@ mod tests {
     use primitives::{
         AssetId,
         asset_constants::{ARBITRUM_USDC_ASSET_ID, HYPERCORE_SPOT_USDC_ASSET_ID},
+        swap::{Slippage, SlippageMode},
     };
     use std::collections::BTreeSet;
 

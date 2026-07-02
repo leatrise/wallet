@@ -8,7 +8,9 @@ import Primitives
 
 @Observable
 public final class SwapSlippageViewModel {
-    static let presets: [UInt32] = [10, 50, 100, 500]
+    static let minBps: UInt32 = 10
+    static let maxBps: UInt32 = 500
+    static let stepBps: UInt32 = 10
     private static let defaultBps: UInt32 = 100
 
     private let onSelect: (SwapSlippage) -> Void
@@ -26,7 +28,7 @@ public final class SwapSlippageViewModel {
             selectedBps = Self.defaultBps
         case let .manual(bps):
             isAuto = false
-            selectedBps = bps
+            selectedBps = min(max(bps, Self.minBps), Self.maxBps)
         }
     }
 
@@ -40,10 +42,6 @@ public final class SwapSlippageViewModel {
 
     var autoDescription: String {
         Localized.Swap.slippageAutoDescription
-    }
-
-    var suggestions: [SwapSlippageSuggestion] {
-        Self.presets.map { SwapSlippageSuggestion(bps: $0) }
     }
 
     var selectedField: ListItemField {

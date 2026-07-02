@@ -79,6 +79,7 @@ public final class SwapSceneViewModel {
         self.swapQuotesProvider = swapQuotesProvider
         self.swapQuoteDataProvider = swapQuoteDataProvider
         self.onSwap = onSwap
+        selectedSlippage = preferences.swapSlippage
     }
 
     var title: String {
@@ -231,7 +232,6 @@ extension SwapSceneViewModel {
         resetTransferDataState()
         resetValues()
         selectedSwapQuote = nil
-        selectedSlippage = .auto
         updateValidators(for: new)
         setFetchTrigger(isImmediate: true)
     }
@@ -290,6 +290,7 @@ extension SwapSceneViewModel {
     func onSelectSlippage(_ slippage: SwapSlippage) {
         guard slippage != selectedSlippage else { return }
         selectedSlippage = slippage
+        preferences.swapSlippage = slippage
         resetTransferDataState()
         setFetchTrigger(isImmediate: true)
     }
