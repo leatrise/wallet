@@ -73,6 +73,10 @@ impl WalletConnectSimulationClient {
         let calldata = simulation::decode_ethereum_calldata(&transaction);
         let client = self.ethereum_client(chain).ok_or("No RPC client available")?;
 
+        if ::simulation::evm::is_approval(chain, &calldata, &transaction.to) {
+            return Ok(SimulationClient::new(&client).simulate_evm_calldata(chain, &calldata, &transaction.to).await?);
+        }
+
         let (calldata_result, balance_result) = self.simulate_calldata_and_balance_changes(chain, &calldata, &client, &transaction).await;
         let calldata_result = calldata_result?;
         let balance_result = balance_result.unwrap_or_default();
@@ -130,14 +134,15 @@ impl WalletConnectSimulationClient {
     }
 }
 
+/// Keeps the gas limit so out-of-gas failures surface, but omits fee prices - they make the trace charge gas and leak fee accounting into the signer's balance diff.
 fn map_transaction_object(transaction: &WcEthereumTransactionData) -> TransactionObject {
     TransactionObject {
         from: Some(transaction.from.clone()),
         to: transaction.to.clone(),
         gas: transaction.gas.clone().or_else(|| transaction.gas_limit.clone()),
-        gas_price: transaction.gas_price.clone(),
-        max_fee_per_gas: transaction.max_fee_per_gas.clone(),
-        max_priority_fee_per_gas: transaction.max_priority_fee_per_gas.clone(),
+        gas_price: None,
+        max_fee_per_gas: None,
+        max_priority_fee_per_gas: None,
         value: transaction.value.clone(),
         data: transaction.data.clone().unwrap_or_default(),
     }
@@ -172,9 +177,10 @@ mod tests {
     }
 
     #[test]
-    fn test_map_transaction_object_passes_through_gas_context() {
+    fn test_map_transaction_object_passes_gas_limit_and_omits_fee_prices() {
         let transaction = WcEthereumTransactionData {
             gas_limit: Some("0x5208".to_string()),
+            gas_price: Some("0x9502f900".to_string()),
             max_fee_per_gas: Some("0x59682f10".to_string()),
             max_priority_fee_per_gas: Some("0x3b9aca00".to_string()),
             ..mock_wc_transaction()
@@ -183,7 +189,8 @@ mod tests {
         let transaction_object = map_transaction_object(&transaction);
 
         assert_eq!(transaction_object.gas.as_deref(), Some("0x5208"));
-        assert_eq!(transaction_object.max_fee_per_gas.as_deref(), Some("0x59682f10"));
-        assert_eq!(transaction_object.max_priority_fee_per_gas.as_deref(), Some("0x3b9aca00"));
+        assert_eq!(transaction_object.gas_price, None);
+        assert_eq!(transaction_object.max_fee_per_gas, None);
+        assert_eq!(transaction_object.max_priority_fee_per_gas, None);
     }
 }
