@@ -52,8 +52,9 @@ fn map_balance_changes(chain: Chain, signer: &str, trace: &TraceCallResult) -> V
     }
 
     for (token, delta) in token_deltas {
-        if !delta.is_zero() {
-            let token_address = ethereum_address_checksum(token).unwrap_or_else(|_| token.to_string());
+        if !delta.is_zero()
+            && let Ok(token_address) = ethereum_address_checksum(token)
+        {
             changes.push(SimulationBalanceChange::new(AssetId::from_token(chain, &token_address), delta));
         }
     }
