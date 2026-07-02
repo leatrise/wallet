@@ -7,7 +7,7 @@ import com.gemwallet.android.blockchain.operators.InvalidWords
 import com.gemwallet.android.blockchain.operators.StorePhraseOperator
 import com.gemwallet.android.blockchain.operators.ValidateAddressOperator
 import com.gemwallet.android.blockchain.operators.ValidatePhraseOperator
-import com.gemwallet.android.cases.device.SyncSubscription
+import com.gemwallet.android.cases.device.InvalidateSubscriptions
 import com.gemwallet.android.cases.wallet.ImportError
 import com.gemwallet.android.cases.wallet.ImportWalletService
 import com.gemwallet.android.cases.wallet.WalletImportResult
@@ -29,7 +29,7 @@ class PhraseAddressImportWalletService(
     private val phraseValidate: ValidatePhraseOperator,
     private val addressValidate: ValidateAddressOperator,
     private val passwordStore: PasswordStore,
-    private val syncSubscription: SyncSubscription,
+    private val invalidateSubscriptions: InvalidateSubscriptions,
     private val walletImportSync: SyncWalletImport,
 ) : ImportWalletService {
 
@@ -58,12 +58,12 @@ class PhraseAddressImportWalletService(
         val wallet = handlePhrase(ImportType(WalletType.Multicoin), walletName, data, WalletSource.Create)
 
         setupWallet(wallet)
-        syncSubscription.syncSubscription(listOf(wallet))
 
         return wallet
     }
 
     private suspend fun setupWallet(wallet: Wallet) {
+        invalidateSubscriptions()
         assetsRepository.createAssets(wallet)
         sessionRepository.setWallet(wallet)
     }

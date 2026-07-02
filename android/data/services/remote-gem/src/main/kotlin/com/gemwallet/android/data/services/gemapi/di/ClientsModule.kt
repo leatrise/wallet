@@ -5,6 +5,7 @@ import android.os.Build
 import com.gemwallet.android.Constants
 import com.gemwallet.android.application.device.coordinators.GetDeviceId
 import com.gemwallet.android.cases.device.EnsureDeviceRegistered
+import com.gemwallet.android.cases.device.EnsureSubscriptionsSynced
 import com.gemwallet.android.data.services.gemapi.GemApiClient
 import com.gemwallet.android.data.services.gemapi.GemApiStaticClient
 import com.gemwallet.android.data.services.gemapi.GemDeviceApiClient
@@ -12,6 +13,7 @@ import com.gemwallet.android.data.services.gemapi.Mime
 import com.gemwallet.android.data.services.gemapi.http.DeviceRegistrationInterceptor
 import com.gemwallet.android.data.services.gemapi.http.GemApiErrorInterceptor
 import com.gemwallet.android.data.services.gemapi.http.SecurityInterceptor
+import com.gemwallet.android.data.services.gemapi.http.SubscriptionSyncInterceptor
 import com.gemwallet.android.model.BuildInfo
 import com.gemwallet.android.serializer.jsonEncoder
 import dagger.Module
@@ -38,6 +40,12 @@ object ClientsModule {
     fun provideDeviceRegistrationInterceptor(
         ensureDeviceRegistered: EnsureDeviceRegistered,
     ) = DeviceRegistrationInterceptor(ensureDeviceRegistered)
+
+    @Provides
+    @Singleton
+    fun provideSubscriptionSyncInterceptor(
+        ensureSubscriptionsSynced: EnsureSubscriptionsSynced,
+    ) = SubscriptionSyncInterceptor(ensureSubscriptionsSynced)
 
     @Provides
     @Singleton
@@ -93,8 +101,9 @@ object ClientsModule {
     fun provideGemDeviceApiClient(
         httpClient: OkHttpClient,
         deviceRegistrationInterceptor: DeviceRegistrationInterceptor,
+        subscriptionSyncInterceptor: SubscriptionSyncInterceptor,
         securityInterceptor: SecurityInterceptor,
-    ): GemDeviceApiClient = deviceApiClient(httpClient, deviceRegistrationInterceptor, securityInterceptor)
+    ): GemDeviceApiClient = deviceApiClient(httpClient, deviceRegistrationInterceptor, subscriptionSyncInterceptor, securityInterceptor)
 
     private fun deviceApiClient(
         httpClient: OkHttpClient,

@@ -67,6 +67,7 @@ class DeviceRepository(
     private val Context.dataStore by preferencesDataStore(name = "device_config")
 
     private val registrationMutex = Mutex()
+    private val subscriptionMutex = Mutex()
 
     override suspend fun syncDeviceInfo() {
         synchronizeDevice(
@@ -158,6 +159,11 @@ class DeviceRepository(
 
     override suspend fun invoke() {
         if (isDeviceRegistered()) return
+        syncDeviceInfo()
+    }
+
+    suspend fun ensureSubscriptionsSynced() = subscriptionMutex.withLock {
+        if (!hasPendingSubscriptionChanges()) return@withLock
         syncDeviceInfo()
     }
 
@@ -299,7 +305,7 @@ class DeviceRepository(
         configStore.putBoolean(Keys.SubscriptionVersionHasChange.string, hasChange)
     }
 
-    private fun invalidateSubscriptions() {
+    fun invalidateSubscriptions() {
         val invalidatedState = getSubscriptionSyncState().invalidate()
         setSubscriptionVersion(invalidatedState.version)
         setSubscriptionVersionHasChange(invalidatedState.hasPendingChanges)

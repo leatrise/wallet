@@ -4,8 +4,10 @@ import android.content.Context
 import com.gemwallet.android.application.device.coordinators.GetDeviceId
 import com.gemwallet.android.application.session.coordinators.GetCurrentCurrency
 import com.gemwallet.android.cases.device.EnsureDeviceRegistered
+import com.gemwallet.android.cases.device.EnsureSubscriptionsSynced
 import com.gemwallet.android.cases.device.GetPushEnabled
 import com.gemwallet.android.cases.device.GetPushToken
+import com.gemwallet.android.cases.device.InvalidateSubscriptions
 import com.gemwallet.android.cases.device.IsDeviceRegistered
 import com.gemwallet.android.cases.device.SetPushToken
 import com.gemwallet.android.cases.device.SwitchPushEnabled
@@ -78,4 +80,12 @@ object DeviceModule {
 
     @Provides
     fun provideEnsureDeviceRegisteredCase(repository: DeviceRepository): EnsureDeviceRegistered = repository
+
+    @Provides
+    fun provideEnsureSubscriptionsSyncedCase(repository: DeviceRepository): EnsureSubscriptionsSynced =
+        EnsureSubscriptionsSynced { repository.ensureSubscriptionsSynced() }
+
+    @Provides
+    fun provideInvalidateSubscriptionsCase(repository: DeviceRepository): InvalidateSubscriptions =
+        InvalidateSubscriptions { repository.invalidateSubscriptions() }
 }
