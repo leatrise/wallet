@@ -10,7 +10,10 @@ import com.gemwallet.android.application.assets.coordinators.SetChartPeriod
 import com.gemwallet.android.application.session.coordinators.GetCurrentCurrency
 import com.gemwallet.android.features.asset.viewmodels.chart.models.ChartUIModel
 import com.gemwallet.android.features.asset.viewmodels.chart.models.from
+import com.gemwallet.android.ui.models.chart.ChartFetch
 import com.gemwallet.android.ui.models.chart.ChartViewState
+import com.gemwallet.android.ui.models.chart.MinChartPoints
+import com.gemwallet.android.ui.models.chart.viewState
 import com.gemwallet.android.ui.models.navigation.requireAssetId
 import com.wallet.core.primitives.AssetId
 import com.wallet.core.primitives.ChartPeriod
@@ -47,13 +50,8 @@ class ChartViewModel internal constructor(
         .map { it?.price }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
     private val selectedPeriod = MutableStateFlow(getChartPeriod())
-    private val viewState = MutableStateFlow<ChartViewState>(ChartViewState.Loading)
     private val refreshTrigger = MutableStateFlow(0L)
     private val refreshState = MutableStateFlow(false)
-
-    val chartUIState = combine(selectedPeriod, viewState) { period, viewState ->
-        ChartUIModel.State(period = period, viewState = viewState)
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, ChartUIModel.State())
 
     val isRefreshing = refreshState.asStateFlow()
 
@@ -63,28 +61,34 @@ class ChartViewModel internal constructor(
         refreshTrigger,
     ) { period, currency, _ -> period to currency }
         .mapLatest { (period, currency) ->
-            try {
-                val prices = request(period, currency)
-                viewState.value = if (prices.size < 2) ChartViewState.Empty else ChartViewState.Ready
-                prices
+            val prices = try {
+                request(period, currency)
             } catch (e: Exception) {
                 currentCoroutineContext().ensureActive()
-                viewState.value = ChartViewState.Error
-                emptyList()
-            } finally {
-                refreshState.value = false
+                null
             }
+            refreshState.value = false
+            ChartFetch(request = period, data = prices)
         }
         .flowOn(Dispatchers.IO)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    val chartUIState = combine(selectedPeriod, chartPrices) { period, fetch ->
+        ChartUIModel.State(
+            period = period,
+            viewState = fetch.viewState(period) { prices ->
+                if (prices.size < MinChartPoints) ChartViewState.Empty else ChartViewState.Ready
+            },
+        )
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, ChartUIModel.State())
 
     val chartUIModel = combine(
         assetPriceInfo,
         selectedPeriod,
         chartPrices,
         getCurrentCurrency.getCurrency().distinctUntilChanged(),
-    ) { priceInfo, period, prices, currency ->
-        ChartUIModel.from(prices, priceInfo, period, currency)
+    ) { priceInfo, period, fetch, currency ->
+        ChartUIModel.from(fetch?.takeIf { it.matches(period) }?.data.orEmpty(), priceInfo, period, currency)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ChartUIModel())
 
     private suspend fun request(period: ChartPeriod, currency: Currency): List<ChartValue> {
@@ -97,12 +101,10 @@ class ChartViewModel internal constructor(
         }
         setChartPeriod(period)
         selectedPeriod.value = period
-        viewState.value = ChartViewState.Loading
     }
 
     fun refresh() {
         refreshState.value = true
-        viewState.value = ChartViewState.Loading
         refreshTrigger.value = refreshTrigger.value + 1
     }
 

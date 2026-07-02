@@ -9,7 +9,10 @@ import com.gemwallet.android.application.session.coordinators.GetCurrentCurrency
 import com.gemwallet.android.data.repositories.perpetual.ObservePerpetualWallet
 import com.gemwallet.android.features.asset.viewmodels.chart.models.ChartUIModel
 import com.gemwallet.android.features.asset.viewmodels.chart.models.from
+import com.gemwallet.android.ui.models.chart.ChartFetch
 import com.gemwallet.android.ui.models.chart.ChartViewState
+import com.gemwallet.android.ui.models.chart.MinChartPoints
+import com.gemwallet.android.ui.models.chart.viewState
 import com.wallet.core.primitives.ChartDateValue
 import com.wallet.core.primitives.ChartPeriod
 import com.wallet.core.primitives.Currency
@@ -32,7 +35,6 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-private const val MinChartPoints = 2
 private const val StopTimeoutMillis = 5_000L
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -78,39 +80,43 @@ class PortfolioChartViewModel internal constructor(
                 selectedPeriod.compareAndSet(period, periods.first())
                 null
             } else {
-                PortfolioFetch(type, period, data, type.displayCurrency(currency))
+                ChartFetch(
+                    request = PortfolioRequest(type, period),
+                    data = data?.let { PortfolioResult(it, type.displayCurrency(currency)) },
+                )
             }
         }
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(StopTimeoutMillis), null)
 
     val chartUIState = combine(selectedType, selectedPeriod, selectedChartType, portfolio) { type, period, chartType, fetch ->
-        ChartUIModel.State(period = period, viewState = fetch.viewState(type, period, chartType))
+        ChartUIModel.State(
+            period = period,
+            viewState = fetch.viewState(PortfolioRequest(type, period)) { it.portfolio.chartState(chartType) },
+        )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(StopTimeoutMillis), ChartUIModel.State())
 
     val chartUIModel = combine(selectedType, selectedPeriod, selectedChartType, portfolio) { type, period, chartType, fetch ->
-        if (fetch?.matches(type, period) != true || fetch.data == null) {
-            ChartUIModel(period = period)
-        } else {
+        fetch?.takeIf { it.matches(PortfolioRequest(type, period)) }?.data?.let { result ->
             ChartUIModel.from(
-                values = fetch.data.chartValues(chartType),
+                values = result.portfolio.chartValues(chartType),
                 period = period,
-                currency = fetch.currency,
+                currency = result.currency,
                 showHeaderValue = type == PortfolioType.Wallet || chartType == PortfolioChartType.Value,
             )
-        }
+        } ?: ChartUIModel(period = period)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(StopTimeoutMillis), ChartUIModel())
 
     val statistics = portfolio
-        .map { it?.data?.statistics.orEmpty() }
+        .map { it?.data?.portfolio?.statistics.orEmpty() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(StopTimeoutMillis), emptyList())
 
     val currency = portfolio
-        .map { it?.currency ?: Currency.USD }
+        .map { it?.data?.currency ?: Currency.USD }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(StopTimeoutMillis), Currency.USD)
 
     val availablePeriods = portfolio
-        .map { it?.data?.availablePeriods?.takeIf { periods -> periods.isNotEmpty() } ?: walletChartPeriods }
+        .map { it?.data?.portfolio?.availablePeriods?.takeIf { periods -> periods.isNotEmpty() } ?: walletChartPeriods }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(StopTimeoutMillis), walletChartPeriods)
 
     fun setType(type: PortfolioType) {
@@ -144,25 +150,9 @@ class PortfolioChartViewModel internal constructor(
     )
 }
 
-private class PortfolioFetch(
-    val type: PortfolioType,
-    val period: ChartPeriod,
-    val data: PortfolioData?,
-    val currency: Currency,
-) {
-    fun matches(type: PortfolioType, period: ChartPeriod): Boolean =
-        this.type == type && this.period == period
-}
+private data class PortfolioRequest(val type: PortfolioType, val period: ChartPeriod)
 
-private fun PortfolioFetch?.viewState(
-    type: PortfolioType,
-    period: ChartPeriod,
-    chartType: PortfolioChartType,
-): ChartViewState = when {
-    this?.matches(type, period) != true -> ChartViewState.Loading
-    data == null -> ChartViewState.Error
-    else -> data.chartState(chartType)
-}
+private class PortfolioResult(val portfolio: PortfolioData, val currency: Currency)
 
 private fun PortfolioData.chartValues(chartType: PortfolioChartType): List<ChartDateValue> =
     (charts.firstOrNull { it.chartType == chartType } ?: charts.firstOrNull())?.values.orEmpty()

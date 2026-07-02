@@ -46,6 +46,7 @@ fun PortfolioChartScene(
     val showSegmentedControl by viewModel.showSegmentedControl.collectAsStateWithLifecycle()
     val selectedChartType by viewModel.selectedChartType.collectAsStateWithLifecycle()
     val state by viewModel.chartUIState.collectAsStateWithLifecycle()
+    val showChartTypePicker = selectedType == PortfolioType.Perpetuals
     val pullToRefreshState = rememberPullToRefreshState()
 
     Scene(
@@ -58,7 +59,7 @@ fun PortfolioChartScene(
         },
         onClose = onCancel,
         actions = {
-            if (selectedType == PortfolioType.Perpetuals) {
+            if (showChartTypePicker) {
                 ChartTypeSelector(selected = selectedChartType, onSelect = viewModel::setChartType)
             }
         },
