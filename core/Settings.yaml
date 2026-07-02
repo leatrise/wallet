@@ -238,6 +238,10 @@ defi:
     url: "https://api.zerion.io"
     key:
       secret: ""
+  jupiter:
+    url: "https://api.jup.ag"
+    key:
+      secret: ""
 
 parser:
   timeout: 1s

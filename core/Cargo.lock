@@ -2340,6 +2340,7 @@ dependencies = [
  "async-trait",
  "base64",
  "futures",
+ "number_formatter",
  "primitives",
  "reqwest 0.13.4",
  "serde",

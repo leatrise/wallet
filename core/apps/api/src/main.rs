@@ -240,7 +240,12 @@ async fn rocket_api(settings: Settings) -> Result<Rocket<Build>, Box<dyn std::er
     );
     let nft_client = NFTClient::from_config(database.clone(), nft_config.clone(), settings.nft.url.clone());
     let nft_provider_client = NFTProviderClient::new(nft_config);
-    let defi_config = DefiProviderConfig::new(settings.defi.zerion.url.clone(), settings.defi.zerion.key.secret.clone());
+    let defi_config = DefiProviderConfig::new(
+        settings.defi.zerion.url.clone(),
+        settings.defi.zerion.key.secret.clone(),
+        settings.defi.jupiter.url.clone(),
+        settings.defi.jupiter.key.secret.clone(),
+    );
     let defi_client = DefiClient::from_config(database.clone(), defi_config.clone());
     let defi_provider_client = DefiProviderClient::new(defi_config);
     let auth_client = Arc::new(AuthClient::new(cacher_client.clone()));

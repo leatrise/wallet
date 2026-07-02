@@ -379,6 +379,7 @@ pub type MagicEden = SecretKeySettings;
 #[derive(Debug, Deserialize, Clone)]
 pub struct Defi {
     pub zerion: UrlSecretKeySettings,
+    pub jupiter: UrlSecretKeySettings,
 }
 
 pub type Assets = URL;
