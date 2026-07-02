@@ -29,7 +29,7 @@ import com.gemwallet.android.ui.R
 import com.gemwallet.android.ui.components.TabsBar
 import com.gemwallet.android.ui.components.screen.Scene
 import com.gemwallet.android.ui.icons.AppIcons
-import com.gemwallet.android.ui.models.chart.ChartViewState
+import com.gemwallet.android.ui.models.StateViewType
 import com.wallet.core.primitives.PortfolioChartType
 import com.wallet.core.primitives.PortfolioType
 
@@ -78,7 +78,7 @@ fun PortfolioChartScene(
         ) {
             LazyColumn {
                 item { PortfolioChart(viewModel) }
-                if (state.viewState == ChartViewState.Ready || state.viewState == ChartViewState.Empty) {
+                if (state.chart is StateViewType.Data || state.chart == StateViewType.NoData) {
                     portfolioStatistics(currency, statistics)
                 }
             }
@@ -125,16 +125,14 @@ private fun ChartTypeSelector(selected: PortfolioChartType, onSelect: (Portfolio
 
 @Composable
 private fun PortfolioChart(viewModel: PortfolioChartViewModel) {
-    val uiModel by viewModel.chartUIModel.collectAsStateWithLifecycle()
     val state by viewModel.chartUIState.collectAsStateWithLifecycle()
     val periods by viewModel.availablePeriods.collectAsStateWithLifecycle()
 
     ChartSection(
-        uiModel = uiModel,
         state = state,
         onPeriodSelect = viewModel::setPeriod,
         periods = periods,
-    ) { selectedPoint -> portfolioChartHeader(uiModel, selectedPoint) }
+    ) { uiModel, selectedPoint -> portfolioChartHeader(uiModel, selectedPoint) }
 }
 
 private fun PortfolioType.titleRes(): Int = when (this) {

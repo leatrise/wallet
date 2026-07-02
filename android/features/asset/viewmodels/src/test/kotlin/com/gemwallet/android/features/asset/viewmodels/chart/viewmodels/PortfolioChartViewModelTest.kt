@@ -5,7 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.gemwallet.android.application.assets.coordinators.GetPortfolioData
 import com.gemwallet.android.application.session.coordinators.GetCurrentCurrency
 import com.gemwallet.android.data.repositories.perpetual.ObservePerpetualWallet
-import com.gemwallet.android.ui.models.chart.ChartViewState
+import com.gemwallet.android.ui.models.StateViewType
+import com.gemwallet.android.ui.models.dataOrNull
 import com.wallet.core.primitives.ChartDateValue
 import com.wallet.core.primitives.ChartPeriod
 import com.wallet.core.primitives.ChartValuePercentage
@@ -73,10 +74,9 @@ class PortfolioChartViewModelTest {
         coEvery { getPortfolioData.getPortfolioData(PortfolioType.Wallet, ChartPeriod.All, Currency.USD) } returns portfolioData(listOf(10f, 12f, 14f))
 
         val viewModel = createViewModel()
-        val uiModel = viewModel.chartUIModel.first { it.chartPoints.size == 3 }
+        val state = viewModel.chartUIState.first { it.chart.dataOrNull?.chartPoints?.size == 3 }
 
-        assertEquals(3, uiModel.chartPoints.size)
-        assertEquals(ChartViewState.Ready, viewModel.chartUIState.first { it.viewState != ChartViewState.Loading }.viewState)
+        assertEquals(3, state.chart.dataOrNull?.chartPoints?.size)
     }
 
     @Test
@@ -84,9 +84,9 @@ class PortfolioChartViewModelTest {
         coEvery { getPortfolioData.getPortfolioData(PortfolioType.Wallet, ChartPeriod.All, Currency.USD) } returns portfolioData(listOf(1f, 2f))
 
         val viewModel = createViewModel()
-        viewModel.chartUIModel.first { it.chartPoints.size == 2 }
+        viewModel.chartUIState.first { it.chart.dataOrNull?.chartPoints?.size == 2 }
 
-        assertEquals(ChartPeriod.All, viewModel.chartUIState.first { it.viewState != ChartViewState.Loading }.period)
+        assertEquals(ChartPeriod.All, viewModel.chartUIState.first { it.chart != StateViewType.Loading }.period)
         coVerify(exactly = 1) { getPortfolioData.getPortfolioData(PortfolioType.Wallet, ChartPeriod.All, Currency.USD) }
     }
 
@@ -97,12 +97,12 @@ class PortfolioChartViewModelTest {
             getPortfolioData.getPortfolioData(PortfolioType.Wallet, ChartPeriod.Month, Currency.USD)
         } returns portfolioData(listOf(1f, 2f, 3f))
         val viewModel = createViewModel()
-        backgroundScope.launch { viewModel.chartUIModel.collect {} }
+        backgroundScope.launch { viewModel.chartUIState.collect {} }
 
         viewModel.setPeriod(ChartPeriod.Month)
-        val model = viewModel.chartUIModel.first { it.chartPoints.size == 3 }
+        val state = viewModel.chartUIState.first { it.chart.dataOrNull?.chartPoints?.size == 3 }
 
-        assertEquals(ChartPeriod.Month, model.period)
+        assertEquals(ChartPeriod.Month, state.period)
         coVerify { getPortfolioData.getPortfolioData(PortfolioType.Wallet, ChartPeriod.Month, Currency.USD) }
     }
 
@@ -116,11 +116,11 @@ class PortfolioChartViewModelTest {
             getPortfolioData.getPortfolioData(any(), ChartPeriod.Day, any())
         } returns portfolioData(listOf(1f, 2f, 3f), availablePeriods = periods)
         val viewModel = createViewModel()
-        backgroundScope.launch { viewModel.chartUIModel.collect {} }
+        backgroundScope.launch { viewModel.chartUIState.collect {} }
 
-        val model = viewModel.chartUIModel.first { it.chartPoints.size == 3 }
+        val state = viewModel.chartUIState.first { it.chart.dataOrNull?.chartPoints?.size == 3 }
 
-        assertEquals(ChartPeriod.Day, model.period)
+        assertEquals(ChartPeriod.Day, state.period)
         coVerify { getPortfolioData.getPortfolioData(PortfolioType.Wallet, ChartPeriod.Day, Currency.USD) }
     }
 
@@ -130,9 +130,9 @@ class PortfolioChartViewModelTest {
             getPortfolioData.getPortfolioData(PortfolioType.Perpetuals, ChartPeriod.All, Currency.USD)
         } returns portfolioData(listOf(1f, 2f))
         val viewModel = createViewModel(initialType = PortfolioType.Perpetuals)
-        backgroundScope.launch { viewModel.chartUIModel.collect {} }
+        backgroundScope.launch { viewModel.chartUIState.collect {} }
 
-        viewModel.chartUIModel.first { it.chartPoints.size == 2 }
+        viewModel.chartUIState.first { it.chart.dataOrNull?.chartPoints?.size == 2 }
 
         assertEquals(PortfolioType.Perpetuals, viewModel.selectedType.value)
         coVerify(exactly = 0) { getPortfolioData.getPortfolioData(PortfolioType.Wallet, any(), any()) }
@@ -142,11 +142,11 @@ class PortfolioChartViewModelTest {
     fun `shows error state when the portfolio request fails`() = runTest(testDispatcher) {
         coEvery { getPortfolioData.getPortfolioData(any(), any(), any()) } throws IllegalStateException("network down")
         val viewModel = createViewModel()
-        backgroundScope.launch { viewModel.chartUIModel.collect {} }
+        backgroundScope.launch { viewModel.chartUIState.collect {} }
 
-        val state = viewModel.chartUIState.first { it.viewState != ChartViewState.Loading }
+        val state = viewModel.chartUIState.first { it.chart != StateViewType.Loading }
 
-        assertEquals(ChartViewState.Error, state.viewState)
+        assertEquals(StateViewType.Error, state.chart)
     }
 
     @Test
@@ -155,11 +155,11 @@ class PortfolioChartViewModelTest {
             getPortfolioData.getPortfolioData(PortfolioType.Wallet, ChartPeriod.All, Currency.USD)
         } returns portfolioData(listOf(5f, 5f, 5f))
         val viewModel = createViewModel()
-        backgroundScope.launch { viewModel.chartUIModel.collect {} }
+        backgroundScope.launch { viewModel.chartUIState.collect {} }
 
-        val state = viewModel.chartUIState.first { it.viewState != ChartViewState.Loading }
+        val state = viewModel.chartUIState.first { it.chart != StateViewType.Loading }
 
-        assertEquals(ChartViewState.Empty, state.viewState)
+        assertEquals(StateViewType.NoData, state.chart)
     }
 
     @Test

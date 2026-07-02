@@ -7,13 +7,16 @@ import com.gemwallet.android.model.AssetPriceInfo
 import com.gemwallet.android.model.CurrencyFormatter
 import com.gemwallet.android.model.PriceChangeFormatter
 import com.gemwallet.android.ui.components.chart.ChartPoint
+import com.gemwallet.android.ui.models.StateViewType
 import com.gemwallet.android.ui.models.chart.ChartHeaderUIModel
 import com.gemwallet.android.ui.models.chart.ChartValueType
-import com.gemwallet.android.ui.models.chart.ChartViewState
 import com.wallet.core.primitives.ChartDateValue
 import com.wallet.core.primitives.ChartPeriod
 import com.wallet.core.primitives.ChartValue
 import com.wallet.core.primitives.Currency
+
+internal const val MinChartPoints = 2
+internal const val StopTimeoutMillis = 5_000L
 
 data class ChartUIModel(
     val period: ChartPeriod = ChartPeriod.Day,
@@ -34,7 +37,7 @@ data class ChartUIModel(
 
     data class State(
         val period: ChartPeriod = ChartPeriod.Day,
-        val viewState: ChartViewState = ChartViewState.Loading,
+        val chart: StateViewType<ChartUIModel> = StateViewType.Loading,
     )
 }
 

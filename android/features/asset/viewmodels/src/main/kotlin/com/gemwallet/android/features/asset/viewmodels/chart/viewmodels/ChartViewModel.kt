@@ -8,12 +8,13 @@ import com.gemwallet.android.application.assets.coordinators.GetAssetTokenInfo
 import com.gemwallet.android.application.assets.coordinators.GetChartPeriod
 import com.gemwallet.android.application.assets.coordinators.SetChartPeriod
 import com.gemwallet.android.application.session.coordinators.GetCurrentCurrency
+import com.gemwallet.android.features.asset.viewmodels.chart.models.AssetChartState
 import com.gemwallet.android.features.asset.viewmodels.chart.models.ChartUIModel
+import com.gemwallet.android.features.asset.viewmodels.chart.models.MinChartPoints
+import com.gemwallet.android.features.asset.viewmodels.chart.models.StopTimeoutMillis
 import com.gemwallet.android.features.asset.viewmodels.chart.models.from
-import com.gemwallet.android.ui.models.chart.ChartFetch
-import com.gemwallet.android.ui.models.chart.ChartViewState
-import com.gemwallet.android.ui.models.chart.MinChartPoints
-import com.gemwallet.android.ui.models.chart.viewState
+import com.gemwallet.android.ui.models.StateViewType
+import com.gemwallet.android.ui.models.flatMap
 import com.gemwallet.android.ui.models.navigation.requireAssetId
 import com.wallet.core.primitives.AssetId
 import com.wallet.core.primitives.ChartPeriod
@@ -31,9 +32,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -59,37 +59,38 @@ class ChartViewModel internal constructor(
         selectedPeriod,
         getCurrentCurrency.getCurrency().distinctUntilChanged(),
         refreshTrigger,
-    ) { period, currency, _ -> period to currency }
-        .mapLatest { (period, currency) ->
+    ) { period, currency, _ -> AssetChartState(period, currency) }
+        .transformLatest { state ->
+            emit(state)
             val prices = try {
-                request(period, currency)
+                request(state.period, state.currency)
             } catch (e: Exception) {
                 currentCoroutineContext().ensureActive()
                 null
             }
             refreshState.value = false
-            ChartFetch(request = period, data = prices)
+            val chartPrices = when {
+                prices == null -> StateViewType.Error
+                prices.size < MinChartPoints -> StateViewType.NoData
+                else -> StateViewType.Data(prices)
+            }
+            emit(state.copy(prices = chartPrices))
         }
         .flowOn(Dispatchers.IO)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(StopTimeoutMillis),
+            AssetChartState(selectedPeriod.value, Currency.USD),
+        )
 
-    val chartUIState = combine(selectedPeriod, chartPrices) { period, fetch ->
+    val chartUIState = combine(assetPriceInfo, chartPrices) { priceInfo, state ->
         ChartUIModel.State(
-            period = period,
-            viewState = fetch.viewState(period) { prices ->
-                if (prices.size < MinChartPoints) ChartViewState.Empty else ChartViewState.Ready
+            period = state.period,
+            chart = state.prices.flatMap {
+                StateViewType.Data(ChartUIModel.from(it, priceInfo, state.period, state.currency))
             },
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, ChartUIModel.State())
-
-    val chartUIModel = combine(
-        assetPriceInfo,
-        selectedPeriod,
-        chartPrices,
-        getCurrentCurrency.getCurrency().distinctUntilChanged(),
-    ) { priceInfo, period, fetch, currency ->
-        ChartUIModel.from(fetch?.takeIf { it.matches(period) }?.data.orEmpty(), priceInfo, period, currency)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ChartUIModel())
 
     private suspend fun request(period: ChartPeriod, currency: Currency): List<ChartValue> {
         return getAssetChartData.getAssetChartData(assetId, period, currency)

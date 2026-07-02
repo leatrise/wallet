@@ -16,57 +16,48 @@ import com.gemwallet.android.features.asset.viewmodels.chart.viewmodels.ChartVie
 import com.gemwallet.android.ui.components.chart.ChartStateView
 import com.gemwallet.android.ui.components.chart.GemLineChart
 import com.gemwallet.android.ui.models.chart.ChartHeaderUIModel
-import com.gemwallet.android.ui.models.chart.ChartViewState
+import com.gemwallet.android.ui.models.dataOrNull
 import com.wallet.core.primitives.ChartPeriod
 
 @Composable
 fun Chart(viewModel: ChartViewModel = hiltViewModel()) {
-    val uiModel by viewModel.chartUIModel.collectAsStateWithLifecycle()
     val state by viewModel.chartUIState.collectAsStateWithLifecycle()
 
     ChartSection(
-        uiModel = uiModel,
         state = state,
         onPeriodSelect = viewModel::setPeriod,
-    ) { selectedPoint -> chartHeader(uiModel, selectedPoint) }
+    ) { uiModel, selectedPoint -> chartHeader(uiModel, selectedPoint) }
 }
 
 @Composable
 internal fun ChartSection(
-    uiModel: ChartUIModel,
     state: ChartUIModel.State,
     onPeriodSelect: (ChartPeriod) -> Unit,
     periods: List<ChartPeriod> = ChartPeriod.entries,
-    header: (PricePoint?) -> ChartHeaderUIModel?,
+    header: (ChartUIModel, PricePoint?) -> ChartHeaderUIModel?,
 ) {
     key(state.period) {
         var selectedIndex by remember { mutableStateOf<Int?>(null) }
 
-        val displayState = when {
-            state.period != uiModel.period -> ChartViewState.Loading
-            else -> state.viewState
-        }
-        val chartPoints = uiModel.chartPoints
-        val selectedPoint: PricePoint? = if (displayState == ChartViewState.Ready) {
-            selectedIndex?.let { chartPoints.getOrNull(it) }
-        } else {
-            null
+        val uiModel = state.chart.dataOrNull
+        val selectedPoint = uiModel?.let { model ->
+            selectedIndex?.let { model.chartPoints.getOrNull(it) }
         }
 
         ChartStateView(
-            state = displayState,
-            header = header(selectedPoint),
+            state = state.chart,
+            header = uiModel?.let { header(it, selectedPoint) },
             period = state.period,
             onPeriodSelect = onPeriodSelect,
             periods = periods,
-        ) {
+        ) { model ->
             GemLineChart(
-                points = uiModel.renderPoints,
+                points = model.renderPoints,
                 lineColor = MaterialTheme.colorScheme.primary,
                 selectedIndex = selectedIndex,
                 onSelectionChanged = { selectedIndex = it },
-                minLabel = uiModel.minLabel,
-                maxLabel = uiModel.maxLabel,
+                minLabel = model.minLabel,
+                maxLabel = model.maxLabel,
             )
         }
     }
