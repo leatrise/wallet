@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GetPortfolioDataImplTest {
@@ -98,16 +97,10 @@ class GetPortfolioDataImplTest {
         subject.getPortfolioData(PortfolioType.Perpetuals, period = ChartPeriod.All, currency = Currency.USD)
     }
 
-    @Test
-    fun getPortfolioData_returnsEmptyChartsWhenRateMissing() = runTest {
-        val bitcoin = mockAsset()
-        every { assetsRepository.getAssetsInfo() } returns
-            flowOf(listOf(mockAssetInfo(asset = bitcoin, balance = AssetBalance.create(bitcoin, available = "1000"))))
+    @Test(expected = IllegalStateException::class)
+    fun getPortfolioData_throwsWhenRateMissing() = runTest {
         every { assetsRepository.getCurrencyRate(Currency.EUR) } returns flowOf(null)
-        coEvery { gemDeviceApiClient.getPortfolioAssets(any(), any()) } returns portfolio()
 
-        val result = subject.getPortfolioData(PortfolioType.Wallet, period = ChartPeriod.Day, currency = Currency.EUR)
-
-        assertTrue(result.charts.isEmpty())
+        subject.getPortfolioData(PortfolioType.Wallet, period = ChartPeriod.Day, currency = Currency.EUR)
     }
 }

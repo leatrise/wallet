@@ -1,11 +1,13 @@
 package com.gemwallet.android.data.coordinators.asset
 
 import com.gemwallet.android.application.assets.coordinators.GetPortfolioData
+import com.gemwallet.android.application.assets.coordinators.walletChartPeriods
 import com.gemwallet.android.blockchain.services.PerpetualService
 import com.gemwallet.android.data.repositories.assets.AssetsRepository
 import com.gemwallet.android.data.repositories.session.SessionRepository
 import com.gemwallet.android.data.services.gemapi.GemDeviceApiClient
 import com.gemwallet.android.ext.hyperliquidAccount
+import com.gemwallet.android.ext.secondsToMillis
 import com.gemwallet.android.model.getTotalAmount
 import com.wallet.core.primitives.ChartDateValue
 import com.wallet.core.primitives.ChartPeriod
@@ -22,15 +24,6 @@ import com.wallet.core.primitives.PortfolioStatistic
 import com.wallet.core.primitives.PortfolioType
 import kotlinx.coroutines.flow.firstOrNull
 import java.math.BigInteger
-import java.util.concurrent.TimeUnit
-
-private val walletChartPeriods = listOf(
-    ChartPeriod.Day,
-    ChartPeriod.Week,
-    ChartPeriod.Month,
-    ChartPeriod.Year,
-    ChartPeriod.All,
-)
 
 class GetPortfolioDataImpl(
     private val gemDeviceApiClient: GemDeviceApiClient,
@@ -49,6 +42,9 @@ class GetPortfolioDataImpl(
     }
 
     private suspend fun getWalletData(period: ChartPeriod, currency: Currency): PortfolioData {
+        val rate = checkNotNull(assetsRepository.getCurrencyRate(currency).firstOrNull()?.rate) {
+            "Missing currency rate for ${currency.string}"
+        }
         val assets = assetsRepository.getAssetsInfo().firstOrNull().orEmpty()
             .mapNotNull { assetInfo ->
                 val total = assetInfo.balance.balance.getTotalAmount()
@@ -59,12 +55,9 @@ class GetPortfolioDataImpl(
             period = period.string,
             request = PortfolioAssetsRequest(assets = assets),
         )
-        val rate = assetsRepository.getCurrencyRate(currency).firstOrNull()?.rate
-            ?: return PortfolioData(charts = emptyList(), statistics = emptyList(), availablePeriods = walletChartPeriods)
-
         val values = portfolio.values
             .sortedBy { it.timestamp }
-            .map { ChartDateValue(date = TimeUnit.SECONDS.toMillis(it.timestamp.toLong()), value = it.value * rate) }
+            .map { ChartDateValue(date = it.timestamp.toLong().secondsToMillis(), value = it.value * rate) }
         val statistics = listOfNotNull(
             portfolio.allTimeHigh?.let { PortfolioStatistic.AllTimeHigh(it) },
             portfolio.allTimeLow?.let { PortfolioStatistic.AllTimeLow(it) },

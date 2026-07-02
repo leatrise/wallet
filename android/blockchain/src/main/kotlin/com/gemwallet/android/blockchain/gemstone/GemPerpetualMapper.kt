@@ -1,6 +1,7 @@
 package com.gemwallet.android.blockchain.gemstone
 
 import com.gemwallet.android.domains.asset.toDTO
+import com.gemwallet.android.ext.secondsToMillis
 import com.gemwallet.android.ext.toAssetId
 import com.gemwallet.android.ext.toPerpetualId
 import com.wallet.core.primitives.ChartCandleStick
@@ -134,14 +135,14 @@ fun GemChartCandleStick.toDTO(): ChartCandleStick {
     )
 }
 
-fun GemChartDateValue.toDTO(): ChartDateValue {
+private fun GemChartDateValue.toDTO(): ChartDateValue {
     return ChartDateValue(
-        date = date * 1_000L,
+        date = date.secondsToMillis(),
         value = value,
     )
 }
 
-fun GemPerpetualAccountSummary.toDTO(): PerpetualAccountSummary {
+private fun GemPerpetualAccountSummary.toDTO(): PerpetualAccountSummary {
     return PerpetualAccountSummary(
         accountValue = accountValue,
         accountLeverage = accountLeverage,
@@ -150,7 +151,7 @@ fun GemPerpetualAccountSummary.toDTO(): PerpetualAccountSummary {
     )
 }
 
-fun GemPerpetualPortfolioTimeframeData.toDTO(): PerpetualPortfolioTimeframeData {
+private fun GemPerpetualPortfolioTimeframeData.toDTO(): PerpetualPortfolioTimeframeData {
     return PerpetualPortfolioTimeframeData(
         accountValueHistory = accountValueHistory.map { it.toDTO() },
         pnlHistory = pnlHistory.map { it.toDTO() },

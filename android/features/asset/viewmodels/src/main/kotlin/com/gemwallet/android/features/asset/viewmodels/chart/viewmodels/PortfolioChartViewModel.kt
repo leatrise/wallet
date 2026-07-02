@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gemwallet.android.application.assets.coordinators.GetPortfolioData
+import com.gemwallet.android.application.assets.coordinators.walletChartPeriods
 import com.gemwallet.android.application.session.coordinators.GetCurrentCurrency
 import com.gemwallet.android.data.repositories.perpetual.ObservePerpetualWallet
 import com.gemwallet.android.features.asset.viewmodels.chart.models.ChartUIModel
@@ -33,14 +34,6 @@ import javax.inject.Inject
 
 private const val MinChartPoints = 2
 private const val StopTimeoutMillis = 5_000L
-
-private val defaultPeriods = listOf(
-    ChartPeriod.Day,
-    ChartPeriod.Week,
-    ChartPeriod.Month,
-    ChartPeriod.Year,
-    ChartPeriod.All,
-)
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -117,8 +110,8 @@ class PortfolioChartViewModel internal constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(StopTimeoutMillis), Currency.USD)
 
     val availablePeriods = portfolio
-        .map { it?.data?.availablePeriods?.takeIf { periods -> periods.isNotEmpty() } ?: defaultPeriods }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(StopTimeoutMillis), defaultPeriods)
+        .map { it?.data?.availablePeriods?.takeIf { periods -> periods.isNotEmpty() } ?: walletChartPeriods }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(StopTimeoutMillis), walletChartPeriods)
 
     fun setType(type: PortfolioType) {
         _selectedType.value = type
