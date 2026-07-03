@@ -1,0 +1,7 @@
+folder: ../../assets/blockchains
+image_size: 256
+delay: 1s
+coingecko:
+  top_count: 250
+jupiter:
+  minimum_market_cap: 5000000

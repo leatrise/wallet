@@ -1,0 +1,171 @@
+use crate::{
+    cli_args::{Args, ImageMode, ImageSource},
+    config::ImgDownloaderConfig,
+    image::download_image,
+    providers::{CoingeckoProvider, JupiterProvider, model::AssetImage},
+};
+use gem_tracing::{error_with_fields, info_with_fields};
+use std::{
+    collections::HashMap,
+    error::Error,
+    fs,
+    io::Write,
+    path::{Path, PathBuf},
+    thread::sleep,
+    time::Duration,
+};
+
+pub struct Downloader {
+    args: Args,
+    folder: String,
+    coingecko_provider: CoingeckoProvider,
+    jupiter_provider: JupiterProvider,
+    image_client: reqwest::Client,
+    image_size: u32,
+    coingecko_top_count: usize,
+    delay: Duration,
+}
+
+struct PendingAssetImage {
+    image: AssetImage,
+    path: PathBuf,
+}
+
+impl Downloader {
+    pub fn new(args: Args, coingecko_api_key: String, config: ImgDownloaderConfig) -> Self {
+        let folder = args.folder.clone().unwrap_or(config.folder);
+        Self {
+            args,
+            folder,
+            coingecko_provider: CoingeckoProvider::new(coingecko_api_key),
+            jupiter_provider: JupiterProvider::new(config.jupiter.minimum_market_cap),
+            image_client: reqwest::Client::new(),
+            image_size: config.image_size,
+            coingecko_top_count: config.coingecko.top_count,
+            delay: config.delay,
+        }
+    }
+
+    pub async fn start(&self) -> Result<(), Box<dyn Error + Send + Sync>> {
+        info_with_fields!("image downloader start", folder = self.folder.as_str());
+        let folder = Path::new(&self.folder);
+        if !folder.exists() {
+            fs::create_dir_all(folder)?;
+        }
+
+        match self.args.source {
+            ImageSource::Coingecko => self.start_coingecko(folder).await,
+            ImageSource::Jupiter => self.start_jupiter(folder).await,
+        }
+    }
+
+    async fn start_coingecko(&self, folder: &Path) -> Result<(), Box<dyn Error + Send + Sync>> {
+        if let Some(id) = self.id() {
+            return self.download_coingecko_coin_id(id, folder).await;
+        }
+
+        let images = match self.args.mode {
+            ImageMode::Top => self.coingecko_provider.get_top_asset_images(self.coingecko_top_count).await?,
+            ImageMode::Trending => self.coingecko_provider.get_trending_asset_images().await?,
+        };
+        self.download_asset_images(images, folder).await
+    }
+
+    async fn start_jupiter(&self, folder: &Path) -> Result<(), Box<dyn Error + Send + Sync>> {
+        let images = if let Some(id) = self.id() {
+            self.jupiter_provider.get_verified_asset_images_by_id(id).await?
+        } else {
+            self.jupiter_provider.get_verified_asset_images().await?
+        };
+        self.download_asset_images(images, folder).await
+    }
+
+    fn id(&self) -> Option<&str> {
+        if !self.args.id.is_empty() { Some(self.args.id.as_str()) } else { None }
+    }
+
+    async fn download_coingecko_coin_id(&self, coin_id: &str, folder: &Path) -> Result<(), Box<dyn Error + Send + Sync>> {
+        info_with_fields!("collect coingecko coin", coin_id = coin_id);
+        let images = self.coingecko_provider.get_asset_images(coin_id).await?;
+        self.download_asset_images(images, folder).await
+    }
+
+    async fn download_asset_images(&self, images: Vec<AssetImage>, folder: &Path) -> Result<(), Box<dyn Error + Send + Sync>> {
+        let total = images.len();
+        let mut existing = 0;
+        let mut unsupported = 0;
+        let mut pending: Vec<PendingAssetImage> = Vec::new();
+
+        for image in images {
+            let Some(path) = self.asset_image_path(&image, folder) else {
+                unsupported += 1;
+                continue;
+            };
+            if path.exists() {
+                existing += 1;
+            } else {
+                pending.push(PendingAssetImage { image, path });
+            }
+        }
+
+        info_with_fields!(
+            "image downloader summary",
+            available = total,
+            existing = existing,
+            pending = pending.len(),
+            unsupported = unsupported
+        );
+
+        let pending_count = pending.len();
+        let mut images_by_url: HashMap<String, Vec<u8>> = HashMap::new();
+        for (index, pending_image) in pending.into_iter().enumerate() {
+            info_with_fields!(
+                "download image",
+                index = index + 1,
+                total = pending_count,
+                chain = pending_image.image.chain,
+                token_id = pending_image.image.token_id.as_str(),
+                url = pending_image.image.image_url.as_str(),
+            );
+            let image_downloaded = match self.download_asset_image(&pending_image, &mut images_by_url).await {
+                Ok(image_downloaded) => image_downloaded,
+                Err(error) => {
+                    error_with_fields!(
+                        "image download failed",
+                        error.as_ref(),
+                        chain = pending_image.image.chain,
+                        token_id = pending_image.image.token_id.as_str(),
+                        url = pending_image.image.image_url.as_str(),
+                    );
+                    false
+                }
+            };
+            if image_downloaded && index + 1 < pending_count {
+                sleep(self.delay);
+            }
+        }
+        Ok(())
+    }
+
+    async fn download_asset_image(&self, pending_image: &PendingAssetImage, images_by_url: &mut HashMap<String, Vec<u8>>) -> Result<bool, Box<dyn Error + Send + Sync>> {
+        let image_folder = pending_image.path.parent().ok_or("invalid image folder")?;
+        fs::create_dir_all(image_folder)?;
+
+        let image_downloaded = if !images_by_url.contains_key(&pending_image.image.image_url) {
+            let bytes = download_image(&self.image_client, &pending_image.image.image_url, self.image_size).await?;
+            images_by_url.insert(pending_image.image.image_url.clone(), bytes);
+            true
+        } else {
+            false
+        };
+        let bytes = images_by_url.get(&pending_image.image.image_url).ok_or("image not cached")?;
+        let mut file = fs::File::create(&pending_image.path)?;
+        file.write_all(bytes)?;
+        Ok(image_downloaded)
+    }
+
+    fn asset_image_path(&self, image: &AssetImage, folder: &Path) -> Option<PathBuf> {
+        let token_id = chain_primitives::format_token_id(image.chain, image.token_id.clone())?;
+        Some(folder.join(image.chain.to_string()).join("assets").join(token_id).join("logo.png"))
+    }
+}
