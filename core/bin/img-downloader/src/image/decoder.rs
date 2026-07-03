@@ -15,9 +15,9 @@ pub fn decode(url: &str, content_type: Option<&str>, bytes: &[u8], supported_typ
     let image_type = image_type(url, content_type, bytes).ok_or(ImageDownloadError::UnsupportedType(None))?;
     ensure_supported_type(image_type, supported_types)?;
     if matches!(image_type, ImageType::Svg) {
-        decode_svg(bytes)
+        decode_svg(bytes).map_err(|_| ImageDownloadError::InvalidImage(image_type).into())
     } else {
-        Ok(image::load_from_memory(bytes)?)
+        image::load_from_memory(bytes).map_err(|_| ImageDownloadError::InvalidImage(image_type).into())
     }
 }
 
