@@ -6,4 +6,4 @@ image_request_retries: 2
 coingecko:
   top_count: 250
 jupiter:
-  minimum_market_cap: 5000000
+  top_count: 250

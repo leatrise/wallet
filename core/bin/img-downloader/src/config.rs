@@ -24,7 +24,7 @@ pub struct CoingeckoConfig {
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct JupiterConfig {
-    pub minimum_market_cap: f64,
+    pub top_count: usize,
 }
 
 impl ImgDownloaderConfig {
@@ -41,7 +41,7 @@ impl ImgDownloaderConfig {
     fn load_from_path(path: PathBuf) -> Result<Self, ConfigError> {
         Config::builder()
             .add_source(File::from(path))
-            .add_source(Environment::default().separator("_"))
+            .add_source(Environment::default().separator("__"))
             .build()?
             .try_deserialize()
     }

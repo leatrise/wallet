@@ -7,29 +7,28 @@ const JUPITER_API_BASE_URL: &str = "https://api.jup.ag/tokens/v2";
 
 pub struct JupiterProvider {
     client: reqwest::Client,
-    minimum_market_cap: f64,
+    top_count: usize,
 }
 
 #[derive(Clone, Debug, Deserialize)]
 struct JupiterToken {
     id: String,
     icon: Option<String>,
-    mcap: Option<f64>,
 }
 
 impl JupiterProvider {
-    pub fn new(client: reqwest::Client, minimum_market_cap: f64) -> Self {
-        Self { client, minimum_market_cap }
+    pub fn new(client: reqwest::Client, top_count: usize) -> Self {
+        Self { client, top_count }
     }
 
     pub async fn get_verified_asset_images(&self) -> Result<Vec<AssetImage>, Box<dyn Error + Send + Sync>> {
         let tokens = self.get_tokens().await?;
-        Ok(self.map_tokens(tokens))
+        Ok(Self::map_tokens(tokens.into_iter().take(self.top_count).collect()))
     }
 
     pub async fn get_verified_asset_images_by_id(&self, token_id: &str) -> Result<Vec<AssetImage>, Box<dyn Error + Send + Sync>> {
         let tokens = self.get_tokens().await?;
-        Ok(self.map_tokens(tokens).into_iter().filter(|image| image.token_id == token_id).collect())
+        Ok(Self::map_tokens(tokens).into_iter().filter(|image| image.token_id == token_id).collect())
     }
 
     async fn get_tokens(&self) -> Result<Vec<JupiterToken>, Box<dyn Error + Send + Sync>> {
@@ -42,13 +41,10 @@ impl JupiterProvider {
         Ok(response.json::<Vec<JupiterToken>>().await?)
     }
 
-    fn map_tokens(&self, tokens: Vec<JupiterToken>) -> Vec<AssetImage> {
+    fn map_tokens(tokens: Vec<JupiterToken>) -> Vec<AssetImage> {
         tokens
             .into_iter()
             .filter_map(|token| {
-                if token.mcap.unwrap_or_default() < self.minimum_market_cap {
-                    return None;
-                }
                 let image_url = token.icon?;
                 Some(AssetImage {
                     chain: Chain::Solana,

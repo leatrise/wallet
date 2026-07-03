@@ -46,7 +46,7 @@ impl Downloader {
             args,
             folder,
             coingecko_provider: CoingeckoProvider::new(coingecko_api_key),
-            jupiter_provider: JupiterProvider::new(http_client.clone(), config.jupiter.minimum_market_cap),
+            jupiter_provider: JupiterProvider::new(http_client.clone(), config.jupiter.top_count),
             http_client,
             image_size: config.image_size,
             image_request_retries: config.image_request_retries,
