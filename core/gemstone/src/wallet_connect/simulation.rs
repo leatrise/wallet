@@ -59,9 +59,17 @@ pub(super) fn decode_solana_transaction(transaction_type: &WcWalletConnectTransa
     }
 }
 
+pub(super) fn decode_sui_transaction(transaction_type: &WcWalletConnectTransactionType, data: &str) -> Option<String> {
+    match WalletConnectRequestHandler::decode_send_transaction(transaction_type.clone(), data.to_string()).ok()? {
+        WcWalletConnectTransaction::Sui { data, .. } => Some(data.transaction),
+        _ => None,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use primitives::TransferDataOutputType;
 
     #[test]
     fn decode_ethereum_transaction_with_calldata_decodes_bytes() {
@@ -75,5 +83,23 @@ mod tests {
         let transaction = decode_ethereum_transaction(&data).unwrap();
 
         assert_eq!(decode_ethereum_calldata(&transaction), vec![0xa9, 0x05, 0x9c, 0xbb]);
+    }
+
+    #[test]
+    fn decode_sui_transaction_extracts_encoded_transaction() {
+        let transaction_type = WcWalletConnectTransactionType::Sui {
+            output_type: TransferDataOutputType::EncodedTransaction,
+        };
+        let data = serde_json::json!({
+            "transaction": "AAACACBioXKtLBHdBvR0cyBEjEQGqRi1DTvHUE1yPPuT1XG0DQ==",
+            "account": "0x93f65b8c16c263343bbf66cf9f8eef69cb1dbc92d13f0c331b0dcaeb76b4aab6",
+        })
+        .to_string();
+
+        assert_eq!(
+            decode_sui_transaction(&transaction_type, &data).as_deref(),
+            Some("AAACACBioXKtLBHdBvR0cyBEjEQGqRi1DTvHUE1yPPuT1XG0DQ==")
+        );
+        assert_eq!(decode_sui_transaction(&transaction_type, "{}"), None);
     }
 }

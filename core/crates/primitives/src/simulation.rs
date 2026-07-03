@@ -2,7 +2,7 @@ use num_bigint::BigInt;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use crate::AssetId;
+use crate::{Asset, AssetId};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[typeshare(swift = "Equatable, Hashable, Sendable")]
@@ -110,6 +110,13 @@ impl SimulationBalanceChange {
             name: None,
             symbol: None,
         }
+    }
+
+    pub fn with_asset(mut self, asset: Asset) -> Self {
+        self.name = Some(asset.name);
+        self.symbol = Some(asset.symbol);
+        self.decimals = asset.decimals;
+        self
     }
 }
 

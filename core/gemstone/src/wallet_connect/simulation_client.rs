@@ -4,7 +4,9 @@ use ::simulation::evm::SimulationClient;
 use chain_traits::ChainSimulation;
 use gem_evm::jsonrpc::TransactionObject;
 use gem_evm::rpc::EthereumClient;
+use gem_jsonrpc::grpc::AlienGrpcTransport;
 use gem_solana::rpc::client::SolanaClient;
+use gem_sui::rpc::client::SuiClient;
 use gem_wallet_connect::{
     SignDigestType as WcSignDigestType, WCEthereumTransactionData as WcEthereumTransactionData, WalletConnectTransactionType as WcWalletConnectTransactionType,
 };
@@ -12,7 +14,7 @@ use primitives::{Chain, EVMChain, SimulationInput, SimulationResult};
 
 use crate::{
     GemstoneError,
-    alien::{AlienClient, AlienProvider, coalescing_provider, new_alien_client},
+    alien::{AlienClient, AlienProvider, AlienProviderWrapper, coalescing_provider, new_alien_client},
     message::sign_type::SignDigestType,
     network::JsonRpcClient,
 };
@@ -55,6 +57,7 @@ impl WalletConnectSimulationClient {
         let simulation = match &transaction_type {
             WcWalletConnectTransactionType::Ethereum => self.simulate_ethereum_transaction(chain, &data).await?,
             WcWalletConnectTransactionType::Solana { .. } => self.simulate_solana_transaction(&transaction_type, &data).await?,
+            WcWalletConnectTransactionType::Sui { .. } => self.simulate_sui_transaction(&transaction_type, &data).await?,
             _ => SimulationResult::default(),
         };
 
@@ -120,6 +123,12 @@ impl WalletConnectSimulationClient {
         Ok(client.simulate_transaction(SimulationInput { encoded_transaction }).await?)
     }
 
+    async fn simulate_sui_transaction(&self, transaction_type: &WcWalletConnectTransactionType, data: &str) -> Result<SimulationResult, GemstoneError> {
+        let encoded_transaction = simulation::decode_sui_transaction(transaction_type, data).ok_or("Failed to decode transaction")?;
+        let client = self.sui_client().ok_or("No RPC client available")?;
+        Ok(client.simulate_transaction(SimulationInput { encoded_transaction }).await?)
+    }
+
     fn ethereum_client(&self, chain: Chain) -> Option<EthereumClient<AlienClient>> {
         let chain = EVMChain::from_chain(chain)?;
         let url = self.provider.get_endpoint(chain.to_chain()).ok()?;
@@ -131,6 +140,12 @@ impl WalletConnectSimulationClient {
         let url = self.provider.get_endpoint(Chain::Solana).ok()?;
         let client = new_alien_client(url, self.provider.clone());
         Some(SolanaClient::new(JsonRpcClient::new(client)))
+    }
+
+    fn sui_client(&self) -> Option<SuiClient> {
+        let url = self.provider.get_endpoint(Chain::Sui).ok()?;
+        let transport = AlienGrpcTransport::new(Arc::new(AlienProviderWrapper::new(self.provider.clone())));
+        Some(SuiClient::new_with_transport(url, Arc::new(transport)))
     }
 }
 
