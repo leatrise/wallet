@@ -41,16 +41,16 @@ struct PendingAssetImage {
 impl Downloader {
     pub fn new(args: Args, coingecko_api_key: String, config: ImgDownloaderConfig) -> Result<Self, Box<dyn Error + Send + Sync>> {
         let folder = args.folder.clone().unwrap_or(config.folder);
-        let http_client = Self::build_http_client(config.image_request_timeout)?;
+        let http_client = Self::build_http_client(config.image.request.timeout)?;
         Ok(Self {
             args,
             folder,
             coingecko_provider: CoingeckoProvider::new(coingecko_api_key),
-            jupiter_provider: JupiterProvider::new(http_client.clone(), config.jupiter.top_count),
+            jupiter_provider: JupiterProvider::new(http_client.clone(), config.jupiter.top.count),
             http_client,
-            image_size: config.image_size,
-            image_request_retries: config.image_request_retries,
-            coingecko_top_count: config.coingecko.top_count,
+            image_size: config.image.size,
+            image_request_retries: config.image.request.retries,
+            coingecko_top_count: config.coingecko.top.count,
             delay: config.delay,
         })
     }

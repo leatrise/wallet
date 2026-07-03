@@ -7,24 +7,39 @@ use std::{env, path::PathBuf};
 #[derive(Debug, Deserialize, Clone)]
 pub struct ImgDownloaderConfig {
     pub folder: String,
-    pub image_size: u32,
     #[serde(deserialize_with = "duration::deserialize")]
     pub delay: Duration,
-    #[serde(deserialize_with = "duration::deserialize")]
-    pub image_request_timeout: Duration,
-    pub image_request_retries: usize,
+    pub image: ImageConfig,
     pub coingecko: CoingeckoConfig,
     pub jupiter: JupiterConfig,
 }
 
 #[derive(Debug, Deserialize, Clone)]
+pub struct ImageConfig {
+    pub size: u32,
+    pub request: ImageRequestConfig,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct ImageRequestConfig {
+    #[serde(deserialize_with = "duration::deserialize")]
+    pub timeout: Duration,
+    pub retries: usize,
+}
+
+#[derive(Debug, Deserialize, Clone)]
 pub struct CoingeckoConfig {
-    pub top_count: usize,
+    pub top: TopConfig,
 }
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct JupiterConfig {
-    pub top_count: usize,
+    pub top: TopConfig,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct TopConfig {
+    pub count: usize,
 }
 
 impl ImgDownloaderConfig {
@@ -41,7 +56,7 @@ impl ImgDownloaderConfig {
     fn load_from_path(path: PathBuf) -> Result<Self, ConfigError> {
         Config::builder()
             .add_source(File::from(path))
-            .add_source(Environment::default().separator("__"))
+            .add_source(Environment::default().separator("_").ignore_empty(true))
             .build()?
             .try_deserialize()
     }
