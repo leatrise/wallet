@@ -2,6 +2,11 @@ folder: ../../assets/blockchains
 delay: 1s
 image:
   size: 256
+  types:
+    - png
+    - jpeg
+    - jpg
+    - svg
   request:
     timeout: 10s
     retries: 2

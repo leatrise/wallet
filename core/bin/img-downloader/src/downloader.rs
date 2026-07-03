@@ -4,7 +4,8 @@ use crate::{
     image::download_image,
     providers::{CoingeckoProvider, JupiterProvider, model::AssetImage},
 };
-use gem_tracing::{error_with_fields, info_with_fields};
+use gem_tracing::{error_with_fields, info_with_fields, warn_with_fields};
+use primitives::ImageType;
 use reqwest::{
     Client,
     header::{ACCEPT, ACCEPT_LANGUAGE, HeaderMap, HeaderValue, USER_AGENT},
@@ -26,6 +27,7 @@ pub struct Downloader {
     jupiter_provider: JupiterProvider,
     http_client: Client,
     image_size: u32,
+    supported_image_types: Vec<ImageType>,
     image_request_retries: usize,
     coingecko_top_count: usize,
     delay: Duration,
@@ -49,6 +51,7 @@ impl Downloader {
             jupiter_provider: JupiterProvider::new(http_client.clone(), config.jupiter.top.count),
             http_client,
             image_size: config.image.size,
+            supported_image_types: config.image.types,
             image_request_retries: config.image.request.retries,
             coingecko_top_count: config.coingecko.top.count,
             delay: config.delay,
@@ -147,13 +150,23 @@ impl Downloader {
             let image_downloaded = match self.download_asset_image(&pending_image, &mut images_by_url).await {
                 Ok(image_downloaded) => image_downloaded,
                 Err(error) => {
-                    error_with_fields!(
-                        "image download failed",
-                        error.as_ref(),
-                        chain = pending_image.image.chain,
-                        token_id = pending_image.image.token_id.as_str(),
-                        url = pending_image.image.image_url.as_str(),
-                    );
+                    if is_unsupported_image_error(error.as_ref()) {
+                        warn_with_fields!(
+                            "image download skipped",
+                            reason = error.as_ref(),
+                            chain = pending_image.image.chain,
+                            token_id = pending_image.image.token_id.as_str(),
+                            url = pending_image.image.image_url.as_str(),
+                        );
+                    } else {
+                        error_with_fields!(
+                            "image download failed",
+                            error.as_ref(),
+                            chain = pending_image.image.chain,
+                            token_id = pending_image.image.token_id.as_str(),
+                            url = pending_image.image.image_url.as_str(),
+                        );
+                    }
                     false
                 }
             };
@@ -166,7 +179,14 @@ impl Downloader {
 
     async fn download_asset_image(&self, pending_image: &PendingAssetImage, images_by_url: &mut HashMap<String, Vec<u8>>) -> Result<bool, Box<dyn Error + Send + Sync>> {
         let image_downloaded = if !images_by_url.contains_key(&pending_image.image.image_url) {
-            let bytes = download_image(&self.http_client, &pending_image.image.image_url, self.image_size, self.image_request_retries).await?;
+            let bytes = download_image(
+                &self.http_client,
+                &pending_image.image.image_url,
+                self.image_size,
+                self.image_request_retries,
+                &self.supported_image_types,
+            )
+            .await?;
             images_by_url.insert(pending_image.image.image_url.clone(), bytes);
             true
         } else {
@@ -184,4 +204,8 @@ impl Downloader {
         let token_id = chain_primitives::format_token_id(image.chain, image.token_id.clone())?;
         Some(folder.join(image.chain.to_string()).join("assets").join(token_id).join("logo.png"))
     }
+}
+
+fn is_unsupported_image_error(error: &(dyn Error + Send + Sync + 'static)) -> bool {
+    error.downcast_ref::<crate::error::ImageDownloadError>().is_some()
 }

@@ -1,6 +1,7 @@
 mod cli_args;
 mod config;
 mod downloader;
+mod error;
 mod image;
 mod providers;
 

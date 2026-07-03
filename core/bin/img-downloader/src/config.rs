@@ -1,4 +1,5 @@
 use config::{Config, ConfigError, Environment, File};
+use primitives::ImageType;
 use serde::Deserialize;
 use serde_serializers::duration;
 use std::time::Duration;
@@ -17,6 +18,7 @@ pub struct ImgDownloaderConfig {
 #[derive(Debug, Deserialize, Clone)]
 pub struct ImageConfig {
     pub size: u32,
+    pub types: Vec<ImageType>,
     pub request: ImageRequestConfig,
 }
 
