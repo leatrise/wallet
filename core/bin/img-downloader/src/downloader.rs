@@ -5,6 +5,7 @@ use crate::{
     providers::{CoingeckoProvider, JupiterProvider, model::AssetImage},
 };
 use gem_tracing::{error_with_fields, info_with_fields};
+use reqwest::Client;
 use std::{
     collections::HashMap,
     error::Error,
@@ -20,8 +21,9 @@ pub struct Downloader {
     folder: String,
     coingecko_provider: CoingeckoProvider,
     jupiter_provider: JupiterProvider,
-    image_client: reqwest::Client,
+    image_client: Client,
     image_size: u32,
+    image_request_retries: usize,
     coingecko_top_count: usize,
     delay: Duration,
 }
@@ -32,18 +34,19 @@ struct PendingAssetImage {
 }
 
 impl Downloader {
-    pub fn new(args: Args, coingecko_api_key: String, config: ImgDownloaderConfig) -> Self {
+    pub fn new(args: Args, coingecko_api_key: String, config: ImgDownloaderConfig) -> Result<Self, Box<dyn Error + Send + Sync>> {
         let folder = args.folder.clone().unwrap_or(config.folder);
-        Self {
+        Ok(Self {
             args,
             folder,
             coingecko_provider: CoingeckoProvider::new(coingecko_api_key),
             jupiter_provider: JupiterProvider::new(config.jupiter.minimum_market_cap),
-            image_client: reqwest::Client::new(),
+            image_client: Client::builder().timeout(config.image_request_timeout).build()?,
             image_size: config.image_size,
+            image_request_retries: config.image_request_retries,
             coingecko_top_count: config.coingecko.top_count,
             delay: config.delay,
-        }
+        })
     }
 
     pub async fn start(&self) -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -148,17 +151,16 @@ impl Downloader {
     }
 
     async fn download_asset_image(&self, pending_image: &PendingAssetImage, images_by_url: &mut HashMap<String, Vec<u8>>) -> Result<bool, Box<dyn Error + Send + Sync>> {
-        let image_folder = pending_image.path.parent().ok_or("invalid image folder")?;
-        fs::create_dir_all(image_folder)?;
-
         let image_downloaded = if !images_by_url.contains_key(&pending_image.image.image_url) {
-            let bytes = download_image(&self.image_client, &pending_image.image.image_url, self.image_size).await?;
+            let bytes = download_image(&self.image_client, &pending_image.image.image_url, self.image_size, self.image_request_retries).await?;
             images_by_url.insert(pending_image.image.image_url.clone(), bytes);
             true
         } else {
             false
         };
         let bytes = images_by_url.get(&pending_image.image.image_url).ok_or("image not cached")?;
+        let image_folder = pending_image.path.parent().ok_or("invalid image folder")?;
+        fs::create_dir_all(image_folder)?;
         let mut file = fs::File::create(&pending_image.path)?;
         file.write_all(bytes)?;
         Ok(image_downloaded)

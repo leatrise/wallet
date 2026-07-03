@@ -10,6 +10,9 @@ pub struct ImgDownloaderConfig {
     pub image_size: u32,
     #[serde(deserialize_with = "duration::deserialize")]
     pub delay: Duration,
+    #[serde(deserialize_with = "duration::deserialize")]
+    pub image_request_timeout: Duration,
+    pub image_request_retries: usize,
     pub coingecko: CoingeckoConfig,
     pub jupiter: JupiterConfig,
 }

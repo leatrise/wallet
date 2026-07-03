@@ -1,6 +1,8 @@
 folder: ../../assets/blockchains
 image_size: 256
 delay: 1s
+image_request_timeout: 10s
+image_request_retries: 2
 coingecko:
   top_count: 250
 jupiter:

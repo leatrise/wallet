@@ -5,11 +5,30 @@ use image::{
 };
 use resvg::{tiny_skia, usvg};
 use std::{cmp::min, error::Error, io::Cursor};
+use tokio::time::{Duration, sleep};
 
-pub async fn download_image(client: &reqwest::Client, url: &str, image_size: u32) -> Result<Vec<u8>, Box<dyn Error + Send + Sync>> {
+pub async fn download_image(client: &reqwest::Client, url: &str, image_size: u32, retries: usize) -> Result<Vec<u8>, Box<dyn Error + Send + Sync>> {
+    let mut last_error = None;
+    let attempts = retries + 1;
+    for attempt in 1..=attempts {
+        match download_image_once(client, url, image_size).await {
+            Ok(bytes) => return Ok(bytes),
+            Err(error) => {
+                last_error = Some(error.to_string());
+                if attempt < attempts {
+                    sleep(Duration::from_millis(250 * attempt as u64)).await;
+                }
+            }
+        }
+    }
+    Err(last_error.unwrap_or_else(|| "image download failed".to_string()).into())
+}
+
+async fn download_image_once(client: &reqwest::Client, url: &str, image_size: u32) -> Result<Vec<u8>, Box<dyn Error + Send + Sync>> {
     let response = client.get(url).send().await?;
-    if response.status() != 200 {
-        return Err("<== image not found".into());
+    let status = response.status();
+    if !status.is_success() {
+        return Err(format!("image request failed: {status}").into());
     }
     let content_type = response
         .headers()

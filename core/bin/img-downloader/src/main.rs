@@ -15,7 +15,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let args = cli_args::Args::parse();
     let config = ImgDownloaderConfig::load()?;
     let settings = Settings::new()?;
-    let downloader = Downloader::new(args, settings.coingecko.key.secret, config);
+    let downloader = Downloader::new(args, settings.coingecko.key.secret, config)?;
 
     downloader.start().await
 }
