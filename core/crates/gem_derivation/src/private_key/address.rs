@@ -27,7 +27,7 @@ pub(super) fn address_from_public_key(public_key: &[u8], chain: Chain) -> Result
         ChainType::Stellar => Ok(gem_stellar::StellarAddress::from_public_key(&ed25519_public_key(public_key)?)?.encode()),
         ChainType::Algorand => Ok(gem_algorand::AlgorandAddress::from_public_key(&ed25519_public_key(public_key)?)?.encode()),
         ChainType::Cosmos => cosmos_address_from_public_key(public_key, chain),
-        ChainType::Ton => Ok(gem_ton::signer::WalletV4R2::new(ed25519_public_key(public_key)?)?.address.encode_non_bounceable()),
+        ChainType::Ton => Ok(gem_ton::signer::WalletV5R1::new(ed25519_public_key(public_key)?)?.address.encode_non_bounceable()),
         ChainType::Xrp => Ok(gem_xrp::XrpAddress::from_public_key_hash(hash160(compressed_public_key(public_key)?)).encode()),
         ChainType::Polkadot => Ok(gem_polkadot::PolkadotAddress::from_public_key(ed25519_public_key(public_key)?).encode()),
         ChainType::Bitcoin | ChainType::Cardano => Err(AccountDerivationError::unsupported_chain(chain)),

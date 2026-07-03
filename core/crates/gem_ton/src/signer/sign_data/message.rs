@@ -134,7 +134,7 @@ mod tests {
         let data = TonSignMessageData::new(payload, "example.com".to_string(), TEST_ADDRESS.to_string());
         let hash = data.hash(1234567890).unwrap();
 
-        assert_eq!(hex::encode(hash), "6ad868b3019bdbd16bc89eecae337bcfcfab02bcb86432cd0cdbc829dfb49adb");
+        assert_eq!(hex::encode(hash), "1a559324ed51bc8613087a8aded09e96141a87d92e6fbc007566521c587248c6");
     }
 
     #[test]

@@ -10,10 +10,14 @@ use crate::{
 };
 
 const BASE_WORKCHAIN: i32 = 0;
-const DEFAULT_WALLET_ID: i32 = 0x29a9a317;
-const WALLET_V4R2_CODE_BOC: &str = include_str!("wallet_v4r2_code.boc.b64");
+const DEFAULT_WALLET_ID: i32 = 0x7fffff11;
+const WALLET_V5R1_AUTH_SIGNED_EXTERNAL: u32 = 0x7369676e;
+const WALLET_V5R1_CODE_BOC_HEX: &str = include_str!("wallet_v5r1_code.boc.hex");
 
-static WALLET_V4R2_CODE: LazyLock<CellArc> = LazyLock::new(|| BagOfCells::parse_base64(WALLET_V4R2_CODE_BOC.trim()).unwrap().get_single_root().unwrap().clone());
+static WALLET_V5R1_CODE: LazyLock<CellArc> = LazyLock::new(|| {
+    let bytes = hex::decode(WALLET_V5R1_CODE_BOC_HEX.trim()).unwrap();
+    BagOfCells::parse(&bytes).unwrap().get_single_root().unwrap().clone()
+});
 
 #[derive(Clone)]
 struct StateInit {
@@ -36,12 +40,12 @@ impl StateInit {
     }
 }
 
-pub struct WalletV4R2 {
+pub struct WalletV5R1 {
     public_key: [u8; 32],
     pub address: Address,
 }
 
-impl WalletV4R2 {
+impl WalletV5R1 {
     pub fn new(public_key: [u8; 32]) -> Result<Self, SignerError> {
         let state_init = Self::state_init(&public_key)?;
         Ok(Self {
@@ -53,13 +57,11 @@ impl WalletV4R2 {
     pub(super) fn build_external_body(&self, expire_at: u32, sequence: u32, messages: &[InternalMessage]) -> Result<Cell, SignerError> {
         let mut builder = CellBuilder::new();
         builder
+            .store_u32(32, WALLET_V5R1_AUTH_SIGNED_EXTERNAL)?
             .store_i32(32, DEFAULT_WALLET_ID)?
             .store_u32(32, expire_at)?
-            .store_u32(32, sequence)?
-            .store_u8(8, 0)?;
-        for message in messages {
-            builder.store_u8(8, message.mode)?.store_child(message.message.clone())?;
-        }
+            .store_u32(32, sequence)?;
+        store_out_list_extended(&mut builder, messages)?;
         Ok(builder.build()?)
     }
 
@@ -82,11 +84,35 @@ impl WalletV4R2 {
 
     fn state_init(public_key: &[u8; 32]) -> Result<StateInit, SignerError> {
         let mut data = CellBuilder::new();
-        data.store_u32(32, 0)?.store_i32(32, DEFAULT_WALLET_ID)?.store_slice(public_key)?.store_bit(false)?;
+        data.store_bit(true)?
+            .store_u32(32, 0)?
+            .store_i32(32, DEFAULT_WALLET_ID)?
+            .store_slice(public_key)?
+            .store_bit(false)?;
 
         Ok(StateInit {
-            code: WALLET_V4R2_CODE.clone(),
+            code: WALLET_V5R1_CODE.clone(),
             data: data.build()?.into_arc(),
         })
     }
+}
+
+fn store_out_list_extended(builder: &mut CellBuilder, messages: &[InternalMessage]) -> Result<(), SignerError> {
+    let out_list = if messages.is_empty() { None } else { Some(build_out_list(messages)?) };
+    builder.store_maybe_reference(out_list.as_ref())?.store_bit(false)?;
+    Ok(())
+}
+
+fn build_out_list(messages: &[InternalMessage]) -> Result<CellArc, SignerError> {
+    let mut out_list = CellBuilder::new().build()?;
+    for message in messages {
+        let mut builder = CellBuilder::new();
+        builder
+            .store_child(out_list)?
+            .store_u32(32, 0x0ec3c86d)?
+            .store_u8(8, message.mode)?
+            .store_child(message.message.clone())?;
+        out_list = builder.build()?;
+    }
+    Ok(out_list.into_arc())
 }

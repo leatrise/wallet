@@ -78,7 +78,7 @@ impl TonSigner {
         let external_body = self.wallet().build_external_body(expire_at, sequence, &internal_messages)?;
         let signature = self.sign(&external_body.hash);
         let mut body_builder = CellBuilder::new();
-        body_builder.store_slice(&signature)?.store_cell(&external_body)?;
+        body_builder.store_cell(&external_body)?.store_slice(&signature)?;
         let signed_transaction = self.wallet().build_transaction(sequence == 0, body_builder.build()?)?;
 
         Ok(BagOfCells::from_root(signed_transaction).to_base64(true)?)
@@ -144,7 +144,7 @@ mod tests {
         );
         assert_eq!(
             signer.sign_transfer(&input, Some(1_000_000_000)).unwrap(),
-            "te6cckEBBAEArgABRYgBkF1w67cBLG0e0D7j0y2ShzflCe2JrlAjS4pC8UHg85AMAQGcOZ5W/jkCqNSj9wrP3isRN8k2PsJvAS1Rc7K+ABk/VgsvD4MSlcEFpS56SGhkmC7pSYwJM1Ocd7iIVUCY1DeFAimpoxc7msoAAAAAAQADAgFkQgBkF1w67cBLG0e0D7j0y2ShzflCe2JrlAjS4pC8UHg85BE4gAAAAAAAAAAAAAAAAAEDAABvNxKJ"
+            "te6cckEBBQEAugABRYgB6KcyxyKXjeZ1aslITLkDx8Ex2t+YYdYne0KICMF4Y64MAQGhc2lnbn///xE7msoAAAAAAZWY27hDbkEhcXO2QrcHLcPThioR5YAEfjbB51nMISdtNz4KT7RJGLNZ2Dvwu4CFSjyOBzha+gMkr2BTQNvaBYAgAgIKDsPIbQMEAwFkQgB6KcyxyKXjeZ1aslITLkDx8Ex2t+YYdYne0KICMF4Y65E4gAAAAAAAAAAAAAAAAAEEAACQ0j25"
         );
     }
 
@@ -163,7 +163,7 @@ mod tests {
         );
         assert_eq!(
             signer.sign_token_transfer(&input, Some(1_000_000_000)).unwrap(),
-            "te6cckEBBAEA/wABRYgBkF1w67cBLG0e0D7j0y2ShzflCe2JrlAjS4pC8UHg85AMAQGcbaO6bjRLkbewbUrj8cYUocJI7vJDeXH4uoZqtTZzf5CRVBRw8rjMKMNg4MEafTwywe6wo2+BhefXkhOtdEakCympoxc7msoAAAAAAQADAgFgYgASwA6bnRklOr1y4MxDEh82TpZnlC7Kl8tiVkz/uVEgGgAAAAAAAAAAAAAAAAABAwCmD4p+pQAAAAAAAAAAInEIAZBdcOu3ASxtHtA+49Mtkoc35Qntia5QI0uKQvFB4PORADILrh124CWNo9oH3HplslDm/KE9sTXKBGlxSF4oPB5yAgKLD74O"
+            "te6cckECBgEAAQ0AAUWIAeinMscil43mdWrJSEy5A8fBMdrfmGHWJ3tCiAjBeGOuDAEBoXNpZ25///8RO5rKAAAAAAGudZJBbHaz3+wTYphViYWKZBSOh8KA2whWRRrxCEPPHESm4pVLnEkkZ10tDTAwjle7wkeM6NYJobf3J5nRJv3BIAICCg7DyG0DAwQAAAFgYgASwA6bnRklOr1y4MxDEh82TpZnlC7Kl8tiVkz/uVEgGgAAAAAAAAAAAAAAAAABBQCmD4p+pQAAAAAAAAAAInEIAeinMscil43mdWrJSEy5A8fBMdrfmGHWJ3tCiAjBeGOvAD0U5ljkUvG8zq1ZKQmXIHj4Jjtb8ww6xO9oUQEYLwx1wgLBYAvZ"
         );
     }
 
@@ -178,7 +178,7 @@ mod tests {
 
         assert_eq!(
             signer.sign_nft_transfer(&input, Some(1_000_000_000)).unwrap(),
-            "te6cckECBAEAAQMAAUWIAZBdcOu3ASxtHtA+49Mtkoc35Qntia5QI0uKQvFB4POQDAEBnNqNNNoZtfnJIY5Ay3QVhWak/TIAnQoTWEq80qOayjpIrJzSwtwHEOKtIL9yqLZw0PhzzP5Q/hDKawfvX80AhAYpqaMXO5rKAAAAAAEAAwIBaGIAV+JOXDw3kOQ4ItjPbzx+NaNiiCQiiZ/HTTaiAwDgzHUgF9eEAAAAAAAAAAAAAAAAAAEDAKVfzD0UAAAAAAAAAACACxq4qfdwkRXv1VoZuOs5Ue3+8/kqqiDYJnNgb9gUgGjwAWNXFT7uEiK9+qtDNx1nKj2/3n8lVUQbBM5sDfsCkA0ccxLQCBmg7No="
+            "te6cckECBgEAAREAAUWIAeinMscil43mdWrJSEy5A8fBMdrfmGHWJ3tCiAjBeGOuDAEBoXNpZ25///8RO5rKAAAAAAGKpqAd7eIZJGJ37XHzqOSoN1nIak/HO9+LvS2cEtnZws85B9TjQqA2EHVOpIyfcHhcHt25UkPyxgulAMIUrffBoAICCg7DyG0DAwQAAAFoYgBX4k5cPDeQ5Dgi2M9vPH41o2KIJCKJn8dNNqIDAODMdSAX14QAAAAAAAAAAAAAAAAAAQUApV/MPRQAAAAAAAAAAIALGrip93CRFe/VWhm46zlR7f7z+SqqINgmc2Bv2BSAaPABY1cVPu4SIr36q0M3HWcqPb/efyVVRBsEzmwN+wKQDRxzEtAIemjjQg=="
         );
     }
 
@@ -197,8 +197,7 @@ mod tests {
         );
     }
 
-    /// Deploy parity vector from TrustWallet wallet-core:
-    /// https://github.com/trustwallet/wallet-core/blob/master/rust/tw_tests/tests/chains/ton/ton_sign.rs
+    /// Deploy vector for Wallet V5R1.
     #[test]
     fn test_sign_wallet_deploy() {
         let private_key = hex::decode(TRUST_WALLET_PRIVATE_KEY).unwrap();
@@ -210,7 +209,7 @@ mod tests {
         };
         assert_eq!(
             signer.sign_requests(vec![request], 0, Some(1_671_135_440)).unwrap(),
-            "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"
+            "te6cckECGwEAA2sAAkWIAPzrlvDh4ZoL3VaGRH2UZVUzjqkEC/+A8381Ubujl5fcHgEXAgE0AhYBFP8A9KQT9LzyyAsDAgEgBA8CAUgFBgLc0CDXScEgkVuPYyDXCx8gghBleHRuvSGCEHNpbnS9sJJfA+CCEGV4dG66jrSAINchAdB01yH6QDD6RPgo+kQwWL2RW+DtRNCBAUHXIfQFgwf0Dm+hMZEw4YBA1yFwf9s84DEg10mBAoC5kTDgcOISEQIBIAcOAgEgCAsCAW4JCgAZrc52omhAIOuQ64X/wAAZrx32omhAEOuQ64WPwAIBSAwNABezJftRNBx1yHXCx+AAEbJi+1E0NcKAIAAZvl8PaiaECAoOuQ+gLAEC8hABHiDXCx+CEHNpZ2668uCKfxEB5o7w7aLt+yGDCNciAoMI1yMggCDXIdMf0x/TH+1E0NIA0x8g0x/T/9cKAAr5AUDM+RCaKJRfCtsx4fLAh98Cs1AHsPLQhFEluvLghVA2uvLghvgju/LQiCKS+ADeAaR/yMoAyx8BzxbJ7VQgkvgP3nDbPNgSA/btou37AvQEIW6SbCGOTAIh1zkwcJQhxwCzji0B1yggdh5DbCDXScAI8uCTINdKwALy4JMg1x0GxxLCAFIwsPLQiddM1zkwAaTobBKEB7vy4JPXSsAA8uCT7VXi0gABwACRW+Dr1ywIFCCRcJYB1ywIHBLiUhCx4w8g10oTFBUAlgH6QAH6RPgo+kQwWLry4JHtRNCBAUHXGPQFBJ1/yMoAQASDB/RT8uCLjhQDgwf0W/LgjCLXCgAhbgGzsPLQkOLIUAPPFhL0AMntVAByMNcsCCSOLSHy4JLSAO1E0NIAURO68tCPVFAwkTGcAYEBQNch1woA8uCO4sjKAFjPFsntVJPywI3iABCTW9sx4ddM0ABRgAAAAD///4j6Fjv8mN9RB2LoCoOYk7XdlxQwSjswki2RjPfAmfdGoKABoXNpZ25///8R/////wAAAAC8+ZGdiSPai3uqZo72yIFXeqJdZNu/S+toBa68KIOfosh/LdN4tekmvBKNNxZcyM8/jiEKqOiUyXA91RXaEOYC4BgCCg7DyG0DGhkBYmIAbC3+ryThKuNsVtAKMll9CvrgTFHFxQyxappA4OpNSKOIUAAAAAAAAAAAAAAAAAEaAAB11p5q"
         );
     }
 

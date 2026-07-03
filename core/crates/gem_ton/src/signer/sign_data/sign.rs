@@ -41,7 +41,7 @@ mod tests {
 
         assert_eq!(
             hex::encode(&result.signature),
-            "626168d23a7db9b8fa2716a7d3e3deeb3999f43dc6dfdd747206b6dba01058a4d785130710e2d4140730a643e2d633e76366f52dda8afd5c2acf4a6acb08ba0b"
+            "bafd1ae238f45f4df9c4c8f0a46c9dd2f9dade285c821634a7bd5bf9d0b9531d51ee45c3c7f53842521b1285a6913849b2553b6739a69e167b707ac92c104c04"
         );
         assert_eq!(hex::encode(&result.public_key), TEST_PUBLIC_KEY);
         assert_eq!(result.timestamp, 1234567890);
@@ -58,7 +58,7 @@ mod tests {
 
         assert_eq!(
             hex::encode(&result.signature),
-            "626168d23a7db9b8fa2716a7d3e3deeb3999f43dc6dfdd747206b6dba01058a4d785130710e2d4140730a643e2d633e76366f52dda8afd5c2acf4a6acb08ba0b"
+            "bafd1ae238f45f4df9c4c8f0a46c9dd2f9dade285c821634a7bd5bf9d0b9531d51ee45c3c7f53842521b1285a6913849b2553b6739a69e167b707ac92c104c04"
         );
     }
 
@@ -80,7 +80,7 @@ mod tests {
 
         assert_eq!(
             hex::encode(&result.signature),
-            "8ff07fcdb495d18b9274b8c837738f0217b56049c30ca622a075ca2ad5154b0ae9d364df087d368f78e25d15286a685816f325458f3127f27ca6f6880dac3903"
+            "579c852645b0a746fcf8ff450d709c94680291b922dfffce517329ef520b1b9bb7867d41e97b2f2b0bf367fec0e98473fc5ead6ae7aa0fe1edb9979b647c2004"
         );
         assert_eq!(result.timestamp, 1234567890);
     }

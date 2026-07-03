@@ -9,4 +9,4 @@ mod transaction;
 pub use chain_signer::TonChainSigner;
 pub use sign_data::{TonSignDataPayload, TonSignDataResponse, TonSignMessageData};
 pub use signer::{TonSignResult, TonSigner};
-pub use transaction::WalletV4R2;
+pub use transaction::WalletV5R1;

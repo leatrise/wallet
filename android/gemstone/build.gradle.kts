@@ -19,7 +19,7 @@ val cargoNdkTargets = (System.getenv("GEMSTONE_ANDROID_ABIS") ?: defaultCargoNdk
     .split(",")
     .map { it.trim() }
     .filter { it.isNotEmpty() }
-    .joinToString(" ") { "-t $it" }
+    .flatMap { listOf("-t", it) }
 
 android {
     namespace = "com.gemwallet.gemstone"
@@ -77,7 +77,7 @@ val bindgenKotlin = tasks.register<Exec>("bindgenKotlin") {
     inputs.dir(cratesDir)
     inputs.file(gemstoneRoot.resolve("Cargo.toml"))
     outputs.dir(generatedKotlinDir.resolve("uniffi"))
-    commandLine("/bin/sh", "-l", "-c", "just bindgen-kotlin")
+    commandLine("just", "bindgen-kotlin")
 }
 
 val buildCargoNdk = tasks.register<Exec>("buildCargoNdk") {
@@ -87,7 +87,12 @@ val buildCargoNdk = tasks.register<Exec>("buildCargoNdk") {
     inputs.dir(cratesDir)
     inputs.file(gemstoneRoot.resolve("Cargo.toml"))
     outputs.dir(jniLibsDir)
-    commandLine("/bin/sh", "-l", "-c", "cargo ndk $cargoNdkTargets -o ${jniLibsDir.absolutePath} build --lib")
+    commandLine(
+        listOf("cargo", "ndk") + cargoNdkTargets + listOf(
+            "-o", jniLibsDir.absolutePath,
+            "build", "--lib"
+        )
+    )
 }
 
 tasks.configureEach {

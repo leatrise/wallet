@@ -13,7 +13,7 @@ use crate::{
     tvm::{BagOfCells, CellBuilder},
 };
 
-pub const TEST_ADDRESS: &str = "UQBY1cVPu4SIr36q0M3HWcqPb_efyVVRBsEzmwN-wKQDR6zg";
+pub const TEST_ADDRESS: &str = "UQDfuLLqLk2lxAjzKmSMYJpfAeqo05KHNF1MnAHTAWMqzoi2";
 pub const TEST_PRIVATE_KEY: &str = "1e9d38b5274152a78dff1a86fa464ceadc1f4238ca2c17060c3c507349424a34";
 pub const TEST_PUBLIC_KEY: &str = "d369452197c2a56481e5e2d3e8bf03de2349f67a63151956822208c2334adee2";
 

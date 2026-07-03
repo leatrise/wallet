@@ -11,7 +11,7 @@
   "cosmos": { "address": "cosmos19rl4cm2hmr8afy4kldpxz3fka4jguq0auqdal4", "path": "m/44'/118'/0'/0/0" },
   "osmosis": { "address": "osmo19rl4cm2hmr8afy4kldpxz3fka4jguq0a5m7df8", "path": "m/44'/118'/0'/0/0" },
   "arbitrum": { "address": "0x9858EfFD232B4033E47d90003D41EC34EcaEda94", "path": "m/44'/60'/0'/0/0" },
-  "ton": { "address": "UQAzWZa6nM5mJev91wGc7VCSfBoIsYRqKJpV78N8Add9-RKY", "path": "m/44'/607'/0'" },
+  "ton": { "address": "UQBHyu-oZVDHRYQ1-rKlGqpHy5yAqanPBirEQNMNOmfHLtaT", "path": "m/44'/607'/0'" },
   "tron": { "address": "TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH", "path": "m/44'/195'/0'/0/0" },
   "doge": { "address": "DBus3bamQjgJULBJtYXpEzDWQRwF5iwxgC", "path": "m/44'/3'/0'/0/0" },
   "zcash": { "address": "t1XVXWCvpMgBvUaed4XDqWtgQgJSu1Ghz7F", "path": "m/44'/133'/0'/0/0" },

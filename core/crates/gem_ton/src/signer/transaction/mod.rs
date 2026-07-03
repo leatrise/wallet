@@ -3,4 +3,4 @@ pub(super) mod request;
 mod sign;
 mod wallet;
 
-pub use wallet::WalletV4R2;
+pub use wallet::WalletV5R1;
