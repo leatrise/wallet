@@ -247,7 +247,7 @@ extension ImportWalletSceneViewModel {
                     throw WalletImportError.invalidSecretPhraseWord(word: word)
                 }
             }
-            guard Mnemonic.isValidWords(words) else {
+            guard Mnemonic.isValidWords(words) || isTonNativePhraseCandidate(words: words) else {
                 throw WalletImportError.invalidSecretPhrase
             }
         case .privateKey:
@@ -258,5 +258,9 @@ extension ImportWalletSceneViewModel {
             }
         }
         return true
+    }
+
+    private func isTonNativePhraseCandidate(words: [String]) -> Bool {
+        chain == .ton && words.count == 24
     }
 }

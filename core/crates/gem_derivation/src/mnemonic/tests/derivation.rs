@@ -1,6 +1,6 @@
 use primitives::{Chain, WalletType, hex};
 
-use crate::{AccountDerivationError, derive_wallet_id_from_account};
+use crate::{AccountDerivationError, derive_account_from_private_key, derive_wallet_id_from_account};
 
 use super::super::derivation::{derive_accounts_from_mnemonic, derive_private_key_from_mnemonic};
 use super::{PHRASE, TEST_PHRASE, bitcoin_family_v3_vectors, expected_derivation};
@@ -44,6 +44,24 @@ fn test_derive_accounts_from_mnemonic_deduplicates_and_rejects_empty_chains() {
     assert_eq!(
         derive_accounts_from_mnemonic(PHRASE, Vec::new()).unwrap_err(),
         AccountDerivationError::invalid_input("mnemonic derivation requires at least one chain")
+    );
+}
+
+#[test]
+fn test_derive_accounts_from_ton_native_mnemonic() {
+    let phrase = "attitude monster voyage sing roof install lobster identify slot trophy degree spin rude song town run cost rally blossom twice tank number pioneer myth";
+    let account = derive_accounts_from_mnemonic(phrase, vec![Chain::Ton]).unwrap().remove(0);
+    let private_key = derive_private_key_from_mnemonic(phrase, Chain::Ton).unwrap();
+    let expected_account = derive_account_from_private_key(&private_key, Chain::Ton).unwrap();
+
+    assert_eq!(account.chain, Chain::Ton);
+    assert_eq!(account.address, expected_account.address);
+    assert_eq!(account.derivation_path, "m/44'/607'/0'");
+    assert_eq!(hex::encode(private_key.as_slice()), "cb3d3f3045ed8ccad0acda6ff5ef0b5370381590b66d68035f268ec0216fa7cb");
+
+    assert_eq!(
+        derive_accounts_from_mnemonic(phrase, vec![Chain::Ton, Chain::Ethereum]).unwrap_err(),
+        AccountDerivationError::invalid_input("Invalid mnemonic")
     );
 }
 

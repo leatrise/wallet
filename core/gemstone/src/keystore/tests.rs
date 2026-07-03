@@ -33,6 +33,13 @@ fn mock_single_phrase_import() -> GemImportType {
     }
 }
 
+fn mock_ton_native_phrase_words() -> Vec<String> {
+    "attitude monster voyage sing roof install lobster identify slot trophy degree spin rude song town run cost rally blossom twice tank number pioneer myth"
+        .split_whitespace()
+        .map(|word| word.to_string())
+        .collect()
+}
+
 #[test]
 fn test_gem_keystore_private_key_create_export_delete() {
     let dir = TempDir::new().unwrap();
@@ -156,4 +163,31 @@ fn test_gem_keystore_single_phrase_import_create() {
     assert_eq!(stored.accounts.len(), 1);
     assert_eq!(stored.accounts[0].chain, Chain::Solana);
     assert_eq!(stored.accounts[0].derivation_path, "m/44'/501'/0'/0'");
+}
+
+#[test]
+fn test_gem_keystore_ton_native_phrase_import_create() {
+    let dir = TempDir::new().unwrap();
+    let keystore = GemKeystore::new(dir.path().to_string_lossy().to_string()).unwrap();
+    let import = GemImportType::SinglePhrase {
+        words: mock_ton_native_phrase_words(),
+        chain: Chain::Ton,
+    };
+
+    let preview = keystore.preview_import(import.clone()).unwrap();
+    assert_eq!(preview.wallet_type, GemWalletType::Single);
+    assert_eq!(preview.accounts.len(), 1);
+    assert_eq!(preview.accounts[0].chain, Chain::Ton);
+    assert_eq!(preview.accounts[0].derivation_path, "m/44'/607'/0'");
+
+    let stored = keystore.create_store(import, b"password".to_vec()).unwrap();
+    assert_eq!(stored.wallet_id, preview.wallet_id);
+    assert_eq!(
+        keystore.export_recovery_phrase(stored.keystore_id.clone(), b"password".to_vec()).unwrap(),
+        mock_ton_native_phrase_words()
+    );
+    assert_eq!(
+        primitives::hex::encode(keystore.private_key(stored.keystore_id, Chain::Ton, b"password".to_vec()).unwrap()),
+        "cb3d3f3045ed8ccad0acda6ff5ef0b5370381590b66d68035f268ec0216fa7cb"
+    );
 }

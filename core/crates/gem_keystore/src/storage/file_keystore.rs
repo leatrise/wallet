@@ -33,9 +33,21 @@ impl FileKeystore {
         self.import_mnemonic_unlocked(phrase, password, keystore_id)
     }
 
+    pub fn import_prevalidated_mnemonic_words(&self, phrase: &str, password: &[u8], keystore_id: Option<String>) -> Result<StoredSecretMeta, KeystoreError> {
+        let _queue = queue::lock()?;
+        self.import_prevalidated_mnemonic_words_unlocked(phrase, password, keystore_id)
+    }
+
     fn import_mnemonic_unlocked(&self, phrase: &str, password: &[u8], keystore_id: Option<String>) -> Result<StoredSecretMeta, KeystoreError> {
         validate_v4_password(password)?;
         let phrase = Mnemonic::clean(phrase)?;
+        let payload = SecretPayload::Mnemonic { phrase: phrase.to_string() };
+        self.import_payload_unlocked(SecretKind::Mnemonic, payload, password, keystore_id)
+    }
+
+    fn import_prevalidated_mnemonic_words_unlocked(&self, phrase: &str, password: &[u8], keystore_id: Option<String>) -> Result<StoredSecretMeta, KeystoreError> {
+        validate_v4_password(password)?;
+        let phrase = Mnemonic::normalize_words(phrase)?;
         let payload = SecretPayload::Mnemonic { phrase: phrase.to_string() };
         self.import_payload_unlocked(SecretKind::Mnemonic, payload, password, keystore_id)
     }

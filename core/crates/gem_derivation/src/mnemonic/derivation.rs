@@ -9,6 +9,7 @@ use super::{
     bip32, bitcoin, cardano,
     scheme::{DerivationScheme, derivation_scheme},
     slip10,
+    ton,
 };
 
 struct DerivedPrivateKey {
@@ -21,9 +22,18 @@ pub fn derive_accounts_from_mnemonic(phrase: &str, chains: Vec<Chain>) -> Result
         return Err(AccountDerivationError::invalid_input("mnemonic derivation requires at least one chain"));
     }
 
-    let seed = Mnemonic::seed(phrase)?;
-    let entropy = Mnemonic::entropy(phrase)?;
     let chains = unique_chains(chains);
+    let seed = match Mnemonic::seed(phrase) {
+        Ok(seed) => seed,
+        Err(error) => {
+            if chains.len() == 1 && chains[0] == Chain::Ton && ton::is_valid(phrase) {
+                let private_key = ton::derive_private_key(phrase)?;
+                return Ok(vec![derive_account_from_private_key(&private_key, Chain::Ton)?]);
+            }
+            return Err(error.into());
+        }
+    };
+    let entropy = Mnemonic::entropy(phrase)?;
     let mut accounts = Vec::with_capacity(chains.len());
     for chain in chains {
         let derived_private_key = derive_private_key_by_chain(seed.as_slice(), entropy.as_slice(), chain)?;
@@ -37,9 +47,21 @@ pub fn derive_accounts_from_mnemonic(phrase: &str, chains: Vec<Chain>) -> Result
 }
 
 pub fn derive_private_key_from_mnemonic(phrase: &str, chain: Chain) -> Result<Zeroizing<Vec<u8>>, AccountDerivationError> {
-    let seed = Mnemonic::seed(phrase)?;
+    let seed = match Mnemonic::seed(phrase) {
+        Ok(seed) => seed,
+        Err(error) => {
+            if chain == Chain::Ton {
+                return ton::derive_private_key(phrase);
+            }
+            return Err(error.into());
+        }
+    };
     let entropy = Mnemonic::entropy(phrase)?;
     derive_private_key_by_chain(seed.as_slice(), entropy.as_slice(), chain).map(|derived| derived.private_key)
+}
+
+pub fn is_ton_native_mnemonic(phrase: &str) -> bool {
+    ton::is_valid(phrase)
 }
 
 fn unique_chains(chains: Vec<Chain>) -> Vec<Chain> {

@@ -71,7 +71,7 @@ class PhraseAddressImportWalletService(
     private suspend fun handlePhrase(importType: ImportType, walletName: String, rawData: String, source: WalletSource): Wallet {
         val cleanedData = rawData.words().joinToString(" ")
         val validateResult = phraseValidate(cleanedData)
-        if (validateResult.isFailure || validateResult.getOrNull() != true) {
+        if ((validateResult.isFailure || validateResult.getOrNull() != true) && !isTonNativePhraseCandidate(importType, cleanedData, validateResult)) {
             val error = validateResult.exceptionOrNull() ?: InvalidPhrase
             throw when (error) {
                 is InvalidWords -> ImportError.InvalidWords(error.words)
@@ -88,6 +88,13 @@ class PhraseAddressImportWalletService(
             walletsRepository.removeWallet(wallet.id)
             throw storeResult.exceptionOrNull() ?: ImportError.CreateError("Unknown error")
         }
+    }
+
+    private fun isTonNativePhraseCandidate(importType: ImportType, cleanedData: String, validateResult: Result<Boolean>): Boolean {
+        return importType.walletType == WalletType.Single &&
+            importType.chain == Chain.Ton &&
+            validateResult.exceptionOrNull() is InvalidPhrase &&
+            cleanedData.words().size == 24
     }
 
     private suspend fun handleAddress(chain: Chain, walletName: String, data: String): Wallet {

@@ -15,10 +15,18 @@ impl Mnemonic {
     }
 
     pub fn clean(phrase: &str) -> Result<Zeroizing<String>, KeystoreError> {
-        let cleaned = Zeroizing::new(phrase.nfkd().collect::<String>());
-        let cleaned = Zeroizing::new(cleaned.split_whitespace().map(|word| word.to_lowercase()).collect::<Vec<_>>().join(" "));
+        let cleaned = Self::normalize_words(phrase)?;
         let mnemonic = Bip39Mnemonic::parse_in_normalized(Language::English, &cleaned).map_err(|_| KeystoreError::invalid_input("mnemonic"))?;
         Ok(Zeroizing::new(mnemonic.words().collect::<Vec<_>>().join(" ")))
+    }
+
+    pub fn normalize_words(phrase: &str) -> Result<Zeroizing<String>, KeystoreError> {
+        let cleaned = Zeroizing::new(phrase.nfkd().collect::<String>());
+        let words = cleaned.split_whitespace().map(|word| word.to_lowercase()).collect::<Vec<_>>();
+        if words.is_empty() || words.iter().any(|word| !Self::is_valid_word(word)) {
+            return Err(KeystoreError::invalid_input("mnemonic"));
+        }
+        Ok(Zeroizing::new(words.join(" ")))
     }
 
     pub fn is_valid(phrase: &str) -> bool {
@@ -115,6 +123,12 @@ mod tests {
         assert!(Mnemonic::is_valid_word(" ABANDON "));
         assert!(!Mnemonic::is_valid_word("abandon1"));
         assert_eq!(Mnemonic::invalid_words("abandon test1 about nope"), vec!["test1", "nope"]);
+    }
+
+    #[test]
+    fn test_normalize_words() {
+        assert_eq!(Mnemonic::normalize_words(" ABANDON   about ").unwrap().as_str(), "abandon about");
+        assert_eq!(Mnemonic::normalize_words("abandon invalid1").unwrap_err(), KeystoreError::invalid_input("mnemonic"));
     }
 
     #[test]

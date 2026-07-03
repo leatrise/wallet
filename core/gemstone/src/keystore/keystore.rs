@@ -3,9 +3,9 @@ use std::sync::Arc;
 
 use gem_derivation::{
     derive_account_from_private_key, derive_account_from_private_key_value, derive_accounts_from_mnemonic, derive_private_key_from_mnemonic, derive_wallet_id_from_account,
-    import_account_from_private_key,
+    import_account_from_private_key, is_ton_native_mnemonic,
 };
-use gem_keystore::{FileKeystore, KeystoreError, KeystoreId, SecretKind};
+use gem_keystore::{FileKeystore, KeystoreError, KeystoreId, SecretKind, StoredSecretMeta};
 use primitives::{Account, Chain, WalletId, WalletType};
 use signer::encode_private_key;
 use zeroize::Zeroizing;
@@ -62,12 +62,12 @@ impl GemKeystore {
             }
             GemImportType::MulticoinPhrase { words, chains } => {
                 let (wallet_id, accounts, phrase) = derive_mnemonic_wallet(words, chains, WalletType::Multicoin, Chain::Ethereum)?;
-                let meta = self.inner.import_mnemonic(&phrase, &password, Some(keystore_id_for_wallet(wallet_id.to_string())))?;
+                let meta = self.import_mnemonic_phrase(&phrase, &password, Some(keystore_id_for_wallet(wallet_id.to_string())))?;
                 Ok(GemStoredWallet::new(wallet_id, WalletType::Multicoin, meta.keystore_id, accounts))
             }
             GemImportType::SinglePhrase { words, chain } => {
                 let (wallet_id, accounts, phrase) = derive_mnemonic_wallet(words, vec![chain], WalletType::Single, chain)?;
-                let meta = self.inner.import_mnemonic(&phrase, &password, Some(keystore_id_for_wallet(wallet_id.to_string())))?;
+                let meta = self.import_mnemonic_phrase(&phrase, &password, Some(keystore_id_for_wallet(wallet_id.to_string())))?;
                 Ok(GemStoredWallet::new(wallet_id, WalletType::Single, meta.keystore_id, accounts))
             }
         }
@@ -160,6 +160,16 @@ impl GemKeystore {
         match self.inner.decrypt_mnemonic(keystore_id, password) {
             Ok(phrase) => Ok(derive_private_key_from_mnemonic(&phrase, chain)?),
             Err(KeystoreError::CorruptFile(message)) if message == "stored secret is not a mnemonic" => Ok(self.inner.decrypt_private_key(keystore_id, password)?),
+            Err(error) => Err(error.into()),
+        }
+    }
+
+    fn import_mnemonic_phrase(&self, phrase: &str, password: &[u8], keystore_id: Option<String>) -> Result<StoredSecretMeta, GemstoneError> {
+        match self.inner.import_mnemonic(phrase, password, keystore_id.clone()) {
+            Ok(meta) => Ok(meta),
+            Err(KeystoreError::InvalidInput(message)) if message == "mnemonic" && is_ton_native_mnemonic(phrase) => {
+                Ok(self.inner.import_prevalidated_mnemonic_words(phrase, password, keystore_id)?)
+            }
             Err(error) => Err(error.into()),
         }
     }
