@@ -5,7 +5,10 @@ use crate::{
     providers::{CoingeckoProvider, JupiterProvider, model::AssetImage},
 };
 use gem_tracing::{error_with_fields, info_with_fields};
-use reqwest::Client;
+use reqwest::{
+    Client,
+    header::{ACCEPT, ACCEPT_LANGUAGE, HeaderMap, HeaderValue, USER_AGENT},
+};
 use std::{
     collections::HashMap,
     error::Error,
@@ -21,12 +24,14 @@ pub struct Downloader {
     folder: String,
     coingecko_provider: CoingeckoProvider,
     jupiter_provider: JupiterProvider,
-    image_client: Client,
+    http_client: Client,
     image_size: u32,
     image_request_retries: usize,
     coingecko_top_count: usize,
     delay: Duration,
 }
+
+const USER_AGENT_VALUE: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
 
 struct PendingAssetImage {
     image: AssetImage,
@@ -36,17 +41,26 @@ struct PendingAssetImage {
 impl Downloader {
     pub fn new(args: Args, coingecko_api_key: String, config: ImgDownloaderConfig) -> Result<Self, Box<dyn Error + Send + Sync>> {
         let folder = args.folder.clone().unwrap_or(config.folder);
+        let http_client = Self::build_http_client(config.image_request_timeout)?;
         Ok(Self {
             args,
             folder,
             coingecko_provider: CoingeckoProvider::new(coingecko_api_key),
-            jupiter_provider: JupiterProvider::new(config.jupiter.minimum_market_cap),
-            image_client: Client::builder().timeout(config.image_request_timeout).build()?,
+            jupiter_provider: JupiterProvider::new(http_client.clone(), config.jupiter.minimum_market_cap),
+            http_client,
             image_size: config.image_size,
             image_request_retries: config.image_request_retries,
             coingecko_top_count: config.coingecko.top_count,
             delay: config.delay,
         })
+    }
+
+    fn build_http_client(timeout: Duration) -> Result<Client, reqwest::Error> {
+        let mut headers = HeaderMap::new();
+        headers.insert(USER_AGENT, HeaderValue::from_static(USER_AGENT_VALUE));
+        headers.insert(ACCEPT, HeaderValue::from_static("image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"));
+        headers.insert(ACCEPT_LANGUAGE, HeaderValue::from_static("en-US,en;q=0.9"));
+        Client::builder().default_headers(headers).timeout(timeout).build()
     }
 
     pub async fn start(&self) -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -152,7 +166,7 @@ impl Downloader {
 
     async fn download_asset_image(&self, pending_image: &PendingAssetImage, images_by_url: &mut HashMap<String, Vec<u8>>) -> Result<bool, Box<dyn Error + Send + Sync>> {
         let image_downloaded = if !images_by_url.contains_key(&pending_image.image.image_url) {
-            let bytes = download_image(&self.image_client, &pending_image.image.image_url, self.image_size, self.image_request_retries).await?;
+            let bytes = download_image(&self.http_client, &pending_image.image.image_url, self.image_size, self.image_request_retries).await?;
             images_by_url.insert(pending_image.image.image_url.clone(), bytes);
             true
         } else {

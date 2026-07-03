@@ -18,11 +18,8 @@ struct JupiterToken {
 }
 
 impl JupiterProvider {
-    pub fn new(minimum_market_cap: f64) -> Self {
-        Self {
-            client: reqwest::Client::new(),
-            minimum_market_cap,
-        }
+    pub fn new(client: reqwest::Client, minimum_market_cap: f64) -> Self {
+        Self { client, minimum_market_cap }
     }
 
     pub async fn get_verified_asset_images(&self) -> Result<Vec<AssetImage>, Box<dyn Error + Send + Sync>> {
