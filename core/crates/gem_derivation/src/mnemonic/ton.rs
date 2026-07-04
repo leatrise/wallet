@@ -15,17 +15,17 @@ const DEFAULT_SEED_SALT: &[u8] = b"TON default seed";
 pub(super) fn is_valid(phrase: &str) -> bool {
     clean_phrase(phrase)
         .and_then(|phrase| entropy(&phrase))
-        .and_then(|entropy| is_basic_seed(&entropy))
+        .and_then(|entropy| is_basic_seed(entropy.as_slice()))
         .unwrap_or(false)
 }
 
 pub(super) fn derive_private_key(phrase: &str) -> Result<Zeroizing<Vec<u8>>, AccountDerivationError> {
     let phrase = clean_phrase(phrase)?;
     let entropy = entropy(&phrase)?;
-    if !is_basic_seed(&entropy)? {
+    if !is_basic_seed(entropy.as_slice())? {
         return Err(AccountDerivationError::invalid_input("mnemonic"));
     }
-    let seed = pbkdf2_hmac_sha512(&entropy, DEFAULT_SEED_SALT, PBKDF_ITERATIONS, SEED_LEN)?;
+    let seed = pbkdf2_hmac_sha512(entropy.as_slice(), DEFAULT_SEED_SALT, PBKDF_ITERATIONS, SEED_LEN)?;
     Ok(Zeroizing::new(seed[..PRIVATE_KEY_LEN].to_vec()))
 }
 
