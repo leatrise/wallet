@@ -8,12 +8,13 @@ use gem_client::{Client, ClientExt, build_path_with_query};
 
 use crate::models::{
     ApiResult, BroadcastTransaction, Chainhead, JettonInfo, JettonOffchainMetadata, JettonWalletsResponse, NftCollectionsResponse, NftItemsResponse, RunGetMethodRequest,
-    RunGetMethodResult, StackArg, TraceByAddressQuery, TraceByBlockQuery, TraceByMessageQuery, TraceByTransactionQuery, TraceResponse, WalletInfo,
+    RunGetMethodResult, StackArg, TonapiJetton, TraceByAddressQuery, TraceByBlockQuery, TraceByMessageQuery, TraceByTransactionQuery, TraceResponse, WalletInfo,
 };
 
 const TONCENTER_V3_BLOCK_LIMIT: usize = 100;
 const TONCENTER_SORT_DESC: &str = "desc";
 const TONCENTER_SORT_ASC: &str = "asc";
+const TONAPI_JETTONS_URL: &str = "https://tonapi.io/v2/jettons";
 
 #[derive(Debug)]
 pub struct TonClient<C: Client> {
@@ -144,7 +145,14 @@ impl<C: Client> TonClient<C> {
     }
 
     pub async fn get_token_data(&self, token_id: String) -> Result<Asset, Box<dyn Error + Send + Sync>> {
-        let token_info = self.get_token_info(token_id.clone()).await?.result;
+        match self.get_token_data_toncenter(&token_id).await {
+            Ok(asset) => Ok(asset),
+            Err(_) => self.get_token_data_tonapi(&token_id).await,
+        }
+    }
+
+    async fn get_token_data_toncenter(&self, token_id: &str) -> Result<Asset, Box<dyn Error + Send + Sync>> {
+        let token_info = self.get_token_info(token_id.to_string()).await?.result;
         let data = &token_info.jetton_content.data;
         let decimals = data.decimals as i32;
 
@@ -156,7 +164,20 @@ impl<C: Client> TonClient<C> {
             }
         };
 
-        Ok(Asset::new(AssetId::from_token(Chain::Ton, &token_id), name, symbol, decimals, AssetType::JETTON))
+        Ok(Asset::new(AssetId::from_token(Chain::Ton, token_id), name, symbol, decimals, AssetType::JETTON))
+    }
+
+    async fn get_token_data_tonapi(&self, token_id: &str) -> Result<Asset, Box<dyn Error + Send + Sync>> {
+        let token: TonapiJetton = self.client.get_url(&format!("{TONAPI_JETTONS_URL}/{token_id}")).await?;
+        let metadata = token.metadata;
+
+        Ok(Asset::new(
+            AssetId::from_token(Chain::Ton, token_id),
+            metadata.name,
+            metadata.symbol,
+            metadata.decimals as i32,
+            AssetType::JETTON,
+        ))
     }
 
     async fn get_token_metadata_offchain(&self, uri: &str) -> Result<(String, String), Box<dyn Error + Send + Sync>> {
@@ -174,5 +195,42 @@ impl<C: Client> ChainSimulation for TonClient<C> {}
 impl<C: Client> chain_traits::ChainProvider for TonClient<C> {
     fn get_chain(&self) -> primitives::Chain {
         Chain::Ton
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use gem_client::{ClientError, testkit::MockClient};
+    use primitives::AssetType;
+
+    #[tokio::test]
+    async fn test_get_token_data_tonapi_fallback() {
+        let token_id = "EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs";
+        let client = TonClient::new(MockClient::new().with_get(move |path| {
+            if path.starts_with("/api/v2/getTokenData") {
+                return Err(ClientError::Network("toncenter unavailable".to_string()));
+            }
+            assert_eq!(path, format!("{TONAPI_JETTONS_URL}/{token_id}"));
+            Ok(
+                serde_json::json!({
+                    "metadata": {
+                        "name": "Tether USD",
+                        "symbol": "USD₮",
+                        "decimals": "6"
+                    }
+                })
+                .to_string()
+                .into_bytes(),
+            )
+        }));
+
+        let asset = client.get_token_data(token_id.to_string()).await.unwrap();
+
+        assert_eq!(asset.id, AssetId::from_token(Chain::Ton, token_id));
+        assert_eq!(asset.name, "Tether USD");
+        assert_eq!(asset.symbol, "USD₮");
+        assert_eq!(asset.decimals, 6);
+        assert_eq!(asset.asset_type, AssetType::JETTON);
     }
 }
