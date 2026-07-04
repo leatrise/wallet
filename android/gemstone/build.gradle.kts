@@ -102,7 +102,7 @@ tasks.configureEach {
     if (name.matches(Regex("(compile|extract|source|javaDoc).*(Debug|Release).*"))) {
         dependsOn(bindgenKotlin)
     }
-    if (name.matches(Regex("merge.*(Debug|Release).*JniLib.*"))) {
+    if (name.matches(Regex(".*(Debug|Release).*(JniLib|NativeLib).*"))) {
         dependsOn(buildCargoNdk)
     }
 }

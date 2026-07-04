@@ -32,8 +32,6 @@ jobs:
   unit_test:
     name: Unit Tests
     runs-on: ubuntu-latest
-    env:
-      UNIT_TESTS: "true"
     defaults:
       run:
         working-directory: android
@@ -58,6 +56,13 @@ jobs:
       - name: Build app
         run: just build
 
+      - name: Verify debug APK native libraries
+        run: |
+          set -euo pipefail
+          APK=$(find app/build/outputs/apk/google/debug -name '*.apk' | head -n 1)
+          unzip -l "$APK" | grep -q 'lib/arm64-v8a/libgemstone.so'
+          unzip -l "$APK" | grep -q 'lib/armeabi-v7a/libgemstone.so'
+
       - name: Upload debug APK
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -66,4 +71,6 @@ jobs:
           if-no-files-found: error
 
       - name: Run unit tests
+        env:
+          UNIT_TESTS: "true"
         run: just test
